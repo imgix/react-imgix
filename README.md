@@ -11,10 +11,12 @@ npm install --save react-imgix
 ## Usage
 
 ```js
+import Imgix from 'react-imgix'
+
 <Imgix
   src='https://[your_domain].imgix.net/[image]'
 
-  aggresiveLoad={bool} // whether to wait until the component has mounted to render the image, useful for auto-sizing, defaults to false
+  aggressiveLoad={bool} // whether to wait until the component has mounted to render the image, useful for auto-sizing, defaults to false
   auto={array} // array of values to pass to Imgix's auto param, defaults to ['format']
   bg={bool} // whether to render the image as a background of the component, defaults to false
   component={string} // wrapper component to use, defaults to 'img' for inline, and 'div' when bg is true
