@@ -36,7 +36,6 @@ export default class ReactImgix extends Component {
   static defaultProps = {
     precision: 100,
     bg: false,
-    resize: true,
     fluid: true,
     aggresiveLoad: false,
     faces: true,
