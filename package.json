@@ -1,0 +1,32 @@
+{
+  "name": "react-imgix",
+  "version": "0.1.0",
+  "description": "React Component for displaying an image from Imgix",
+  "main": "lib/index.js",
+  "scripts": {
+    "build": "npm run build:lib",
+    "build:lib": "babel src --out-dir lib",
+    "prepublish": "npm run build",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/frederickfogerty/react-imgix.git"
+  },
+  "keywords": [
+    "react"
+  ],
+  "author": "Frederick Fogerty",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/frederickfogerty/react-imgix/issues"
+  },
+  "homepage": "https://github.com/frederickfogerty/react-imgix#readme",
+  "dependencies": {
+    "imgix.js": "^1.1.3"
+  },
+  "devDependencies": {
+    "babel": "^5.8.23",
+    "react": "^0.13.3"
+  }
+}
