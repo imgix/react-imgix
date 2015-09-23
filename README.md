@@ -2,6 +2,12 @@
 
 A [React](https://facebook.github.io/react/) component that renders images using the [Imgix](https://www.imgix.com/) API. It uses the smallest images possible, and does cool stuff, like [cropping to faces](https://www.imgix.com/docs/reference/size#param-crop) by default.
 
+## Installation
+
+```
+npm install --save react-imgix
+```
+
 ## Usage
 
 ```js
@@ -25,7 +31,3 @@ Author: [Frederick Fogerty](http://twitter.com/fredfogerty)
 
 License: ISC
 
-
-
-
-```
