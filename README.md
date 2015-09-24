@@ -14,7 +14,7 @@ npm install --save react-imgix
 import Imgix from 'react-imgix'
 
 <Imgix
-  src='https://[your_domain].imgix.net/[image]'
+  src={string} // required, usually in the form: 'https://[your_domain].imgix.net/[image]'. Don't include any parameters.
 
   aggressiveLoad={bool} // whether to wait until the component has mounted to render the image, useful for auto-sizing, defaults to false
   auto={array} // array of values to pass to Imgix's auto param, defaults to ['format']
