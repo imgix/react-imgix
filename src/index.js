@@ -80,23 +80,25 @@ export default class ReactImgix extends Component {
       src = ''
     }
 
-    let props = this.props
+    let childProps = {...this.props}
 
     if (this.props.bg) {
       if (!this.props.component) {
         component = 'div'
       }
-      props.style = {
+      childProps.style = {
+        ...childProps.style,
         backgroundImage: `url(${src})`
       }
+      delete childProps.src
     } else {
       if (!this.props.component) {
         component = 'img'
       }
-      props.src = src
+      childProps.src = src
     }
     return React.createElement(component,
-      props,
+      childProps,
       this.props.children)
   }
 }
