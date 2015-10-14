@@ -10,7 +10,7 @@ import Imgix from './index.js'
 expect.extend(expectJSX)
 
 const src = 'http://domain.imgix.net/image.jpg'
-let tree, vdom, instance
+let tree, vdom, instance // eslint-disable-line no-unused-vars
 
 describe('<img> mode', () => {
   beforeEach(() => {
@@ -85,7 +85,7 @@ describe('image props', () => {
     instance = tree.getMountedInstance()
   })
   it('auto prop', () => {
-    expect(vdom.props.src).toInclude('auto=format,enhance')
+    expect(vdom.props.src).toInclude('auto=format%2Cenhance')
   })
   it('className prop', () => {
     expect(vdom.props.className).toInclude(className)

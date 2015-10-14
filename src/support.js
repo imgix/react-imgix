@@ -106,7 +106,7 @@ var DEFAULT_OPTIONS = Object.freeze({
 
 function constructUrl (src, params) {
   var optionKeys = Object.keys(params)
-  var fullUrl = optionKeys.reduce(function(uri, key) {
+  var fullUrl = optionKeys.reduce(function (uri, key) {
     return uri.addQueryParam(key, params[key])
   }, new Uri(src))
 
@@ -116,7 +116,6 @@ function constructUrl (src, params) {
 /**
  * Construct a URL for an image with an Imgix proxy, expanding image options
  * per the [API reference docs](https://www.imgix.com/docs/reference).
- * @param  {String} imgProxy    URL of a proxy that transparently authorizes requests
  * @param  {String} src         src of raw image
  * @param  {Object} longOptions map of image API options, in long or short form per expansion rules
  * @return {String}             URL of image src transformed by Imgix
@@ -141,6 +140,4 @@ function processImage (src, longOptions) {
   return constructUrl(src, shortOptions)
 }
 
-module.exports = [
-  processImage
-]
+module.exports = processImage
