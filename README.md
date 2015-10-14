@@ -1,5 +1,9 @@
 # React Imgix
 
+[![npm version](https://img.shields.io/npm/v/react-imgix.svg)](https://www.npmjs.com/package/react-imgix)
+[![Build Status](https://travis-ci.org/frederickfogerty/react-imgix.svg?branch=master)](https://travis-ci.org/frederickfogerty/react-imgix)
+[![Dependecies Status](https://david-dm.org/frederickfogerty/react-imgix.svg)](https://david-dm.org/frederickfogerty/react-imgix)
+
 A [React](https://facebook.github.io/react/) component that renders images using the [Imgix](https://www.imgix.com/) API. It uses the smallest images possible, and does cool stuff, like [cropping to faces](https://www.imgix.com/docs/reference/size#param-crop) by default.
 
 ## Installation
