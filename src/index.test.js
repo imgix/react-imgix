@@ -97,7 +97,7 @@ describe('image props', () => {
   // it('precision prop', () => {
   //   expect(vdom.props.src).to.include('auto=format,enhance')
   // })
-  it.skip('custom props', () => {
-    expect(vdom.props.src).to.include('auto=format,enhance')
-  })
+  // it.skip('custom props', () => {
+  //   expect(vdom.props.src).to.include('auto=format,enhance')
+  // })
 })
