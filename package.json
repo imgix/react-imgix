@@ -27,6 +27,12 @@
   },
   "devDependencies": {
     "babel": "^5.8.23",
-    "react": "^0.13.3"
+    "chai": "^3.3.0",
+    "mocha": "^2.3.3",
+    "mocha-babel": "^3.0.0",
+    "react": "^0.14",
+    "react-addons-test-utils": "^0.14.0",
+    "skin-deep": "^0.8.1",
+    "tap": "^2.1.1"
   }
 }
