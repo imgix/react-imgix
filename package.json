@@ -23,6 +23,9 @@
     "url": "https://github.com/frederickfogerty/react-imgix/issues"
   },
   "homepage": "https://github.com/frederickfogerty/react-imgix#readme",
+  "peerDependencies": {
+    "react": ">=0.13"
+  },
   "dependencies": {
     "imgix.js": "^1.1.3"
   },
