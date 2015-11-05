@@ -34,7 +34,8 @@ export default class ReactImgix extends Component {
     aggresiveLoad: PropTypes.bool,
     fluid: PropTypes.bool,
     children: PropTypes.any,
-    customParams: PropTypes.object
+    customParams: PropTypes.object,
+    entropy: PropTypes.bool
   }
   static defaultProps = {
     precision: 100,
