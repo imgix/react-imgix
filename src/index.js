@@ -1,6 +1,8 @@
-import ix from 'imgix.js'
+import pick from 'object.pick'
 import ReactDOM from 'react-dom'
 import React, {Component, PropTypes} from 'react'
+
+import processImage from './support.js'
 
 const roundToNearest = (size, precision) => precision * Math.ceil(size / precision)
 
@@ -32,7 +34,8 @@ export default class ReactImgix extends Component {
     faces: PropTypes.bool,
     aggresiveLoad: PropTypes.bool,
     fluid: PropTypes.bool,
-    children: PropTypes.any
+    children: PropTypes.any,
+    customParams: PropTypes.object
   }
   static defaultProps = {
     precision: 100,
@@ -59,26 +62,20 @@ export default class ReactImgix extends Component {
   _findSizeForDimension = dim => findSizeForDimension(dim, this.props, this.state)
 
   render () {
-    let src = new ix.URL(this.props.src)
+    let src = ''
     let component = this.props.component
 
     let width = this._findSizeForDimension('width')
     let height = this._findSizeForDimension('height')
-    src.setParams({
-      w: width,
-      h: height,
-      fit: this.props.fit,
-      auto: this.props.auto
-    })
 
-    if (this.props.faces) {
-      src.setCrop('faces')
-    }
-
-    src = src.getUrl()
-
-    if (!this.state.mounted && !this.props.aggresiveLoad) {
-      src = ''
+    if (this.state.mounted || this.props.aggresiveLoad) {
+      src = processImage(this.props.src, {
+        ...pick(this.props, ['auto', 'fit']),
+        ...this.props.customParams,
+        crop: (this.props.faces && 'faces'),
+        width,
+        height
+      })
     }
 
     let childProps = {...this.props}
