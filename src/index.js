@@ -1,4 +1,3 @@
-import pick from 'object.pick'
 import ReactDOM from 'react-dom'
 import React, {Component, PropTypes} from 'react'
 
@@ -44,6 +43,7 @@ export default class ReactImgix extends Component {
     aggresiveLoad: false,
     faces: true,
     fit: 'crop',
+    entropy: false,
     auto: ['format']
   }
   state = {
@@ -68,11 +68,20 @@ export default class ReactImgix extends Component {
     let width = this._findSizeForDimension('width')
     let height = this._findSizeForDimension('height')
 
+    let crop = false
+    if (this.props.faces) crop = 'faces'
+    if (this.props.entropy) crop = 'entropy'
+
+    let fit = false
+    if (this.props.entropy) fit = 'crop'
+    if (this.props.fit) fit = this.props.fit
+
     if (this.state.mounted || this.props.aggresiveLoad) {
       src = processImage(this.props.src, {
-        ...pick(this.props, ['auto', 'fit']),
+        auto: this.props.auto,
         ...this.props.customParams,
-        crop: (this.props.faces && 'faces'),
+        crop,
+        fit,
         width,
         height
       })

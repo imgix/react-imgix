@@ -96,6 +96,19 @@ describe('image props', () => {
   it('fit prop', () => {
     expect(vdom.props.src).toInclude('fit=crop')
   })
+  it('entropy prop', () => {
+    tree = sd.shallowRender(
+      <Imgix
+        src={src}
+        aggresiveLoad
+        entropy
+      />
+    )
+    vdom = tree.getRenderOutput()
+
+    expect(vdom.props.src).toInclude('crop=entropy')
+    expect(vdom.props.src).toInclude('fit=crop')
+  })
   // it('fluid prop', () => {
   //   expect(vdom.props.src).to.include('auto=format,enhance')
   // })

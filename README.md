@@ -26,6 +26,7 @@ import Imgix from 'react-imgix'
   bg={bool} // whether to render the image as a background of the component, defaults to false
   component={string} // wrapper component to use, defaults to 'img' for inline, and 'div' when bg is true
   className={string}
+  entropy={bool} // whether or not to crop using points of interest. See Imgix API for more details. Defaults to false
   faces={bool} // whether to crop to faces, defaults to true
   fit={string} // see Imgix's API, defaults to 'crop'
   fluid={bool} // whether to fit the image requested to the size of the component rendered, defaults to true
@@ -37,4 +38,3 @@ import Imgix from 'react-imgix'
 Author: [Frederick Fogerty](http://twitter.com/fredfogerty)
 
 License: ISC
-
