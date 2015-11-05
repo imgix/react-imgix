@@ -8,7 +8,7 @@
     "build:lib": "babel src --out-dir lib",
     "prepublish": "npm run build",
     "test": "mocha --compilers js:mocha-babel --recursive src/*.test.js",
-    "test:watch": "npm run test -- --watch"
+    "test:watch": "npm run test -- --watch --reporter min"
   },
   "repository": {
     "type": "git",
@@ -28,7 +28,8 @@
   },
   "devDependencies": {
     "babel": "^5.8.23",
-    "chai": "^3.3.0",
+    "expect": "^1.12.2",
+    "expect-jsx": "^2.1.0",
     "mocha": "^2.3.3",
     "mocha-babel": "^3.0.0",
     "react": "^0.14",

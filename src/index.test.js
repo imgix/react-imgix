@@ -1,8 +1,13 @@
 /* global describe it beforeEach */
-import { expect } from 'chai'
-import React from 'react'
-import Imgix from './index.js'
+
+import expect from 'expect'
+import expectJSX from 'expect-jsx'
 import sd from 'skin-deep'
+import React from 'react'
+
+import Imgix from './index.js'
+
+expect.extend(expectJSX)
 
 const src = 'http://domain.imgix.net/image.jpg'
 let tree, vdom, instance
@@ -20,10 +25,10 @@ describe('<img> mode', () => {
   })
 
   it('should render an image', () => {
-    expect(vdom.type).to.equal('img')
+    expect(vdom.type).toBe('img')
   })
   it('should have a src tag', () => {
-    expect(vdom.props.src).to.include(src)
+    expect(vdom.props.src).toInclude(src)
   })
 })
 describe('background mode', () => {
@@ -39,11 +44,11 @@ describe('background mode', () => {
     instance = tree.getMountedInstance()
   })
   it('should render a div', () => {
-    expect(vdom.type).to.equal('div')
+    expect(vdom.type).toBe('div')
   })
   it('should have the appropriate styles', () => {
-    expect(vdom.props.style.backgroundImage).to.include(src)
-    expect(vdom.props.style.backgroundSize).to.equal('cover')
+    expect(vdom.props.style.backgroundImage).toInclude(src)
+    expect(vdom.props.style.backgroundSize).toBe('cover')
   })
 })
 describe('custom component', () => {
@@ -60,8 +65,8 @@ describe('custom component', () => {
     instance = tree.getMountedInstance()
   })
   it('should render the custom component', () => {
-    expect(vdom.props.style.backgroundImage).to.include(src)
-    expect(vdom.type).to.equal('li')
+    expect(vdom.props.style.backgroundImage).toInclude(src)
+    expect(vdom.type).toBe('li')
   })
 })
 describe('image props', () => {
@@ -80,16 +85,16 @@ describe('image props', () => {
     instance = tree.getMountedInstance()
   })
   it('auto prop', () => {
-    expect(vdom.props.src).to.include('auto=format,enhance')
+    expect(vdom.props.src).toInclude('auto=format,enhance')
   })
   it('className prop', () => {
-    expect(vdom.props.className).to.include(className)
+    expect(vdom.props.className).toInclude(className)
   })
   it('faces prop', () => {
-    expect(vdom.props.src).to.include('crop=faces')
+    expect(vdom.props.src).toInclude('crop=faces')
   })
   it('fit prop', () => {
-    expect(vdom.props.src).to.include('fit=crop')
+    expect(vdom.props.src).toInclude('fit=crop')
   })
   // it('fluid prop', () => {
   //   expect(vdom.props.src).to.include('auto=format,enhance')
