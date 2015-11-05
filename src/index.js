@@ -1,4 +1,3 @@
-import ix from 'imgix.js'
 import pick from 'object.pick'
 import ReactDOM from 'react-dom'
 import React, {Component, PropTypes} from 'react'
