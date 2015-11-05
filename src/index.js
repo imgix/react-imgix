@@ -1,5 +1,6 @@
-import React, {Component, PropTypes} from 'react'
 import ix from 'imgix.js'
+import ReactDOM from 'react-dom'
+import React, {Component, PropTypes} from 'react'
 
 const roundToNearest = (size, precision) => precision * Math.ceil(size / precision)
 
@@ -48,7 +49,7 @@ export default class ReactImgix extends Component {
     mounted: false
   }
   componentDidMount = () => {
-    const node = React.findDOMNode(this)
+    const node = ReactDOM.findDOMNode(this)
     this.setState({
       width: node.scrollWidth,
       height: node.scrollHeight,

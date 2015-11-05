@@ -8,6 +8,5 @@ node_js:
   - "0.10"
   - "iojs"
 env:
-  - REACT=0.13
   - REACT=0.14
 before_script: "sh install-relevant-react.sh"
