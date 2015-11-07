@@ -31,7 +31,8 @@ import Imgix from 'react-imgix'
   fit={string} // see Imgix's API, defaults to 'crop'
   fluid={bool} // whether to fit the image requested to the size of the component rendered, defaults to true
   precision={number} // round to nearest x for image width and height, useful for caching, defaults to 100
-
+  height={number} // force images to be a certain height, overrides precision
+  width={number} // force images to be a certain width, overrides precision
 />
 ```
 
