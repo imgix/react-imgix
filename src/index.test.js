@@ -118,4 +118,17 @@ describe('image props', () => {
   // it.skip('custom props', () => {
   //   expect(vdom.props.src).to.include('auto=format,enhance')
   // })
+  it('generateSrcSet prop', () => {
+    tree = sd.shallowRender(
+      <Imgix
+        src={src}
+        aggresiveLoad
+        generateSrcSet
+      />
+    )
+    vdom = tree.getRenderOutput()
+
+    expect(vdom.props.srcSet).toInclude('dpr=2')
+    expect(vdom.props.srcSet).toInclude('dpr=3')
+  })
 })
