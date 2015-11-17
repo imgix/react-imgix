@@ -35,7 +35,8 @@ export default class ReactImgix extends Component {
     fluid: PropTypes.bool,
     children: PropTypes.any,
     customParams: PropTypes.object,
-    entropy: PropTypes.bool
+    entropy: PropTypes.bool,
+    generateSrcSet: PropTypes.bool
   }
   static defaultProps = {
     precision: 100,
@@ -45,7 +46,8 @@ export default class ReactImgix extends Component {
     faces: true,
     fit: 'crop',
     entropy: false,
-    auto: ['format']
+    auto: ['format'],
+    generateSrcSet: true
   }
   state = {
     width: null,
@@ -64,6 +66,7 @@ export default class ReactImgix extends Component {
 
   render () {
     let src = ''
+    let srcSet = ''
     let component = this.props.component
 
     let width = this._findSizeForDimension('width')
@@ -78,14 +81,19 @@ export default class ReactImgix extends Component {
     if (this.props.fit) fit = this.props.fit
 
     if (this.state.mounted || this.props.aggresiveLoad) {
-      src = processImage(this.props.src, {
+      const srcOptions = {
         auto: this.props.auto,
         ...this.props.customParams,
         crop,
         fit,
         width,
         height
-      })
+      }
+
+      src = processImage(this.props.src, srcOptions)
+      const dpr2 = processImage(this.props.src, {...srcOptions, dpr: 2})
+      const dpr3 = processImage(this.props.src, {...srcOptions, dpr: 3})
+      srcSet = `${dpr2} 2x, ${dpr3} 3x`
     }
 
     let childProps = {...this.props}
@@ -100,10 +108,16 @@ export default class ReactImgix extends Component {
         backgroundSize: 'cover'
       }
       delete childProps.src
+      delete childProps.srcSet
     } else {
       if (!this.props.component) {
         component = 'img'
       }
+
+      if (component === 'img' && this.props.generateSrcSet) {
+        childProps.srcSet = srcSet
+      }
+
       childProps.src = src
     }
     return React.createElement(component,
