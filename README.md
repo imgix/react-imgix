@@ -33,6 +33,7 @@ import Imgix from 'react-imgix'
   precision={number} // round to nearest x for image width and height, useful for caching, defaults to 100
   height={number} // force images to be a certain height, overrides precision
   width={number} // force images to be a certain width, overrides precision
+  customParams={object} // any other Imgix params to add to the image src
 />
 ```
 
