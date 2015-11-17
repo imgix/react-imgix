@@ -1,6 +1,6 @@
 {
   "name": "react-imgix",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "description": "React Component for displaying an image from Imgix",
   "main": "lib/index.js",
   "standard": {
