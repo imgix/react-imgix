@@ -81,13 +81,22 @@ export default class ReactImgix extends Component {
     if (this.props.fit) fit = this.props.fit
 
     if (this.state.mounted || this.props.aggresiveLoad) {
-      const srcOptions = {
+      let srcOptions = {
         auto: this.props.auto,
         ...this.props.customParams,
         crop,
         fit,
         width,
         height
+      }
+      
+      if (fit === 'clip') {
+        if (this.props.width && !this.props.height) {
+          delete srcOptions.height
+        }
+        if (this.props.height && !this.props.width) {
+          delete srcOptions.width
+        }
       }
 
       src = processImage(this.props.src, srcOptions)
