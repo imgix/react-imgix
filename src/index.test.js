@@ -51,6 +51,33 @@ describe('background mode', () => {
     expect(vdom.props.style.backgroundSize).toBe('cover')
   })
 })
+describe('background mode + style prop', () => {
+  const backgroundImage = 'url("https://assets.imgix.net/unsplash/bridge.jpg")'
+  beforeEach(() => {
+    tree = sd.shallowRender(
+      <Imgix
+        src={src}
+        bg
+        aggresiveLoad
+        style={{
+          backgroundImage,
+          backgroundSize: 'contain',
+          top: 100
+        }}
+      />
+    )
+    vdom = tree.getRenderOutput()
+    instance = tree.getMountedInstance()
+  })
+  it('should render a div', () => {
+    expect(vdom.type).toBe('div')
+  })
+  it('should have the appropriate styles', () => {
+    expect(vdom.props.style.backgroundImage).toInclude(src)
+    expect(vdom.props.style.backgroundSize).toBe('contain')
+    expect(vdom.props.style.top).toBe(100)
+  })
+})
 describe('custom component', () => {
   beforeEach(() => {
     tree = sd.shallowRender(

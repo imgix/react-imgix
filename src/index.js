@@ -103,9 +103,9 @@ export default class ReactImgix extends Component {
         component = 'div'
       }
       childProps.style = {
+        backgroundSize: 'cover',
         ...childProps.style,
-        backgroundImage: `url(${src})`,
-        backgroundSize: 'cover'
+        backgroundImage: `url(${src})`
       }
       delete childProps.src
       delete childProps.srcSet
