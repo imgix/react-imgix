@@ -15,7 +15,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/frederickfogerty/react-imgix.git"
+    "url": "git+https://github.com/imgix/react-imgix.git"
   },
   "keywords": [
     "react"
@@ -23,9 +23,9 @@
   "author": "Frederick Fogerty",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/frederickfogerty/react-imgix/issues"
+    "url": "https://github.com/imgix/react-imgix/issues"
   },
-  "homepage": "https://github.com/frederickfogerty/react-imgix#readme",
+  "homepage": "https://github.com/imgix/react-imgix#readme",
   "peerDependencies": {
     "react": ">=0.14",
     "react-dom": ">=0.14"
