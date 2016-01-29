@@ -37,7 +37,7 @@ export default class ReactImgix extends Component {
     customParams: PropTypes.object,
     entropy: PropTypes.bool,
     generateSrcSet: PropTypes.bool
-  }
+  };
   static defaultProps = {
     precision: 100,
     bg: false,
@@ -48,12 +48,12 @@ export default class ReactImgix extends Component {
     entropy: false,
     auto: ['format'],
     generateSrcSet: true
-  }
+  };
   state = {
     width: null,
     height: null,
     mounted: false
-  }
+  };
   componentDidMount = () => {
     const node = ReactDOM.findDOMNode(this)
     this.setState({
@@ -61,8 +61,8 @@ export default class ReactImgix extends Component {
       height: node.scrollHeight,
       mounted: true
     })
-  }
-  _findSizeForDimension = dim => findSizeForDimension(dim, this.props, this.state)
+  };
+  _findSizeForDimension = dim => findSizeForDimension(dim, this.props, this.state);
 
   render () {
     let src = ''
