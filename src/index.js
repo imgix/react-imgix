@@ -65,63 +65,75 @@ export default class ReactImgix extends Component {
   _findSizeForDimension = dim => findSizeForDimension(dim, this.props, this.state);
 
   render () {
-    let src = ''
+    const {
+      aggresiveLoad,
+      auto,
+      bg,
+      children,
+      component,
+      customParams,
+      entropy,
+      faces,
+      fit,
+      generateSrcSet,
+      src,
+      ...other
+    } = this.props
+    let _src = ''
     let srcSet = ''
-    let component = this.props.component
+    let _component = component
 
     let width = this._findSizeForDimension('width')
     let height = this._findSizeForDimension('height')
 
     let crop = false
-    if (this.props.faces) crop = 'faces'
-    if (this.props.entropy) crop = 'entropy'
+    if (faces) crop = 'faces'
+    if (entropy) crop = 'entropy'
 
-    let fit = false
-    if (this.props.entropy) fit = 'crop'
-    if (this.props.fit) fit = this.props.fit
+    let _fit = false
+    if (entropy) _fit = 'crop'
+    if (fit) _fit = fit
 
-    if (this.state.mounted || this.props.aggresiveLoad) {
+    if (this.state.mounted || aggresiveLoad) {
       const srcOptions = {
-        auto: this.props.auto,
-        ...this.props.customParams,
+        auto: auto,
+        ...customParams,
         crop,
-        fit,
+        fit: _fit,
         width,
         height
       }
 
-      src = processImage(this.props.src, srcOptions)
-      const dpr2 = processImage(this.props.src, {...srcOptions, dpr: 2})
-      const dpr3 = processImage(this.props.src, {...srcOptions, dpr: 3})
+      _src = processImage(src, srcOptions)
+      const dpr2 = processImage(src, {...srcOptions, dpr: 2})
+      const dpr3 = processImage(src, {...srcOptions, dpr: 3})
       srcSet = `${dpr2} 2x, ${dpr3} 3x`
     }
 
-    let childProps = {...this.props}
+    let childProps = other
 
-    if (this.props.bg) {
-      if (!this.props.component) {
-        component = 'div'
+    if (bg) {
+      if (!component) {
+        _component = 'div'
       }
       childProps.style = {
         ...childProps.style,
-        backgroundImage: `url(${src})`,
+        backgroundImage: `url(${_src})`,
         backgroundSize: 'cover'
       }
-      delete childProps.src
-      delete childProps.srcSet
     } else {
-      if (!this.props.component) {
-        component = 'img'
+      if (!component) {
+        _component = 'img'
       }
 
-      if (component === 'img' && this.props.generateSrcSet) {
+      if (_component === 'img' && generateSrcSet) {
         childProps.srcSet = srcSet
       }
 
-      childProps.src = src
+      childProps.src = _src
     }
-    return React.createElement(component,
+    return React.createElement(_component,
       childProps,
-      this.props.children)
+      children)
   }
 }
