@@ -10,8 +10,8 @@
     "build": "npm run build:lib",
     "build:lib": "babel src --out-dir lib",
     "prepublish": "npm run build",
-    "test": "standard && mocha --compilers js:mocha-babel --recursive src/*.test.js",
-    "test:watch": "mocha --compilers js:mocha-babel --recursive src/*.test.js --watch --reporter min"
+    "test": "standard && mocha --require babel-core/register --recursive src/*.test.js",
+    "test:watch": "mocha --require babel-core/register --recursive src/*.test.js --watch --reporter min"
   },
   "repository": {
     "type": "git",
@@ -34,8 +34,13 @@
     "jsuri": "^1.3.1"
   },
   "devDependencies": {
-    "babel": "^5.8.23",
+    "babel-cli": "^6.4.5",
+    "babel-core": "^6.4.5",
     "babel-eslint": "^4.1.3",
+    "babel-plugin-transform-object-assign": "^6.3.13",
+    "babel-preset-es2015": "^6.3.13",
+    "babel-preset-react": "^6.3.13",
+    "babel-preset-stage-0": "^6.3.13",
     "expect": "^1.12.2",
     "expect-jsx": "^2.1.0",
     "jsuri": "^1.3.1",
