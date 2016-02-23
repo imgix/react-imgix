@@ -54,14 +54,20 @@ export default class ReactImgix extends Component {
     height: null,
     mounted: false
   };
-  componentDidMount = () => {
+
+  forceLayout = () => {
     const node = ReactDOM.findDOMNode(this)
     this.setState({
       width: node.scrollWidth,
       height: node.scrollHeight,
       mounted: true
     })
-  };
+  }
+
+  componentDidMount = () => {
+    this.forceLayout()
+  }
+
   _findSizeForDimension = dim => findSizeForDimension(dim, this.props, this.state);
 
   render () {
