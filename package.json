@@ -31,7 +31,8 @@
     "react-dom": ">=0.14"
   },
   "dependencies": {
-    "jsuri": "^1.3.1"
+    "jsuri": "^1.3.1",
+    "js-base64": "~2.1.9"
   },
   "devDependencies": {
     "babel-cli": "^6.4.5",
@@ -43,7 +44,6 @@
     "babel-preset-stage-0": "^6.3.13",
     "expect": "^1.12.2",
     "expect-jsx": "^2.1.0",
-    "jsuri": "^1.3.1",
     "mocha": "^2.3.3",
     "mocha-babel": "^3.0.0",
     "react": "^0.14",

@@ -109,6 +109,48 @@ describe('image props', () => {
     expect(vdom.props.src).toInclude('crop=entropy')
     expect(vdom.props.src).toInclude('fit=crop')
   })
+  it('url encodes param keys', () => {
+    tree = sd.shallowRender(
+      <Imgix
+        src={'https://mysource.imgix.net/demo.png'}
+        aggresiveLoad
+        customParams={{
+          'hello world': 'interesting'
+        }}
+      />
+    )
+    vdom = tree.getRenderOutput()
+
+    expect(vdom.props.src).toEqual('https://mysource.imgix.net/demo.png?auto=format&dpr=1&hello%20world=interesting&crop=faces&fit=crop&w=1&h=1')
+  })
+  it('url encodes param values', () => {
+    tree = sd.shallowRender(
+      <Imgix
+        src={'https://mysource.imgix.net/demo.png'}
+        aggresiveLoad
+        customParams={{
+          'hello_world': '/foo"> <script>alert("hacked")</script><'
+        }}
+      />
+    )
+    vdom = tree.getRenderOutput()
+
+    expect(vdom.props.src).toEqual('https://mysource.imgix.net/demo.png?auto=format&dpr=1&hello_world=%2Ffoo%22%3E%20%3Cscript%3Ealert(%22hacked%22)%3C%2Fscript%3E%3C&crop=faces&fit=crop&w=1&h=1')
+  })
+  it('Base64 encodes Base64 param variants', () => {
+    tree = sd.shallowRender(
+      <Imgix
+        src={'https://mysource.imgix.net/~text'}
+        aggresiveLoad
+        customParams={{
+          'txt64': 'I cannøt belîév∑ it wors! 😱'
+        }}
+      />
+    )
+    vdom = tree.getRenderOutput()
+
+    expect(vdom.props.src).toEqual('https://mysource.imgix.net/~text?auto=format&dpr=1&txt64=SSBjYW5uw7h0IGJlbMOuw6l24oiRIGl0IHdvcu-jv3MhIPCfmLE&crop=faces&fit=crop&w=1&h=1')
+  })
   // it('fluid prop', () => {
   //   expect(vdom.props.src).to.include('auto=format,enhance')
   // })
