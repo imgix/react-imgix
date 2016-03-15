@@ -119,9 +119,9 @@ export default class ReactImgix extends Component {
       srcSet = `${dpr2} 2x, ${dpr3} 3x`
     }
 
-    // Match first instance of <anything>:// in the string
-    const protocolMatch = new RegExp(/^.*?:\/\//)
-    if (stripProtocol) _src = _src.replace(protocolMatch, '//')
+    // Match first instance of <anything>:// in a string
+    const matchProtocol = new RegExp(/^.*?:\/\//)
+    if (stripProtocol) _src = _src.replace(matchProtocol, '//')
 
     let childProps = other
 
