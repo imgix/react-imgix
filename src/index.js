@@ -82,10 +82,10 @@ export default class ReactImgix extends Component {
       customParams,
       entropy,
       faces,
-      src,
-      stripProtocol,
       fit,
       generateSrcSet,
+      src,
+      stripProtocol,
       ...other
     } = this.props
     let _src = ''
