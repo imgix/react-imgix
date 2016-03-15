@@ -82,12 +82,12 @@ export default class ReactImgix extends Component {
       customParams,
       entropy,
       faces,
+      src,
       stripProtocol,
       fit,
       generateSrcSet,
       ...other
     } = this.props
-    let src = this.props.src
     let _src = ''
     let srcSet = ''
     let _component = component
@@ -113,15 +113,15 @@ export default class ReactImgix extends Component {
         height
       }
 
-      // Match first instance of <anything>:// in the string
-      const protocolMatch = new RegExp(/^.*?:\/\//)
-      if (stripProtocol) src = src.replace(protocolMatch, '//')
-
       _src = processImage(src, srcOptions)
       const dpr2 = processImage(src, {...srcOptions, dpr: 2})
       const dpr3 = processImage(src, {...srcOptions, dpr: 3})
       srcSet = `${dpr2} 2x, ${dpr3} 3x`
     }
+
+    // Match first instance of <anything>:// in the string
+    const protocolMatch = new RegExp(/^.*?:\/\//)
+    if (stripProtocol) _src = _src.replace(protocolMatch, '//')
 
     let childProps = other
 
