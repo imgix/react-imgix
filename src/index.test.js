@@ -151,6 +151,19 @@ describe('image props', () => {
 
     expect(vdom.props.src).toEqual('https://mysource.imgix.net/~text?auto=format&dpr=1&txt64=SSBjYW5uw7h0IGJlbMOuw6l24oiRIGl0IHdvcu-jv3MhIPCfmLE&crop=faces&fit=crop&w=1&h=1')
   })
+  it('strip protocol if stripProtocol attribute is present', () => {
+    tree = sd.shallowRender(
+      <Imgix
+        src={'https://mysource.imgix.net/demo.png'}
+        aggresiveLoad
+        stripProtocol
+      />
+    )
+    vdom = tree.getRenderOutput()
+
+    const protocolIndex = vdom.props.src.indexOf('//mysource.imgix.net/demo.png')
+    expect(protocolIndex).toBe(0)
+  })
   // it('fluid prop', () => {
   //   expect(vdom.props.src).to.include('auto=format,enhance')
   // })

@@ -31,6 +31,7 @@ export default class ReactImgix extends Component {
     fit: PropTypes.string,
     auto: PropTypes.array,
     faces: PropTypes.bool,
+    stripProtocol: PropTypes.bool,
     aggresiveLoad: PropTypes.bool,
     fluid: PropTypes.bool,
     children: PropTypes.any,
@@ -44,6 +45,7 @@ export default class ReactImgix extends Component {
     fluid: true,
     aggresiveLoad: false,
     faces: true,
+    stripProtocol: false,
     fit: 'crop',
     entropy: false,
     auto: ['format'],
@@ -83,6 +85,7 @@ export default class ReactImgix extends Component {
       fit,
       generateSrcSet,
       src,
+      stripProtocol,
       ...other
     } = this.props
     let _src = ''
@@ -115,6 +118,10 @@ export default class ReactImgix extends Component {
       const dpr3 = processImage(src, {...srcOptions, dpr: 3})
       srcSet = `${dpr2} 2x, ${dpr3} 3x`
     }
+
+    // Match first instance of <anything>:// in a string
+    const matchProtocol = new RegExp(/^.*?:\/\//)
+    if (stripProtocol) _src = _src.replace(matchProtocol, '//')
 
     let childProps = other
 
