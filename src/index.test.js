@@ -17,7 +17,7 @@ describe('<img> mode', () => {
     tree = sd.shallowRender(
       <Imgix
         src={src}
-        aggresiveLoad
+        aggressiveLoad
       />
     )
     vdom = tree.getRenderOutput()
@@ -37,7 +37,7 @@ describe('background mode', () => {
       <Imgix
         src={src}
         bg
-        aggresiveLoad
+        aggressiveLoad
       />
     )
     vdom = tree.getRenderOutput()
@@ -58,7 +58,7 @@ describe('custom component', () => {
         src={src}
         component='li'
         bg
-        aggresiveLoad
+        aggressiveLoad
       />
     )
     vdom = tree.getRenderOutput()
@@ -77,7 +77,7 @@ describe('image props', () => {
         src={src}
         auto={['format', 'enhance']}
         className={className}
-        aggresiveLoad
+        aggressiveLoad
         faces
       />
     )
@@ -100,7 +100,7 @@ describe('image props', () => {
     tree = sd.shallowRender(
       <Imgix
         src={src}
-        aggresiveLoad
+        aggressiveLoad
         entropy
       />
     )
@@ -113,7 +113,7 @@ describe('image props', () => {
     tree = sd.shallowRender(
       <Imgix
         src={'https://mysource.imgix.net/demo.png'}
-        aggresiveLoad
+        aggressiveLoad
         customParams={{
           'hello world': 'interesting'
         }}
@@ -127,7 +127,7 @@ describe('image props', () => {
     tree = sd.shallowRender(
       <Imgix
         src={'https://mysource.imgix.net/demo.png'}
-        aggresiveLoad
+        aggressiveLoad
         customParams={{
           'hello_world': '/foo"> <script>alert("hacked")</script><'
         }}
@@ -141,7 +141,7 @@ describe('image props', () => {
     tree = sd.shallowRender(
       <Imgix
         src={'https://mysource.imgix.net/~text'}
-        aggresiveLoad
+        aggressiveLoad
         customParams={{
           'txt64': 'I cannøt belîév∑ it wors! 😱'
         }}
@@ -164,7 +164,7 @@ describe('image props', () => {
     tree = sd.shallowRender(
       <Imgix
         src={src}
-        aggresiveLoad
+        aggressiveLoad
         generateSrcSet
       />
     )
