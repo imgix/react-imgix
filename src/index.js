@@ -31,7 +31,7 @@ export default class ReactImgix extends Component {
     fit: PropTypes.string,
     auto: PropTypes.array,
     faces: PropTypes.bool,
-    aggresiveLoad: PropTypes.bool,
+    aggressiveLoad: PropTypes.bool,
     fluid: PropTypes.bool,
     children: PropTypes.any,
     customParams: PropTypes.object,
@@ -42,7 +42,7 @@ export default class ReactImgix extends Component {
     precision: 100,
     bg: false,
     fluid: true,
-    aggresiveLoad: false,
+    aggressiveLoad: false,
     faces: true,
     fit: 'crop',
     entropy: false,
@@ -72,7 +72,7 @@ export default class ReactImgix extends Component {
 
   render () {
     const {
-      aggresiveLoad,
+      aggressiveLoad,
       auto,
       bg,
       children,
@@ -100,7 +100,7 @@ export default class ReactImgix extends Component {
     if (entropy) _fit = 'crop'
     if (fit) _fit = fit
 
-    if (this.state.mounted || aggresiveLoad) {
+    if (this.state.mounted || aggressiveLoad) {
       const srcOptions = {
         auto: auto,
         ...customParams,
