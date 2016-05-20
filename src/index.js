@@ -116,7 +116,11 @@ export default class ReactImgix extends Component {
       srcSet = `${dpr2} 2x, ${dpr3} 3x`
     }
 
-    let childProps = other
+    let childProps = {
+      ...other,
+      width: null,
+      height: null
+    }
 
     if (bg) {
       if (!component) {
