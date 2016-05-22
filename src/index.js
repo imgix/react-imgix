@@ -118,8 +118,8 @@ export default class ReactImgix extends Component {
 
     let childProps = {
       ...other,
-      width: null,
-      height: null
+      width: other.width <= 1 ? null : other.width,
+      height: other.height <= 1 ? null : other.height
     }
 
     if (bg) {
