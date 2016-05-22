@@ -173,4 +173,87 @@ describe('image props', () => {
     expect(vdom.props.srcSet).toInclude('dpr=2')
     expect(vdom.props.srcSet).toInclude('dpr=3')
   })
+  it('height passed to url param', () => {
+    const height = 300
+    tree = sd.shallowRender(
+      <Imgix
+        src={'https://mysource.imgix.net/demo.png'}
+        aggressiveLoad
+        height={height}
+      />
+    )
+    vdom = tree.getRenderOutput()
+
+    expect(vdom.props.src).toEqual(`https://mysource.imgix.net/demo.png?auto=format&dpr=1&crop=faces&fit=crop&w=1&h=${height}`)
+  })
+
+  it('height between 0 and 1 not passed to childProps', () => {
+    const height = 0.5
+    tree = sd.shallowRender(
+      <Imgix
+        src={'https://mysource.imgix.net/demo.png'}
+        aggressiveLoad
+        height={height}
+      />
+    )
+    vdom = tree.getRenderOutput()
+
+    expect(vdom.props.height).toBeFalsy()
+  })
+
+  it('height greater than 1 passed to childProps', () => {
+    const height = 300
+    tree = sd.shallowRender(
+      <Imgix
+        src={'https://mysource.imgix.net/demo.png'}
+        aggressiveLoad
+        height={height}
+      />
+    )
+    vdom = tree.getRenderOutput()
+
+    expect(vdom.props.height).toEqual(height)
+  })
+
+  it('width passed to url param', () => {
+    const width = 300
+    tree = sd.shallowRender(
+      <Imgix
+        src={'https://mysource.imgix.net/demo.png'}
+        aggressiveLoad
+        width={width}
+      />
+    )
+    vdom = tree.getRenderOutput()
+
+    expect(vdom.props.src).toEqual(`https://mysource.imgix.net/demo.png?auto=format&dpr=1&crop=faces&fit=crop&w=${width}&h=1`)
+  })
+
+  it('width between 0 and 1 not passed to childProps', () => {
+    const width = 0.5
+    tree = sd.shallowRender(
+      <Imgix
+        src={'https://mysource.imgix.net/demo.png'}
+        aggressiveLoad
+        width={width}
+      />
+    )
+    vdom = tree.getRenderOutput()
+
+    expect(vdom.props.width).toBeFalsy()
+  })
+
+  it('width greater than 1 passed to childProps', () => {
+    const width = 300
+    tree = sd.shallowRender(
+      <Imgix
+        src={'https://mysource.imgix.net/demo.png'}
+        aggressiveLoad
+        width={width}
+      />
+    )
+    vdom = tree.getRenderOutput()
+
+    expect(vdom.props.width).toEqual(width)
+  })
 })
