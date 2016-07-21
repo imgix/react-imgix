@@ -36,6 +36,7 @@ import Imgix from 'react-imgix'
   width={number} // force images to be a certain width, overrides precision
   generateSrcSet={bool} // generate 2x and 3x src sets when using an <img> tag. Defaults to true
   customParams={object} // any other Imgix params to add to the image src
+  imgProps={object} // any other attributes to add to the html node (example: 'alt', 'data-*')
 />
 ```
 

@@ -256,4 +256,21 @@ describe('image props', () => {
 
     expect(vdom.props.width).toEqual(width)
   })
+
+  it('accepts any prop passed to imgProps', () => {
+    const imgProps = {
+      alt: 'Example alt attribute',
+      dataSrc: 'https://mysource.imgix.net/demo.png'
+    }
+    tree = sd.shallowRender(
+      <Imgix
+        src={'https://mysource.imgix.net/demo.png'}
+        imgProps={imgProps}
+      />
+    )
+    vdom = tree.getRenderOutput()
+
+    expect(vdom.props.alt).toEqual(imgProps.alt)
+    expect(vdom.props.dataSrc).toEqual(imgProps.dataSrc)
+  })
 })
