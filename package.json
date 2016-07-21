@@ -1,6 +1,6 @@
 {
   "name": "react-imgix",
-  "version": "4.0.0",
+  "version": "0.0.0-semantically-released",
   "description": "React Component for displaying an image from Imgix",
   "main": "lib/index.js",
   "standard": {
@@ -11,11 +11,12 @@
     "build:lib": "babel src --out-dir lib",
     "prepublish": "npm run build",
     "test": "standard && mocha --require babel-core/register --recursive src/*.test.js",
-    "test:watch": "mocha --require babel-core/register --recursive src/*.test.js --watch --reporter min"
+    "test:watch": "mocha --require babel-core/register --recursive src/*.test.js --watch --reporter min",
+    "semantic-release": "semantic-release pre && npm publish && semantic-release post"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/imgix/react-imgix.git"
+    "url": "https://github.com/imgix/react-imgix.git"
   },
   "keywords": [
     "react"
@@ -51,6 +52,7 @@
     "react-dom": "^15.1.0",
     "skin-deep": "^0.16.0",
     "standard": "^7.1.2",
-    "tap": "^6.2.0"
+    "tap": "^6.2.0",
+    "semantic-release": "^4.3.5"
   }
 }
