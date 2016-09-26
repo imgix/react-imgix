@@ -50,7 +50,7 @@
     "react-addons-test-utils": "^15.1.0",
     "react-dom": "^15.1.0",
     "skin-deep": "^0.16.0",
-    "standard": "^7.1.2",
+    "standard": "^8.2.0",
     "tap": "^6.2.0"
   }
 }
