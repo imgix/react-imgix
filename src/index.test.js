@@ -51,6 +51,21 @@ describe('background mode', () => {
     expect(vdom.props.style.backgroundSize).toBe('cover')
   })
 })
+describe('background mode - pre-mount', () => {
+  beforeEach(() => {
+    tree = sd.shallowRender(
+      <Imgix
+        src={src}
+        bg
+      />
+    )
+    vdom = tree.getRenderOutput()
+  })
+  it('should not have an empty url()', () => {
+    expect(vdom.props.style.backgroundImage).toBe(undefined)
+    expect(vdom.props.style.backgroundSize).toBe('cover')
+  })
+})
 describe('custom component', () => {
   beforeEach(() => {
     tree = sd.shallowRender(
