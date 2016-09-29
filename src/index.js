@@ -87,8 +87,8 @@ export default class ReactImgix extends Component {
       src,
       ...other
     } = this.props
-    let _src = ''
-    let srcSet = ''
+    let _src = null
+    let srcSet = null
     let _component = component
 
     let width = this._findSizeForDimension('width')

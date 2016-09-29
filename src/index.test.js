@@ -31,6 +31,20 @@ describe('<img> mode', () => {
     expect(vdom.props.src).toInclude(src)
   })
 })
+describe('<img> mode - pre-mount', () => {
+  beforeEach(() => {
+    tree = sd.shallowRender(
+      <Imgix
+        src={src}
+      />
+    )
+    vdom = tree.getRenderOutput()
+  })
+  it("shouldn't have a blank src tag", () => {
+    expect(vdom.props.src).toBe(null)
+    expect(vdom.props.srcSet).toBe(null)
+  })
+})
 describe('background mode', () => {
   beforeEach(() => {
     tree = sd.shallowRender(
