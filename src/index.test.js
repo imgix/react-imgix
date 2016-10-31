@@ -76,7 +76,7 @@ describe('background mode - pre-mount', () => {
     vdom = tree.getRenderOutput()
   })
   it('should not have an empty url()', () => {
-    expect(vdom.props.style.backgroundImage).toBe(undefined)
+    expect(vdom.props.style.backgroundImage).toBe(null)
     expect(vdom.props.style.backgroundSize).toBe('cover')
   })
 })
