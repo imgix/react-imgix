@@ -31,6 +31,7 @@ describe('<img> mode', () => {
     expect(vdom.props.src).toInclude(src)
   })
 })
+// These tests emulate the pre-mount state as `tree.getMountedInstance()` isn't called
 describe('<img> mode - pre-mount', () => {
   beforeEach(() => {
     tree = sd.shallowRender(
@@ -65,6 +66,7 @@ describe('background mode', () => {
     expect(vdom.props.style.backgroundSize).toBe('cover')
   })
 })
+// These tests emulate the pre-mount state as `tree.getMountedInstance()` isn't called
 describe('background mode - pre-mount', () => {
   beforeEach(() => {
     tree = sd.shallowRender(
