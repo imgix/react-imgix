@@ -5,7 +5,7 @@ import processImage from './support.js'
 
 const roundToNearest = (size, precision) => precision * Math.ceil(size / precision)
 
-const isPresent = (str) => str && typeof str === 'string' && str.length > 0
+const isStringNotEmpty = (str) => str && typeof str === 'string' && str.length > 0
 
 const defaultMap = {
   width: 'defaultWidth',
@@ -133,7 +133,7 @@ export default class ReactImgix extends Component {
         ...childProps.style,
         backgroundSize: 'cover'
       }
-      if (isPresent(_src)) childProps.style.backgroundImage = `url(${_src})`
+      if (isStringNotEmpty(_src)) childProps.style.backgroundImage = `url(${_src})`
     } else {
       if (!component) {
         _component = 'img'
