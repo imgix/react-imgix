@@ -1,12 +1,10 @@
 language: node_js
 node_js:
-  - "4.2"
-  - "4.1"
-  - "4.0"
+  - "stable"
+  - "lts"
+  - "5"
+  - "4"
   - "0.12"
-  - "0.11"
-  - "0.10"
-  - "iojs"
 env:
   - REACT=0.14
 before_script: "sh install-relevant-react.sh"
