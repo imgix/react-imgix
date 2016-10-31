@@ -5,6 +5,8 @@ import processImage from './support.js'
 
 const roundToNearest = (size, precision) => precision * Math.ceil(size / precision)
 
+const isStringNotEmpty = (str) => str && typeof str === 'string' && str.length > 0
+
 const defaultMap = {
   width: 'defaultWidth',
   height: 'defaultHeight'
@@ -85,8 +87,8 @@ export default class ReactImgix extends Component {
       src,
       ...other
     } = this.props
-    let _src = ''
-    let srcSet = ''
+    let _src = null
+    let srcSet = null
     let _component = component
 
     let width = this._findSizeForDimension('width')
@@ -129,8 +131,8 @@ export default class ReactImgix extends Component {
       }
       childProps.style = {
         ...childProps.style,
-        backgroundImage: `url(${_src})`,
-        backgroundSize: 'cover'
+        backgroundSize: 'cover',
+        backgroundImage: isStringNotEmpty(_src) ? `url(${_src})` : null
       }
     } else {
       if (!component) {
