@@ -1,4 +1,22 @@
 
+v4.1.0 / 2016-11-15
+==================
+
+	* **Added:** `crop` prop to override `crop` url parameter [#57] - @rbliss
+
+[#57]: https://github.com/imgix/react-imgix/pull/57
+
+  * Enable passing in specific crop options, useful for fallbacks (#57)
+  * Add additional tests testing crop prop overriding faces and entropy props
+  * Enable passing in specific crop options, useful for specifying fallbacks to the ‘faces’ crop option
+  * Add server-side rendering note to `aggressiveLoad`
+  * Merge pull request #53 from imgix/fred-new-node-versions
+  * lts => 6
+  * Avoid blank background urls and src attributes (#51)
+  * Update node versions supported
+  * chore(package): update standard to version 8.2.0 (#47)
+  * chore(package): update mocha to version 3.0.1 (#37)
+
 v4.0.0 / 2016-06-07
 ==================
 
@@ -57,7 +75,7 @@ v2.1.1 / 2015-11-18
 
   * **Feature:** `generateSrcSet` prop to generate a `srcSet` attribute for images, only when in `img` mode. Enabled by default. See [here](https://css-tricks.com/responsive-images-youre-just-changing-resolutions-use-srcset/) for more ([#4])
 
-[#4]: https://github.com/imgix/react-imgix/pull/4  
+[#4]: https://github.com/imgix/react-imgix/pull/4
 
 
   * 2.1.1
