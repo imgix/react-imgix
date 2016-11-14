@@ -1,21 +1,22 @@
 
-v4.1.0 / 2016-11-15
+v5.1.0 / 2016-11-15
 ==================
 
-	* **Added:** `crop` prop to override `crop` url parameter [#57] - @rbliss
+ * **Added:** `crop` prop to override `crop` url parameter #57 - @rbliss
+ * Add additional tests testing crop prop overriding faces and entropy props
+ * Enable passing in specific crop options, useful for specifying fallbacks to the ‘faces’ crop option
+ * Add server-side rendering note to `aggressiveLoad`
+ * Merge pull request #53 from imgix/fred-new-node-versions
+ * lts => 6
+ * Avoid blank background urls and src attributes (#51)
+ * Update node versions supported
+ * chore(package): update standard to version 8.2.0 (#47)
+ * chore(package): update mocha to version 3.0.1 (#37)
 
-[#57]: https://github.com/imgix/react-imgix/pull/57
 
-  * Enable passing in specific crop options, useful for fallbacks (#57)
-  * Add additional tests testing crop prop overriding faces and entropy props
-  * Enable passing in specific crop options, useful for specifying fallbacks to the ‘faces’ crop option
-  * Add server-side rendering note to `aggressiveLoad`
-  * Merge pull request #53 from imgix/fred-new-node-versions
-  * lts => 6
-  * Avoid blank background urls and src attributes (#51)
-  * Update node versions supported
-  * chore(package): update standard to version 8.2.0 (#47)
-  * chore(package): update mocha to version 3.0.1 (#37)
+v5.0.0 / 2016-07-22
+==================
+  * **Breaking:** Unused props on the Imgix component are no longer passed down, use imgProps instead. #34 - @theolampert
 
 v4.0.0 / 2016-06-07
 ==================
