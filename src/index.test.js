@@ -121,6 +121,47 @@ describe('image props', () => {
   it('className prop', () => {
     expect(vdom.props.className).toInclude(className)
   })
+  it('crop prop', () => {
+    tree = sd.shallowRender(
+      <Imgix
+        src={src}
+        aggressiveLoad
+        crop='faces,entropy'
+      />
+    )
+    vdom = tree.getRenderOutput()
+
+    expect(vdom.props.src).toInclude('crop=faces%2Centropy')
+    expect(vdom.props.src).toInclude('fit=crop')
+  })
+  it('crop prop overrides faces prop', () => {
+    tree = sd.shallowRender(
+      <Imgix
+        src={src}
+        aggressiveLoad
+        faces
+        crop='faces,entropy'
+      />
+    )
+    vdom = tree.getRenderOutput()
+
+    expect(vdom.props.src).toInclude('crop=faces%2Centropy')
+    expect(vdom.props.src).toInclude('fit=crop')
+  })
+  it('crop prop overrides entropy prop', () => {
+    tree = sd.shallowRender(
+      <Imgix
+        src={src}
+        aggressiveLoad
+        entropy
+        crop='faces,entropy'
+      />
+    )
+    vdom = tree.getRenderOutput()
+
+    expect(vdom.props.src).toInclude('crop=faces%2Centropy')
+    expect(vdom.props.src).toInclude('fit=crop')
+  })
   it('faces prop', () => {
     expect(vdom.props.src).toInclude('crop=faces')
   })
