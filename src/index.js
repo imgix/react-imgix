@@ -32,6 +32,7 @@ export default class ReactImgix extends Component {
     component: PropTypes.string,
     fit: PropTypes.string,
     auto: PropTypes.array,
+    crop: PropTypes.string,
     faces: PropTypes.bool,
     aggressiveLoad: PropTypes.bool,
     fluid: PropTypes.bool,
@@ -80,6 +81,7 @@ export default class ReactImgix extends Component {
       children,
       component,
       customParams,
+      crop,
       entropy,
       faces,
       fit,
@@ -94,9 +96,10 @@ export default class ReactImgix extends Component {
     let width = this._findSizeForDimension('width')
     let height = this._findSizeForDimension('height')
 
-    let crop = false
-    if (faces) crop = 'faces'
-    if (entropy) crop = 'entropy'
+    let _crop = false
+    if (faces) _crop = 'faces'
+    if (entropy) _crop = 'entropy'
+    if (crop) _crop = crop
 
     let _fit = false
     if (entropy) _fit = 'crop'
@@ -106,7 +109,7 @@ export default class ReactImgix extends Component {
       const srcOptions = {
         auto: auto,
         ...customParams,
-        crop,
+        crop: _crop,
         fit: _fit,
         width,
         height

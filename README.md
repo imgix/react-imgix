@@ -28,6 +28,7 @@ import Imgix from 'react-imgix'
   className={string}
   entropy={bool} // whether or not to crop using points of interest. See Imgix API for more details. Defaults to false
   faces={bool} // whether to crop to faces, defaults to true
+  crop={string} // sets specific crop, overriding faces and entropy flags. Useful for specifying fallbacks for faces like 'faces,top,right'
   fit={string} // see Imgix's API, defaults to 'crop'
   fluid={bool} // whether to fit the image requested to the size of the component rendered, defaults to true
   precision={number} // round to nearest x for image width and height, useful for caching, defaults to 100
