@@ -56,6 +56,103 @@ describe('default type', () => {
   })
 })
 
+describe('<picture> type', () => {
+  let children, lastChild
+  const shouldBehaveLikePicture = function () {
+    it('should have key set on every child', () => {
+      expect(children.every(c => c.key !== undefined)).toBe(true)
+    })
+
+    it('should render a picture', () => {
+      expect(vdom.type).toBe('picture')
+    })
+
+    it('should have either an <img> or a <ReactImgix type=img> as its last child', () => {
+      if (lastChild.type.hasOwnProperty('name')) {
+        expect(lastChild.type.name).toBe('ReactImgix')
+        expect(lastChild.props.type).toBe('img')
+      } else {
+        expect(lastChild.type).toBe('img')
+      }
+    })
+  }
+
+  describe('with no children', () => {
+    beforeEach(() => {
+      tree = sd.shallowRender(
+        <Imgix src={src} type='picture' agressiveLoad />
+      )
+      vdom = tree.getRenderOutput()
+      instance = tree.getMountedInstance()
+      children = vdom.props.children
+      lastChild = children[children.length - 1]
+    })
+
+    shouldBehaveLikePicture()
+
+    it('should only have one child', () => {
+      expect(children.length).toBe(1)
+    })
+
+    it('should pass props down to automatically added type=img', () => {
+      // todo - verify all valid props are passed down to children as defaults
+      // except for the ones we specifically exclude
+      let expectedProps = Object.assign({}, instance.props, {type: 'img'})
+      delete expectedProps.bg
+      delete expectedProps.children
+      delete expectedProps.component
+
+      expect(lastChild.props).toEqual(expectedProps)
+    })
+  })
+
+  describe('with a <ReactImgix type=img> as a child', () => {
+    beforeEach(() => {
+      tree = sd.shallowRender(
+        <Imgix src={src} type='picture' agressiveLoad faces={false} entropy>
+          <Imgix src={src} type='img' />
+        </Imgix>
+      )
+      vdom = tree.getRenderOutput()
+      instance = tree.getMountedInstance()
+      children = vdom.props.children
+      lastChild = children[children.length - 1]
+    })
+
+    shouldBehaveLikePicture()
+    it('should only have one child', () => {
+      expect(children.length).toBe(1)
+    })
+    it('should not pass props down to children', () => {
+      expect(lastChild.props.faces).toBe(true)
+      expect(lastChild.props.entropy).toBe(false)
+    })
+  })
+
+  describe('with an <img> as a child', () => {
+    beforeEach(() => {
+      tree = sd.shallowRender(
+        <Imgix src={src} type='picture' agressiveLoad faces={false} entropy>
+          <img src={src} />
+        </Imgix>
+      )
+      vdom = tree.getRenderOutput()
+      instance = tree.getMountedInstance()
+      children = vdom.props.children
+      lastChild = children[children.length - 1]
+    })
+
+    shouldBehaveLikePicture()
+    it('should only have one child', () => {
+      expect(children.length).toBe(1)
+    })
+    it('should not pass props down to children', () => {
+      expect(lastChild.props.faces).toBe(undefined)
+      expect(lastChild.props.entropy).toBe(undefined)
+    })
+  })
+})
+
 const shouldBehaveLikeBg = function () {
   it('should render a div', () => {
     expect(vdom.type).toBe('div')
