@@ -23,8 +23,9 @@ import Imgix from 'react-imgix'
   src={string} // required, usually in the form: 'https://[your_domain].imgix.net/[image]'. Don't include any parameters.
   aggressiveLoad={bool} // whether to wait until the component has mounted to render the image, useful for auto-sizing and server-side rendering, defaults to false
   auto={array} // array of values to pass to Imgix's auto param, defaults to ['format']
-  bg={bool} // whether to render the image as a background of the component, defaults to false
-  component={string} // wrapper component to use, defaults to 'img' for inline, and 'div' when bg is true
+  type={string} // what kind of component to render, one of 'img', 'bg', 'picture', 'source'. Defaults to 'img'
+  bg={bool} // DEPRECATED, use type='bg'. whether to render the image as a background of the component, defaults to false
+  component={string} //  wrapper component to use when rendering a 'bg', defaults to 'div'
   className={string}
   entropy={bool} // whether or not to crop using points of interest. See Imgix API for more details. Defaults to false
   faces={bool} // whether to crop to faces, defaults to true

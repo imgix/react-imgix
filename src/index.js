@@ -1,11 +1,13 @@
 import ReactDOM from 'react-dom'
 import React, {Component, PropTypes} from 'react'
+import { deprecate } from 'react-is-deprecated'
 
 import processImage from './support.js'
 
 const roundToNearest = (size, precision) => precision * Math.ceil(size / precision)
 
 const isStringNotEmpty = (str) => str && typeof str === 'string' && str.length > 0
+const validTypes = ['bg', 'img', 'picture', 'source']
 
 const defaultMap = {
   width: 'defaultWidth',
@@ -28,7 +30,10 @@ export default class ReactImgix extends Component {
   static propTypes = {
     src: PropTypes.string.isRequired,
     className: PropTypes.string,
-    bg: PropTypes.bool,
+    // we don't set this in defaultProps because then just referencing the variable
+    // prints the deprecation notice and we only ever check for truthiness so
+    // undefined and false are close enough.
+    bg: deprecate(PropTypes.bool, 'bg is depracated, use type="bg" instead'),
     component: PropTypes.string,
     fit: PropTypes.string,
     auto: PropTypes.array,
@@ -39,18 +44,20 @@ export default class ReactImgix extends Component {
     children: PropTypes.any,
     customParams: PropTypes.object,
     entropy: PropTypes.bool,
-    generateSrcSet: PropTypes.bool
+    generateSrcSet: PropTypes.bool,
+    type: PropTypes.oneOf(validTypes)
   };
   static defaultProps = {
     precision: 100,
-    bg: false,
+    component: 'div',
     fluid: true,
     aggressiveLoad: false,
     faces: true,
     fit: 'crop',
     entropy: false,
     auto: ['format'],
-    generateSrcSet: true
+    generateSrcSet: true,
+    type: 'img'
   };
   state = {
     width: null,
@@ -87,6 +94,7 @@ export default class ReactImgix extends Component {
       fit,
       generateSrcSet,
       src,
+      type,
       ...other
     } = this.props
     let _src = null
@@ -128,25 +136,26 @@ export default class ReactImgix extends Component {
       height: other.height <= 1 ? null : other.height
     }
 
-    if (bg) {
-      if (!component) {
-        _component = 'div'
-      }
-      childProps.style = {
-        ...childProps.style,
-        backgroundSize: 'cover',
-        backgroundImage: isStringNotEmpty(_src) ? `url(${_src})` : null
-      }
-    } else {
-      if (!component) {
+    // TODO: remove _type once bg option is gone
+    const _type = bg ? 'bg' : type
+    switch (_type) {
+      case 'bg':
+        childProps.style = {
+          ...childProps.style,
+          backgroundSize: 'cover',
+          backgroundImage: isStringNotEmpty(_src) ? `url(${_src})` : null
+        }
+        break
+      case 'img':
         _component = 'img'
-      }
-
-      if (_component === 'img' && generateSrcSet) {
-        childProps.srcSet = srcSet
-      }
-
-      childProps.src = _src
+        if (generateSrcSet) {
+          childProps.srcSet = srcSet
+        }
+        childProps.src = _src
+        break
+      default:
+        // TODO - should we console.error something here? or make img the default?
+        break
     }
     return React.createElement(_component,
       childProps,

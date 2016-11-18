@@ -1,7 +1,8 @@
-/* global describe it beforeEach */
+/* global describe it beforeEach afterEach console */
 
 import expect from 'expect'
 import expectJSX from 'expect-jsx'
+import sinon from 'sinon'
 import sd from 'skin-deep'
 import React from 'react'
 
@@ -32,10 +33,11 @@ describe('<img> mode', () => {
   })
 })
 // These tests emulate the pre-mount state as `tree.getMountedInstance()` isn't called
-describe('<img> mode - pre-mount', () => {
+describe('<img> type - pre-mount', () => {
   beforeEach(() => {
     tree = sd.shallowRender(
       <Imgix
+        type='img'
         src={src}
       />
     )
@@ -46,8 +48,45 @@ describe('<img> mode - pre-mount', () => {
     expect(vdom.props.srcSet).toBe(null)
   })
 })
-describe('background mode', () => {
+
+describe('default type', () => {
+  it('should be img', () => {
+    const component = <Imgix src={src} />
+    expect(component.props.type).toBe('img')
+  })
+})
+
+const shouldBehaveLikeBg = function () {
+  it('should render a div', () => {
+    expect(vdom.type).toBe('div')
+  })
+  it('should have the appropriate styles', () => {
+    expect(vdom.props.style.backgroundImage).toInclude(src)
+    expect(vdom.props.style.backgroundSize).toBe('cover')
+  })
+}
+
+describe('background type', () => {
   beforeEach(() => {
+    tree = sd.shallowRender(
+      <Imgix
+        src={src}
+        type='bg'
+        aggressiveLoad
+      />
+    )
+    vdom = tree.getRenderOutput()
+    instance = tree.getMountedInstance()
+  })
+  shouldBehaveLikeBg()
+})
+
+// same as above but with bg prop instead of type='bg'
+describe('background mode', () => {
+  let sandbox
+  beforeEach(() => {
+    sandbox = sinon.sandbox.create()
+    sandbox.stub(console, 'warn')
     tree = sd.shallowRender(
       <Imgix
         src={src}
@@ -58,21 +97,26 @@ describe('background mode', () => {
     vdom = tree.getRenderOutput()
     instance = tree.getMountedInstance()
   })
-  it('should render a div', () => {
-    expect(vdom.type).toBe('div')
+  afterEach(() => {
+    sandbox.restore()
   })
-  it('should have the appropriate styles', () => {
-    expect(vdom.props.style.backgroundImage).toInclude(src)
-    expect(vdom.props.style.backgroundSize).toBe('cover')
+
+  // this test has to come first since react-is-deprecated only prints a warning
+  // the first time it's called
+  it('should print deprecation error', () => {
+    sinon.assert.calledWithExactly(console.warn, 'bg is depracated, use type="bg" instead')
   })
+
+  shouldBehaveLikeBg()
 })
+
 // These tests emulate the pre-mount state as `tree.getMountedInstance()` isn't called
 describe('background mode - pre-mount', () => {
   beforeEach(() => {
     tree = sd.shallowRender(
       <Imgix
         src={src}
-        bg
+        type='bg'
       />
     )
     vdom = tree.getRenderOutput()
@@ -88,7 +132,7 @@ describe('custom component', () => {
       <Imgix
         src={src}
         component='li'
-        bg
+        type='bg'
         aggressiveLoad
       />
     )
@@ -332,7 +376,7 @@ describe('image props', () => {
   it('accepts any prop passed to imgProps', () => {
     const imgProps = {
       alt: 'Example alt attribute',
-      dataSrc: 'https://mysource.imgix.net/demo.png'
+      'data-src': 'https://mysource.imgix.net/demo.png'
     }
     tree = sd.shallowRender(
       <Imgix
@@ -343,6 +387,6 @@ describe('image props', () => {
     vdom = tree.getRenderOutput()
 
     expect(vdom.props.alt).toEqual(imgProps.alt)
-    expect(vdom.props.dataSrc).toEqual(imgProps.dataSrc)
+    expect(vdom.props['data-src']).toEqual(imgProps['data-src'])
   })
 })
