@@ -56,6 +56,60 @@ describe('default type', () => {
   })
 })
 
+describe('<source> type', () => {
+  // verify that these will make it through
+  const imgProps = {
+    media: '(min-width: 1200px)',
+    sizes: '(max-width: 30em) 100vw, (max-width: 50em) 50vw, calc(33vw - 100px)',
+    type: 'image/webp'
+  }
+  const shouldBehaveLikeSource = function () {
+    it('should render a source', () => {
+      expect(vdom.type).toBe('source')
+    })
+
+    it('should have a srcSet prop', () => {
+      expect(vdom.props.srcSet).toExist()
+    })
+
+    Object.keys(imgProps).forEach(k => {
+      it(`should have props.${k} set`, () => {
+        expect(vdom.props[k]).toBe(imgProps[k])
+      })
+    })
+  }
+
+  describe('with generateSrcSet', () => {
+    beforeEach(() => {
+      tree = sd.shallowRender(
+        <Imgix src={src} type='source' generateSrcSet aggressiveLoad imgProps={imgProps} />
+      )
+      vdom = tree.getRenderOutput()
+      instance = tree.getMountedInstance()
+    })
+
+    shouldBehaveLikeSource()
+    it('should have props.srcSet set to a valid src', () => {
+      expect(vdom.props.srcSet).toInclude(src)
+      expect(vdom.props.srcSet).toInclude('2x')
+    })
+  })
+
+  describe('without generateSrcSet', () => {
+    beforeEach(() => {
+      tree = sd.shallowRender(
+        <Imgix src={src} type='source' generateSrcSet={false} aggressiveLoad imgProps={imgProps} />
+      )
+      vdom = tree.getRenderOutput()
+      instance = tree.getMountedInstance()
+    })
+    shouldBehaveLikeSource()
+    it('should have props.srcSet set to src', () => {
+      expect(vdom.props.srcSet).toMatch(new RegExp(`^${src}`))
+    })
+  })
+})
+
 describe('<picture> type', () => {
   let children, lastChild
   const shouldBehaveLikePicture = function () {

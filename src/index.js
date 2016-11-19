@@ -162,13 +162,28 @@ export default class ReactImgix extends Component {
         }
         childProps.src = _src
         break
+      case 'source':
+        if (!component) {
+          _component = 'source'
+        }
+
+        // inside of a <picture> element a <source> element ignores its src
+        // attribute in favor of srcSet so we set that with either an actual
+        // srcSet or a single src
+        childProps.srcSet = generateSrcSet ? srcSet : _src
+
+        // for now we'll take media from imgProps which isn't ideal because
+        //   a) this isn't an <img>
+        //   b) passing objects as props means that react will always rerender
+        //      since objects dont respond correctly to ===
+        break
       case 'picture':
         if (!component) {
           _component = 'picture'
         }
 
         //
-        // 2. we need to make sure an img is the last child so we look for one
+        // we need to make sure an img is the last child so we look for one
         //    in children
         //    a. if we find one, move it to the last entry if it's not already there
         //    b. if we don't find one, create one.
@@ -178,9 +193,12 @@ export default class ReactImgix extends Component {
           (child, idx) => React.cloneElement(child, Object.assign({}, child.props, { key: buildKey(idx) }))
         )
 
-        // look for an <img> or <ReactImgix type='img'> - if we don't find one
-        // we'll have to add it in manually
-        let imgIdx = _children.findIndex(c => (c.type === 'img' || ((c.type.hasOwnProperty('name') && c.type.name === 'ReactImgix') && c.props.type === 'img')))
+        // look for an <img> or <ReactImgix type='img'> - at the bare minimum we
+        // have to have a single <img> element or else ie will not work.
+        let imgIdx = _children.findIndex(c =>
+          (c.type === 'img' || ((c.type.hasOwnProperty('name') && c.type.name === 'ReactImgix') && c.props.type === 'img'))
+        )
+
         if (imgIdx === -1) {
           // didn't find one or empty array - either way make a new component to
           // put at the end. we pass in almost all of our props as defaults to
