@@ -170,8 +170,11 @@ export default class ReactImgix extends Component {
         // inside of a <picture> element a <source> element ignores its src
         // attribute in favor of srcSet so we set that with either an actual
         // srcSet or a single src
-        childProps.srcSet = generateSrcSet ? srcSet : _src
-
+        if (generateSrcSet) {
+          childProps.srcSet = `${_src}, ${srcSet}`
+        } else {
+          childProps.srcSet = _src
+        }
         // for now we'll take media from imgProps which isn't ideal because
         //   a) this isn't an <img>
         //   b) passing objects as props means that react will always rerender
@@ -211,10 +214,6 @@ export default class ReactImgix extends Component {
           //    type - specifically we're adding an img type so we hard-code this,
           //           also letting type=picture through would infinitely loop
 
-          //    TODO - what about css / class stuff? set on all the children or
-          //    the parent? have to see how ie handles this since it just ignores
-          //    the picture element and renders the <img>
-
           let imgProps = {
             aggressiveLoad,
             auto,
@@ -230,6 +229,12 @@ export default class ReactImgix extends Component {
             // make sure to set a unique key too
             key: buildKey(_children.length + 1)
           }
+
+          // we also remove className and styles if they exist - those passed in
+          // to our top-level component are set there, if you want them set on
+          // the child <img> element you can use `imgProps`.
+          delete imgProps.className
+          delete imgProps.styles
 
           // have to strip out props set to undefined since they will override
           // any defaultProps in the child
