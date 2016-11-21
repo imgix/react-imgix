@@ -1,3 +1,5 @@
+import polyfill from './array-findindex' // eslint-disable-line no-unused-vars
+
 import ReactDOM from 'react-dom'
 import React, {Component, PropTypes} from 'react'
 import { deprecate } from 'react-is-deprecated'
