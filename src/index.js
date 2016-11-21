@@ -244,7 +244,7 @@ export default class ReactImgix extends Component {
             if (imgProps[k] === undefined) delete imgProps[k]
           })
 
-          _children.push(React.createElement(this.constructor, imgProps))
+          _children.push(<ReactImgix {...imgProps} />)
         } else if (imgIdx !== (_children.length - 1)) {
           // found one, need to move it to the end
           _children.splice(_children.length - 1, 0, _children.splice(imgIdx, 1)[0])
