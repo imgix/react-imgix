@@ -251,7 +251,6 @@ export default class ReactImgix extends Component {
         }
         break
       default:
-        // TODO - should we console.warn something here?
         break
     }
     return React.createElement(_component,
