@@ -134,7 +134,7 @@ describe('<picture> type', () => {
   describe('with no children', () => {
     beforeEach(() => {
       tree = sd.shallowRender(
-        <Imgix src={src} type='picture' agressiveLoad />
+        <Imgix src={src} type='picture' agressiveLoad imgProps={{className: 'foobar'}} />
       )
       vdom = tree.getRenderOutput()
       instance = tree.getMountedInstance()
@@ -151,11 +151,11 @@ describe('<picture> type', () => {
     it('should pass props down to automatically added type=img', () => {
       // todo - verify all valid props are passed down to children as defaults
       // except for the ones we specifically exclude
-      let expectedProps = Object.assign({}, instance.props, {type: 'img'})
+      let expectedProps = Object.assign({}, instance.props, {type: 'img'}, instance.props.imgProps)
       delete expectedProps.bg
       delete expectedProps.children
       delete expectedProps.component
-
+      delete expectedProps.imgProps
       expect(lastChild.props).toEqual(expectedProps)
     })
   })

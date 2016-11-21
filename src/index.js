@@ -1,4 +1,4 @@
-import polyfill from './array-findindex' // eslint-disable-line no-unused-vars
+import './array-findindex'
 
 import ReactDOM from 'react-dom'
 import React, {Component, PropTypes} from 'react'
@@ -237,6 +237,12 @@ export default class ReactImgix extends Component {
           // the child <img> element you can use `imgProps`.
           delete imgProps.className
           delete imgProps.styles
+
+          // ..except if you have passed in imgProps you need those to not disappear,
+          // so we'll remove the imgProps attribute from our imgProps object (ugh!)
+          // and apply them now:
+          delete imgProps.imgProps
+          Object.assign(imgProps, this.props.imgProps)
 
           // have to strip out props set to undefined since they will override
           // any defaultProps in the child
