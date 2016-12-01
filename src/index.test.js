@@ -1,7 +1,8 @@
-/* global describe it beforeEach */
+/* global describe it beforeEach afterEach console */
 
 import expect from 'expect'
 import expectJSX from 'expect-jsx'
+import sinon from 'sinon'
 import sd from 'skin-deep'
 import React from 'react'
 
@@ -32,10 +33,11 @@ describe('<img> mode', () => {
   })
 })
 // These tests emulate the pre-mount state as `tree.getMountedInstance()` isn't called
-describe('<img> mode - pre-mount', () => {
+describe('<img> type - pre-mount', () => {
   beforeEach(() => {
     tree = sd.shallowRender(
       <Imgix
+        type='img'
         src={src}
       />
     )
@@ -46,8 +48,196 @@ describe('<img> mode - pre-mount', () => {
     expect(vdom.props.srcSet).toBe(null)
   })
 })
-describe('background mode', () => {
+
+describe('default type', () => {
+  it('should be img', () => {
+    const component = <Imgix src={src} />
+    expect(component.props.type).toBe('img')
+  })
+})
+
+describe('<source> type', () => {
+  // verify that these will make it through
+  const imgProps = {
+    media: '(min-width: 1200px)',
+    sizes: '(max-width: 30em) 100vw, (max-width: 50em) 50vw, calc(33vw - 100px)',
+    type: 'image/webp'
+  }
+  const shouldBehaveLikeSource = function () {
+    it('should render a source', () => {
+      expect(vdom.type).toBe('source')
+    })
+
+    it('should have a srcSet prop', () => {
+      expect(vdom.props.srcSet).toExist()
+    })
+
+    Object.keys(imgProps).forEach(k => {
+      it(`should have props.${k} set`, () => {
+        expect(vdom.props[k]).toBe(imgProps[k])
+      })
+    })
+  }
+
+  describe('with generateSrcSet', () => {
+    beforeEach(() => {
+      tree = sd.shallowRender(
+        <Imgix src={src} type='source' generateSrcSet aggressiveLoad imgProps={imgProps} />
+      )
+      vdom = tree.getRenderOutput()
+      instance = tree.getMountedInstance()
+    })
+
+    shouldBehaveLikeSource()
+    it('should have props.srcSet set to a valid src', () => {
+      expect(vdom.props.srcSet).toInclude(src)
+      expect(vdom.props.srcSet).toInclude('2x')
+    })
+  })
+
+  describe('without generateSrcSet', () => {
+    beforeEach(() => {
+      tree = sd.shallowRender(
+        <Imgix src={src} type='source' generateSrcSet={false} aggressiveLoad imgProps={imgProps} />
+      )
+      vdom = tree.getRenderOutput()
+      instance = tree.getMountedInstance()
+    })
+    shouldBehaveLikeSource()
+    it('should have props.srcSet set to src', () => {
+      expect(vdom.props.srcSet).toMatch(new RegExp(`^${src}`))
+    })
+  })
+})
+
+describe('<picture> type', () => {
+  let children, lastChild
+  const shouldBehaveLikePicture = function () {
+    it('should have key set on every child', () => {
+      expect(children.every(c => c.key !== undefined)).toBe(true)
+    })
+
+    it('should render a picture', () => {
+      expect(vdom.type).toBe('picture')
+    })
+
+    it('should have either an <img> or a <ReactImgix type=img> as its last child', () => {
+      if (lastChild.type.hasOwnProperty('name')) {
+        expect(lastChild.type.name).toBe('ReactImgix')
+        expect(lastChild.props.type).toBe('img')
+      } else {
+        expect(lastChild.type).toBe('img')
+      }
+    })
+  }
+
+  describe('with no children', () => {
+    beforeEach(() => {
+      tree = sd.shallowRender(
+        <Imgix src={src} type='picture' agressiveLoad imgProps={{className: 'foobar'}} />
+      )
+      vdom = tree.getRenderOutput()
+      instance = tree.getMountedInstance()
+      children = vdom.props.children
+      lastChild = children[children.length - 1]
+    })
+
+    shouldBehaveLikePicture()
+
+    it('should only have one child', () => {
+      expect(children.length).toBe(1)
+    })
+
+    it('should pass props down to automatically added type=img', () => {
+      // todo - verify all valid props are passed down to children as defaults
+      // except for the ones we specifically exclude
+      let expectedProps = Object.assign({}, instance.props, {type: 'img'}, instance.props.imgProps)
+      delete expectedProps.bg
+      delete expectedProps.children
+      delete expectedProps.component
+      delete expectedProps.imgProps
+      expect(lastChild.props).toEqual(expectedProps)
+    })
+  })
+
+  describe('with a <ReactImgix type=img> as a child', () => {
+    beforeEach(() => {
+      tree = sd.shallowRender(
+        <Imgix src={src} type='picture' agressiveLoad faces={false} entropy>
+          <Imgix src={src} type='img' />
+        </Imgix>
+      )
+      vdom = tree.getRenderOutput()
+      instance = tree.getMountedInstance()
+      children = vdom.props.children
+      lastChild = children[children.length - 1]
+    })
+
+    shouldBehaveLikePicture()
+    it('should only have one child', () => {
+      expect(children.length).toBe(1)
+    })
+    it('should not pass props down to children', () => {
+      expect(lastChild.props.faces).toBe(true)
+      expect(lastChild.props.entropy).toBe(false)
+    })
+  })
+
+  describe('with an <img> as a child', () => {
+    beforeEach(() => {
+      tree = sd.shallowRender(
+        <Imgix src={src} type='picture' agressiveLoad faces={false} entropy>
+          <img src={src} />
+        </Imgix>
+      )
+      vdom = tree.getRenderOutput()
+      instance = tree.getMountedInstance()
+      children = vdom.props.children
+      lastChild = children[children.length - 1]
+    })
+
+    shouldBehaveLikePicture()
+    it('should only have one child', () => {
+      expect(children.length).toBe(1)
+    })
+    it('should not pass props down to children', () => {
+      expect(lastChild.props.faces).toBe(undefined)
+      expect(lastChild.props.entropy).toBe(undefined)
+    })
+  })
+})
+
+const shouldBehaveLikeBg = function () {
+  it('should render a div', () => {
+    expect(vdom.type).toBe('div')
+  })
+  it('should have the appropriate styles', () => {
+    expect(vdom.props.style.backgroundImage).toInclude(src)
+    expect(vdom.props.style.backgroundSize).toBe('cover')
+  })
+}
+
+describe('background type', () => {
   beforeEach(() => {
+    tree = sd.shallowRender(
+      <Imgix
+        src={src}
+        type='bg'
+        aggressiveLoad
+      />
+    )
+    vdom = tree.getRenderOutput()
+    instance = tree.getMountedInstance()
+  })
+  shouldBehaveLikeBg()
+})
+
+// same as above but with bg prop instead of type='bg'
+describe('background mode', () => {
+  let sandbox
+  beforeEach(() => {
+    sandbox = sinon.sandbox.create()
+    sandbox.stub(console, 'warn')
     tree = sd.shallowRender(
       <Imgix
         src={src}
@@ -58,21 +248,26 @@ describe('background mode', () => {
     vdom = tree.getRenderOutput()
     instance = tree.getMountedInstance()
   })
-  it('should render a div', () => {
-    expect(vdom.type).toBe('div')
+  afterEach(() => {
+    sandbox.restore()
   })
-  it('should have the appropriate styles', () => {
-    expect(vdom.props.style.backgroundImage).toInclude(src)
-    expect(vdom.props.style.backgroundSize).toBe('cover')
+
+  // this test has to come first since react-is-deprecated only prints a warning
+  // the first time it's called
+  it('should print deprecation error', () => {
+    sinon.assert.calledWithExactly(console.warn, 'bg is depracated, use type="bg" instead')
   })
+
+  shouldBehaveLikeBg()
 })
+
 // These tests emulate the pre-mount state as `tree.getMountedInstance()` isn't called
 describe('background mode - pre-mount', () => {
   beforeEach(() => {
     tree = sd.shallowRender(
       <Imgix
         src={src}
-        bg
+        type='bg'
       />
     )
     vdom = tree.getRenderOutput()
@@ -88,7 +283,7 @@ describe('custom component', () => {
       <Imgix
         src={src}
         component='li'
-        bg
+        type='bg'
         aggressiveLoad
       />
     )
@@ -332,7 +527,7 @@ describe('image props', () => {
   it('accepts any prop passed to imgProps', () => {
     const imgProps = {
       alt: 'Example alt attribute',
-      dataSrc: 'https://mysource.imgix.net/demo.png'
+      'data-src': 'https://mysource.imgix.net/demo.png'
     }
     tree = sd.shallowRender(
       <Imgix
@@ -343,6 +538,6 @@ describe('image props', () => {
     vdom = tree.getRenderOutput()
 
     expect(vdom.props.alt).toEqual(imgProps.alt)
-    expect(vdom.props.dataSrc).toEqual(imgProps.dataSrc)
+    expect(vdom.props['data-src']).toEqual(imgProps['data-src'])
   })
 })

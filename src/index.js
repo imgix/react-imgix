@@ -1,11 +1,17 @@
+import './array-findindex'
+
 import ReactDOM from 'react-dom'
 import React, {Component, PropTypes} from 'react'
+import { deprecate } from 'react-is-deprecated'
 
 import processImage from './support.js'
 
 const roundToNearest = (size, precision) => precision * Math.ceil(size / precision)
 
 const isStringNotEmpty = (str) => str && typeof str === 'string' && str.length > 0
+const buildKey = (idx) => `react-imgix-${idx}`
+
+const validTypes = ['bg', 'img', 'picture', 'source']
 
 const defaultMap = {
   width: 'defaultWidth',
@@ -26,31 +32,35 @@ const findSizeForDimension = (dim, props = {}, state = {}) => {
 
 export default class ReactImgix extends Component {
   static propTypes = {
-    src: PropTypes.string.isRequired,
-    className: PropTypes.string,
-    bg: PropTypes.bool,
-    component: PropTypes.string,
-    fit: PropTypes.string,
-    auto: PropTypes.array,
-    crop: PropTypes.string,
-    faces: PropTypes.bool,
     aggressiveLoad: PropTypes.bool,
-    fluid: PropTypes.bool,
+    auto: PropTypes.array,
+    // we don't set this in defaultProps because then just referencing the variable
+    // prints the deprecation notice and we only ever check for truthiness so
+    // undefined and false are close enough.
+    bg: deprecate(PropTypes.bool, 'bg is depracated, use type="bg" instead'),
     children: PropTypes.any,
+    className: PropTypes.string,
+    component: PropTypes.string,
+    crop: PropTypes.string,
     customParams: PropTypes.object,
     entropy: PropTypes.bool,
-    generateSrcSet: PropTypes.bool
+    faces: PropTypes.bool,
+    fit: PropTypes.string,
+    fluid: PropTypes.bool,
+    generateSrcSet: PropTypes.bool,
+    src: PropTypes.string.isRequired,
+    type: PropTypes.oneOf(validTypes)
   };
   static defaultProps = {
-    precision: 100,
-    bg: false,
-    fluid: true,
     aggressiveLoad: false,
+    auto: ['format'],
+    entropy: false,
     faces: true,
     fit: 'crop',
-    entropy: false,
-    auto: ['format'],
-    generateSrcSet: true
+    fluid: true,
+    generateSrcSet: true,
+    precision: 100,
+    type: 'img'
   };
   state = {
     width: null,
@@ -87,6 +97,7 @@ export default class ReactImgix extends Component {
       fit,
       generateSrcSet,
       src,
+      type,
       ...other
     } = this.props
     let _src = null
@@ -104,6 +115,8 @@ export default class ReactImgix extends Component {
     let _fit = false
     if (entropy) _fit = 'crop'
     if (fit) _fit = fit
+
+    let _children = children
 
     if (this.state.mounted || aggressiveLoad) {
       const srcOptions = {
@@ -128,28 +141,126 @@ export default class ReactImgix extends Component {
       height: other.height <= 1 ? null : other.height
     }
 
-    if (bg) {
-      if (!component) {
-        _component = 'div'
-      }
-      childProps.style = {
-        ...childProps.style,
-        backgroundSize: 'cover',
-        backgroundImage: isStringNotEmpty(_src) ? `url(${_src})` : null
-      }
-    } else {
-      if (!component) {
-        _component = 'img'
-      }
+    // TODO: remove _type once bg option is gone
+    const _type = bg ? 'bg' : type
+    switch (_type) {
+      case 'bg':
+        if (!component) {
+          _component = 'div'
+        }
+        childProps.style = {
+          ...childProps.style,
+          backgroundSize: 'cover',
+          backgroundImage: isStringNotEmpty(_src) ? `url(${_src})` : null
+        }
+        break
+      case 'img':
+        if (!component) {
+          _component = 'img'
+        }
 
-      if (_component === 'img' && generateSrcSet) {
-        childProps.srcSet = srcSet
-      }
+        if (generateSrcSet) {
+          childProps.srcSet = srcSet
+        }
+        childProps.src = _src
+        break
+      case 'source':
+        if (!component) {
+          _component = 'source'
+        }
 
-      childProps.src = _src
+        // inside of a <picture> element a <source> element ignores its src
+        // attribute in favor of srcSet so we set that with either an actual
+        // srcSet or a single src
+        if (generateSrcSet) {
+          childProps.srcSet = `${_src}, ${srcSet}`
+        } else {
+          childProps.srcSet = _src
+        }
+        // for now we'll take media from imgProps which isn't ideal because
+        //   a) this isn't an <img>
+        //   b) passing objects as props means that react will always rerender
+        //      since objects dont respond correctly to ===
+        break
+      case 'picture':
+        if (!component) {
+          _component = 'picture'
+        }
+
+        //
+        // we need to make sure an img is the last child so we look for one
+        //    in children
+        //    a. if we find one, move it to the last entry if it's not already there
+        //    b. if we don't find one, create one.
+
+        // make sure all of our children have key set, otherwise we get react warnings
+        _children = React.Children.map(React.Children.toArray(children),
+          (child, idx) => React.cloneElement(child, Object.assign({}, child.props, { key: buildKey(idx) }))
+        )
+
+        // look for an <img> or <ReactImgix type='img'> - at the bare minimum we
+        // have to have a single <img> element or else ie will not work.
+        let imgIdx = _children.findIndex(c =>
+          (c.type === 'img' || ((c.type.hasOwnProperty('name') && c.type.name === 'ReactImgix') && c.props.type === 'img'))
+        )
+
+        if (imgIdx === -1) {
+          // didn't find one or empty array - either way make a new component to
+          // put at the end. we pass in almost all of our props as defaults to
+          // our children, exceptions are:
+          //
+          //    bg - only <source> and <img> elements are allowable as children of
+          //         <picture> so we strip this option
+          //    children - we don't want to get recursive here
+          //    component - same reason as bg
+          //    type - specifically we're adding an img type so we hard-code this,
+          //           also letting type=picture through would infinitely loop
+
+          let imgProps = {
+            aggressiveLoad,
+            auto,
+            customParams,
+            crop,
+            entropy,
+            faces,
+            fit,
+            generateSrcSet,
+            src,
+            type: 'img',
+            ...other,
+            // make sure to set a unique key too
+            key: buildKey(_children.length + 1)
+          }
+
+          // we also remove className and styles if they exist - those passed in
+          // to our top-level component are set there, if you want them set on
+          // the child <img> element you can use `imgProps`.
+          delete imgProps.className
+          delete imgProps.styles
+
+          // ..except if you have passed in imgProps you need those to not disappear,
+          // so we'll remove the imgProps attribute from our imgProps object (ugh!)
+          // and apply them now:
+          delete imgProps.imgProps
+          Object.assign(imgProps, this.props.imgProps)
+
+          // have to strip out props set to undefined since they will override
+          // any defaultProps in the child
+          Object.keys(imgProps).forEach(k => {
+            if (imgProps[k] === undefined) delete imgProps[k]
+          })
+
+          _children.push(<ReactImgix {...imgProps} />)
+        } else if (imgIdx !== (_children.length - 1)) {
+          // found one, need to move it to the end
+          _children.splice(_children.length - 1, 0, _children.splice(imgIdx, 1)[0])
+        }
+        break
+      default:
+        break
     }
     return React.createElement(_component,
       childProps,
-      children)
+      _children)
   }
 }
