@@ -20,39 +20,56 @@ import Imgix from 'react-imgix'
 
 #### src={string}
 required, usually in the form: `https://[your_domain].imgix.net/[image]`. Don't include any parameters.
+
 #### aggressiveLoad={bool}
 whether to wait until the component has mounted to render the image, useful for auto-sizing and server-side rendering, defaults to false
+
 #### auto={array}
 array of values to pass to Imgix's auto param, defaults to `['format']`
+
 #### type={string} 
 what kind of component to render, one of `img`, `bg`, `picture`, `source`. Defaults to `img`
+
 #### bg={bool}
 _DEPRECATED, use `type='bg'` instead_. whether to render the image as a background of the component, defaults to `false`.  
 _To be deprecated in v6._
+
 #### component={string}
 wrapper component to use when rendering a `bg`, defaults to `div`
+
 #### className={string}
 `className` applied to top level component. To set `className` on the image itself see `imgProps`. 
+
 #### entropy={bool}
 whether or not to crop using points of interest. See Imgix API for more details. Defaults to `false`
+
 #### faces={bool}
 whether to crop to faces, defaults to `true`
+
 #### crop={string}
 sets specific crop, overriding faces and entropy flags. Useful for specifying fallbacks for faces like `faces,top,right`
+
 #### fit={string}
 see Imgix's API, defaults to `crop`
+
 #### fluid={bool}
 whether to fit the image requested to the size of the component rendered, defaults to `true`
+
 #### precision={number}
 round to nearest x for image width and height, useful for caching, defaults to `100`
+
 #### height={number}
 force images to be a certain height, overrides `precision`
+
 #### width={number}
 force images to be a certain width, overrides `precision`
+
 #### generateSrcSet={bool} 
 generate `2x` and `3x` src sets when using an `<img>` tag. Defaults to `true`
+
 #### customParams={object}
 any other Imgix params to add to the image `src`
+
 #### imgProps={object}
 any other attributes to add to the html node (example: `alt`, `data-*`, `className`)
 
