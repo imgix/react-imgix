@@ -37,7 +37,7 @@ export default class ReactImgix extends Component {
     // we don't set this in defaultProps because then just referencing the variable
     // prints the deprecation notice and we only ever check for truthiness so
     // undefined and false are close enough.
-    bg: deprecate(PropTypes.bool, 'bg is depracated, use type="bg" instead'),
+    bg: deprecate(PropTypes.bool, 'bg is deprecated, use type="bg" instead'),
     children: PropTypes.any,
     className: PropTypes.string,
     component: PropTypes.string,
