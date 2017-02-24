@@ -255,7 +255,7 @@ describe('background mode', () => {
   // this test has to come first since react-is-deprecated only prints a warning
   // the first time it's called
   it('should print deprecation error', () => {
-    sinon.assert.calledWithExactly(console.warn, 'bg is depracated, use type="bg" instead')
+    sinon.assert.calledWithExactly(console.warn, 'bg is deprecated, use type="bg" instead')
   })
 
   shouldBehaveLikeBg()
