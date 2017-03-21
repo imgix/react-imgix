@@ -34,6 +34,9 @@ what kind of component to render, one of `img`, `bg`, `picture`, `source`. Defau
 _DEPRECATED, use `type='bg'` instead_. whether to render the image as a background of the component, defaults to `false`.  
 _To be deprecated in v6._
 
+#### backgroundSize={string}
+Allow overriding the backgroundStyle property applied to the component when rendering a `bg`, defaults to `cover`.
+
 #### component={string}
 wrapper component to use when rendering a `bg`, defaults to `div`
 
