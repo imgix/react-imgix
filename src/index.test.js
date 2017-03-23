@@ -207,13 +207,13 @@ describe('<picture> type', () => {
   })
 })
 
-const shouldBehaveLikeBg = function () {
+const shouldBehaveLikeBg = function (size = 'cover') {
   it('should render a div', () => {
     expect(vdom.type).toBe('div')
   })
   it('should have the appropriate styles', () => {
     expect(vdom.props.style.backgroundImage).toInclude(src)
-    expect(vdom.props.style.backgroundSize).toBe('cover')
+    expect(vdom.props.style.backgroundSize).toBe(size)
   })
 }
 
@@ -230,6 +230,38 @@ describe('background type', () => {
     instance = tree.getMountedInstance()
   })
   shouldBehaveLikeBg()
+})
+
+describe('background type without backgroundSize', () => {
+  beforeEach(() => {
+    tree = sd.shallowRender(
+      <Imgix
+        src={src}
+        type='bg'
+        imgProps={{style: {backgroundSize: null}}}
+        aggressiveLoad
+      />
+    )
+    vdom = tree.getRenderOutput()
+    instance = tree.getMountedInstance()
+  })
+  shouldBehaveLikeBg(null)
+})
+
+describe('background type with background contain', () => {
+  beforeEach(() => {
+    tree = sd.shallowRender(
+      <Imgix
+        src={src}
+        type='bg'
+        imgProps={{style: {backgroundSize: 'contain'}}}
+        aggressiveLoad
+      />
+    )
+    vdom = tree.getRenderOutput()
+    instance = tree.getMountedInstance()
+  })
+  shouldBehaveLikeBg('contain')
 })
 
 // same as above but with bg prop instead of type='bg'
