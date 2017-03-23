@@ -47,7 +47,6 @@ export default class ReactImgix extends Component {
     faces: PropTypes.bool,
     fit: PropTypes.string,
     fluid: PropTypes.bool,
-    backgroundSize: PropTypes.string,
     generateSrcSet: PropTypes.bool,
     src: PropTypes.string.isRequired,
     type: PropTypes.oneOf(validTypes)
@@ -55,7 +54,6 @@ export default class ReactImgix extends Component {
   static defaultProps = {
     aggressiveLoad: false,
     auto: ['format'],
-    backgroundSize: 'cover',
     entropy: false,
     faces: true,
     fit: 'crop',
@@ -90,7 +88,6 @@ export default class ReactImgix extends Component {
       aggressiveLoad,
       auto,
       bg,
-      backgroundSize,
       children,
       component,
       customParams,
@@ -152,9 +149,9 @@ export default class ReactImgix extends Component {
           _component = 'div'
         }
         childProps.style = {
-          ...childProps.style,
-          backgroundSize: backgroundSize,
-          backgroundImage: isStringNotEmpty(_src) ? `url(${_src})` : null
+          backgroundSize: 'cover',
+          backgroundImage: isStringNotEmpty(_src) ? `url(${_src})` : null,
+          ...childProps.style
         }
         break
       case 'img':
