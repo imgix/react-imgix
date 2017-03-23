@@ -232,13 +232,29 @@ describe('background type', () => {
   shouldBehaveLikeBg()
 })
 
-describe('background type with backgroundSize', () => {
+describe('background type without backgroundSize', () => {
   beforeEach(() => {
     tree = sd.shallowRender(
       <Imgix
         src={src}
         type='bg'
-        backgroundSize="contain"
+        imgProps={{style: {backgroundSize: null}}}
+        aggressiveLoad
+      />
+    )
+    vdom = tree.getRenderOutput()
+    instance = tree.getMountedInstance()
+  })
+  shouldBehaveLikeBg(null)
+})
+
+describe('background type with background contain', () => {
+  beforeEach(() => {
+    tree = sd.shallowRender(
+      <Imgix
+        src={src}
+        type='bg'
+        imgProps={{style: {backgroundSize: 'contain'}}}
         aggressiveLoad
       />
     )
