@@ -1,4 +1,10 @@
 
+v5.3.0 / 2017-03-24
+==================
+
+  * Background Size adjustments (#89)
+  * fix typo - deprecated warning (#81)
+
 v5.2.0 / 2016-12-02
 ==================
 
