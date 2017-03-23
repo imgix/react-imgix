@@ -73,7 +73,7 @@ any other Imgix params to add to the image `src`
 #### imgProps={object}
 any other attributes to add to the html node (example: `alt`, `data-*`, `className`)
 
-_Note_: if you use type='bg' the css property background-size is set to 'cover' by default. To override this behaviour you can change the background Size by overriding it with a string such as `'contain'`, or to `null` for controlling the style with CSS. 
+_Note_: if you use type='bg' the css property background-size is set to 'cover' by default. To override this behaviour you can change the background size by overriding it with a string such as `'contain'`, or to `null` for controlling the style with CSS. 
 
 ```js
 <Imgix
