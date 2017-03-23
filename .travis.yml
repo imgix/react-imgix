@@ -1,10 +1,9 @@
 language: node_js
 node_js:
-  - "stable"
-  - "6"
-  - "5"
-  - "4"
-  - "0.12"
+  - stable
+  - '6'
+  - '5'
+  - '4'
 env:
   - REACT=0.14
 before_script: "sh install-relevant-react.sh"
