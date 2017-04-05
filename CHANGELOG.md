@@ -1,4 +1,9 @@
 
+v5.4.0 / 2017-04-06
+==================
+
+  * add onMounted callback with access to underlying node (#94)
+
 v5.3.0 / 2017-03-24
 ==================
 
