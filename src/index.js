@@ -48,6 +48,7 @@ export default class ReactImgix extends Component {
     fit: PropTypes.string,
     fluid: PropTypes.bool,
     generateSrcSet: PropTypes.bool,
+    onMounted: PropTypes.func,
     src: PropTypes.string.isRequired,
     type: PropTypes.oneOf(validTypes)
   };
@@ -59,6 +60,7 @@ export default class ReactImgix extends Component {
     fit: 'crop',
     fluid: true,
     generateSrcSet: true,
+    onMounted: () => {},
     precision: 100,
     type: 'img'
   };
@@ -75,6 +77,7 @@ export default class ReactImgix extends Component {
       height: node.scrollHeight,
       mounted: true
     })
+    this.props.onMounted(node)
   };
 
   componentDidMount = () => {

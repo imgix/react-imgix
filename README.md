@@ -55,6 +55,9 @@ see Imgix's API, defaults to `crop`
 #### fluid={bool}
 whether to fit the image requested to the size of the component rendered, defaults to `true`
 
+#### onMounted={func}
+called on `componentDidMount` with the mounted DOM node as an argument
+
 #### precision={number}
 round to nearest x for image width and height, useful for caching, defaults to `100`
 
