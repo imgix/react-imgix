@@ -5,6 +5,7 @@ import expectJSX from 'expect-jsx'
 import sinon from 'sinon'
 import sd from 'skin-deep'
 import React from 'react'
+import ReactDOM from 'react-dom'
 
 import Imgix from './index.js'
 
@@ -571,5 +572,24 @@ describe('image props', () => {
 
     expect(vdom.props.alt).toEqual(imgProps.alt)
     expect(vdom.props['data-src']).toEqual(imgProps['data-src'])
+  })
+
+  it('onMounted callback is called', () => {
+    const onMountedSpy = sinon.spy()
+    const mockImage = <img />
+
+    tree = sd.shallowRender(
+      <Imgix
+        src={'https://mysource.imgix.net/demo.png'}
+        onMounted={onMountedSpy}
+      />
+    )
+    instance = tree.getMountedInstance()
+    sinon.stub(ReactDOM, 'findDOMNode', () => (mockImage))
+    instance.componentDidMount()
+
+    sinon.assert.calledWith(onMountedSpy, mockImage)
+
+    ReactDOM.findDOMNode.restore()
   })
 })
