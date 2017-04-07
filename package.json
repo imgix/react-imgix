@@ -48,7 +48,7 @@
     "expect-jsx": "^2.1.0",
     "mocha": "^3.0.1",
     "mocha-babel": "^3.0.0",
-    "react": "^15.1.0",
+    "react": "^15.5.0",
     "react-addons-test-utils": "^15.1.0",
     "react-dom": "^15.1.0",
     "sinon": "^1.17.6",
