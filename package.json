@@ -50,7 +50,7 @@
     "mocha-babel": "^3.0.0",
     "react": "^15.1.0",
     "react-addons-test-utils": "^15.1.0",
-    "react-dom": "^15.1.0",
+    "react-dom": "^15.5.1",
     "sinon": "^1.17.6",
     "skin-deep": "^0.16.0",
     "standard": "^8.2.0",
