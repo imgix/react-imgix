@@ -1,34 +1,34 @@
-import './array-findindex'
+import './array-findindex';
 
-import ReactDOM from 'react-dom'
-import React, {Component, PropTypes} from 'react'
-import { deprecate } from 'react-is-deprecated'
+import ReactDOM from 'react-dom';
+import React, { Component, PropTypes } from 'react';
+import { deprecate } from 'react-is-deprecated';
 
-import processImage from './support.js'
+import processImage from './support.js';
 
-const roundToNearest = (size, precision) => precision * Math.ceil(size / precision)
+const roundToNearest = (size, precision) => precision * Math.ceil(size / precision);
 
-const isStringNotEmpty = (str) => str && typeof str === 'string' && str.length > 0
-const buildKey = (idx) => `react-imgix-${idx}`
+const isStringNotEmpty = str => str && typeof str === 'string' && str.length > 0;
+const buildKey = idx => `react-imgix-${idx}`;
 
-const validTypes = ['bg', 'img', 'picture', 'source']
+const validTypes = ['bg', 'img', 'picture', 'source'];
 
 const defaultMap = {
   width: 'defaultWidth',
-  height: 'defaultHeight'
-}
+  height: 'defaultHeight',
+};
 
 const findSizeForDimension = (dim, props = {}, state = {}) => {
   if (props[dim]) {
-    return props[dim]
+    return props[dim];
   } else if (props.fluid && state[dim]) {
-    return roundToNearest(state[dim], props.precision)
+    return roundToNearest(state[dim], props.precision);
   } else if (props[defaultMap[dim]]) {
-    return props[defaultMap[dim]]
+    return props[defaultMap[dim]];
   } else {
-    return 1
+    return 1;
   }
-}
+};
 
 export default class ReactImgix extends Component {
   static propTypes = {
@@ -50,7 +50,7 @@ export default class ReactImgix extends Component {
     generateSrcSet: PropTypes.bool,
     onMounted: PropTypes.func,
     src: PropTypes.string.isRequired,
-    type: PropTypes.oneOf(validTypes)
+    type: PropTypes.oneOf(validTypes),
   };
   static defaultProps = {
     aggressiveLoad: false,
@@ -62,31 +62,31 @@ export default class ReactImgix extends Component {
     generateSrcSet: true,
     onMounted: () => {},
     precision: 100,
-    type: 'img'
+    type: 'img',
   };
   state = {
     width: null,
     height: null,
-    mounted: false
+    mounted: false,
   };
 
   forceLayout = () => {
-    const node = ReactDOM.findDOMNode(this)
+    const node = ReactDOM.findDOMNode(this);
     this.setState({
       width: node.scrollWidth,
       height: node.scrollHeight,
-      mounted: true
-    })
-    this.props.onMounted(node)
+      mounted: true,
+    });
+    this.props.onMounted(node);
   };
 
   componentDidMount = () => {
-    this.forceLayout()
+    this.forceLayout();
   };
 
   _findSizeForDimension = dim => findSizeForDimension(dim, this.props, this.state);
 
-  render () {
+  render() {
     const {
       aggressiveLoad,
       auto,
@@ -102,24 +102,24 @@ export default class ReactImgix extends Component {
       src,
       type,
       ...other
-    } = this.props
-    let _src = null
-    let srcSet = null
-    let _component = component
+    } = this.props;
+    let _src = null;
+    let srcSet = null;
+    let _component = component;
 
-    let width = this._findSizeForDimension('width')
-    let height = this._findSizeForDimension('height')
+    let width = this._findSizeForDimension('width');
+    let height = this._findSizeForDimension('height');
 
-    let _crop = false
-    if (faces) _crop = 'faces'
-    if (entropy) _crop = 'entropy'
-    if (crop) _crop = crop
+    let _crop = false;
+    if (faces) _crop = 'faces';
+    if (entropy) _crop = 'entropy';
+    if (crop) _crop = crop;
 
-    let _fit = false
-    if (entropy) _fit = 'crop'
-    if (fit) _fit = fit
+    let _fit = false;
+    if (entropy) _fit = 'crop';
+    if (fit) _fit = fit;
 
-    let _children = children
+    let _children = children;
 
     if (this.state.mounted || aggressiveLoad) {
       const srcOptions = {
@@ -128,66 +128,66 @@ export default class ReactImgix extends Component {
         crop: _crop,
         fit: _fit,
         width,
-        height
-      }
+        height,
+      };
 
-      _src = processImage(src, srcOptions)
-      const dpr2 = processImage(src, {...srcOptions, dpr: 2})
-      const dpr3 = processImage(src, {...srcOptions, dpr: 3})
-      srcSet = `${dpr2} 2x, ${dpr3} 3x`
+      _src = processImage(src, srcOptions);
+      const dpr2 = processImage(src, { ...srcOptions, dpr: 2 });
+      const dpr3 = processImage(src, { ...srcOptions, dpr: 3 });
+      srcSet = `${dpr2} 2x, ${dpr3} 3x`;
     }
 
     let childProps = {
       ...this.props.imgProps,
       className: this.props.className,
       width: other.width <= 1 ? null : other.width,
-      height: other.height <= 1 ? null : other.height
-    }
+      height: other.height <= 1 ? null : other.height,
+    };
 
     // TODO: remove _type once bg option is gone
-    const _type = bg ? 'bg' : type
+    const _type = bg ? 'bg' : type;
     switch (_type) {
       case 'bg':
         if (!component) {
-          _component = 'div'
+          _component = 'div';
         }
         childProps.style = {
           backgroundSize: 'cover',
           backgroundImage: isStringNotEmpty(_src) ? `url(${_src})` : null,
-          ...childProps.style
-        }
-        break
+          ...childProps.style,
+        };
+        break;
       case 'img':
         if (!component) {
-          _component = 'img'
+          _component = 'img';
         }
 
         if (generateSrcSet) {
-          childProps.srcSet = srcSet
+          childProps.srcSet = srcSet;
         }
-        childProps.src = _src
-        break
+        childProps.src = _src;
+        break;
       case 'source':
         if (!component) {
-          _component = 'source'
+          _component = 'source';
         }
 
         // inside of a <picture> element a <source> element ignores its src
         // attribute in favor of srcSet so we set that with either an actual
         // srcSet or a single src
         if (generateSrcSet) {
-          childProps.srcSet = `${_src}, ${srcSet}`
+          childProps.srcSet = `${_src}, ${srcSet}`;
         } else {
-          childProps.srcSet = _src
+          childProps.srcSet = _src;
         }
         // for now we'll take media from imgProps which isn't ideal because
         //   a) this isn't an <img>
         //   b) passing objects as props means that react will always rerender
         //      since objects dont respond correctly to ===
-        break
+        break;
       case 'picture':
         if (!component) {
-          _component = 'picture'
+          _component = 'picture';
         }
 
         //
@@ -197,15 +197,16 @@ export default class ReactImgix extends Component {
         //    b. if we don't find one, create one.
 
         // make sure all of our children have key set, otherwise we get react warnings
-        _children = React.Children.map(React.Children.toArray(children),
-          (child, idx) => React.cloneElement(child, Object.assign({}, child.props, { key: buildKey(idx) }))
-        )
+        _children = React.Children.map(React.Children.toArray(children), (child, idx) =>
+          React.cloneElement(child, Object.assign({}, child.props, { key: buildKey(idx) })));
 
         // look for an <img> or <ReactImgix type='img'> - at the bare minimum we
         // have to have a single <img> element or else ie will not work.
-        let imgIdx = _children.findIndex(c =>
-          (c.type === 'img' || ((c.type.hasOwnProperty('name') && c.type.name === 'ReactImgix') && c.props.type === 'img'))
-        )
+        let imgIdx = _children.findIndex(
+          c =>
+            c.type === 'img' ||
+            (c.type.hasOwnProperty('name') && c.type.name === 'ReactImgix' && c.props.type === 'img')
+        );
 
         if (imgIdx === -1) {
           // didn't find one or empty array - either way make a new component to
@@ -232,38 +233,36 @@ export default class ReactImgix extends Component {
             type: 'img',
             ...other,
             // make sure to set a unique key too
-            key: buildKey(_children.length + 1)
-          }
+            key: buildKey(_children.length + 1),
+          };
 
           // we also remove className and styles if they exist - those passed in
           // to our top-level component are set there, if you want them set on
           // the child <img> element you can use `imgProps`.
-          delete imgProps.className
-          delete imgProps.styles
+          delete imgProps.className;
+          delete imgProps.styles;
 
           // ..except if you have passed in imgProps you need those to not disappear,
           // so we'll remove the imgProps attribute from our imgProps object (ugh!)
           // and apply them now:
-          delete imgProps.imgProps
-          Object.assign(imgProps, this.props.imgProps)
+          delete imgProps.imgProps;
+          Object.assign(imgProps, this.props.imgProps);
 
           // have to strip out props set to undefined since they will override
           // any defaultProps in the child
           Object.keys(imgProps).forEach(k => {
-            if (imgProps[k] === undefined) delete imgProps[k]
-          })
+            if (imgProps[k] === undefined) delete imgProps[k];
+          });
 
-          _children.push(<ReactImgix {...imgProps} />)
-        } else if (imgIdx !== (_children.length - 1)) {
+          _children.push(<ReactImgix {...imgProps} />);
+        } else if (imgIdx !== _children.length - 1) {
           // found one, need to move it to the end
-          _children.splice(_children.length - 1, 0, _children.splice(imgIdx, 1)[0])
+          _children.splice(_children.length - 1, 0, _children.splice(imgIdx, 1)[0]);
         }
-        break
+        break;
       default:
-        break
+        break;
     }
-    return React.createElement(_component,
-      childProps,
-      _children)
+    return React.createElement(_component, childProps, _children);
   }
 }
