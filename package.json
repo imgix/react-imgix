@@ -55,6 +55,6 @@
 		"react-addons-test-utils": "^15.5.0",
 		"react-dom": "^15.5.1",
 		"sinon": "^2.1.0",
-		"skin-deep": "^1.0.0-alpha2"
+		"skin-deep": "^1.0.0"
 	}
 }
