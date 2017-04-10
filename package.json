@@ -30,7 +30,8 @@
 	"homepage": "https://github.com/imgix/react-imgix#readme",
 	"peerDependencies": {
 		"react": ">=0.14",
-		"react-dom": ">=0.14"
+		"react-dom": ">=0.14",
+		"prop-types": ">=15.5.6"
 	},
 	"dependencies": {
 		"js-base64": "~2.1.9",

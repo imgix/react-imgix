@@ -463,7 +463,7 @@ describe('image props', () => {
 
     tree = sd.shallowRender(<Imgix src={'https://mysource.imgix.net/demo.png'} onMounted={onMountedSpy} />);
     instance = tree.getMountedInstance();
-    sinon.stub(ReactDOM, 'findDOMNode', () => mockImage);
+    sinon.stub(ReactDOM, 'findDOMNode').callsFake(() => mockImage);
     instance.componentDidMount();
 
     sinon.assert.calledWith(onMountedSpy, mockImage);
