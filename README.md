@@ -76,7 +76,8 @@ any other Imgix params to add to the image `src`
 _For example_:
 ```js
 <Imgix
-    customParams={{mask: 'ellipse'}}/>
+    customParams={{mask: 'ellipse'}}
+/>
  ```
 
 #### imgProps={object}
@@ -88,7 +89,8 @@ _Note_: if you use type='bg' the css property background-size is set to 'cover' 
 <Imgix
     src={src}
     type='bg'
-    imgProps={{style: {backgroundSize: 'contain'}}}/>
+    imgProps={{style: {backgroundSize: 'contain'}}}
+/>
  ```
 
 ### Picture Support
