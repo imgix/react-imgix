@@ -1,3 +1,8 @@
+v6.0.0 / unknown
+==================
+  * **Breaking:** React > 15 is now required (#101) - @modosc
+  * **Breaking:** `bg` prop deprecated, use `type='bg'` instead (#101) - @modosc
+  * fix React 15.5 warnings (#102, #104) - @modosc
 
 v5.4.0 / 2017-04-06
 ==================
@@ -175,4 +180,3 @@ v1.0.0 / 2015-09-23
   * Change to babel stage 0
   * Add ReactImgix component
   * Initial Commit
-

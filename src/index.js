@@ -3,7 +3,6 @@ import './array-findindex';
 import ReactDOM from 'react-dom';
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { deprecate } from 'react-is-deprecated';
 
 import processImage from './support.js';
 
@@ -35,10 +34,6 @@ export default class ReactImgix extends Component {
   static propTypes = {
     aggressiveLoad: PropTypes.bool,
     auto: PropTypes.array,
-    // we don't set this in defaultProps because then just referencing the variable
-    // prints the deprecation notice and we only ever check for truthiness so
-    // undefined and false are close enough.
-    bg: deprecate(PropTypes.bool, 'bg is deprecated, use type="bg" instead'),
     children: PropTypes.any,
     className: PropTypes.string,
     component: PropTypes.string,
@@ -145,9 +140,7 @@ export default class ReactImgix extends Component {
       height: other.height <= 1 ? null : other.height,
     };
 
-    // TODO: remove _type once bg option is gone
-    const _type = bg ? 'bg' : type;
-    switch (_type) {
+    switch (type) {
       case 'bg':
         if (!component) {
           _component = 'div';

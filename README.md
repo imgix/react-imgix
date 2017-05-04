@@ -30,10 +30,6 @@ array of values to pass to Imgix's auto param, defaults to `['format']`
 #### type={string}
 what kind of component to render, one of `img`, `bg`, `picture`, `source`. Defaults to `img`
 
-#### bg={bool}
-_DEPRECATED, use `type='bg'` instead_. whether to render the image as a background of the component, defaults to `false`.  
-_To be deprecated in v6._
-
 #### component={string}
 wrapper component to use when rendering a `bg`, defaults to `div`
 
@@ -103,7 +99,7 @@ Using the [<picture> element](https://docs.imgix.com/tutorials/using-imgix-pictu
   <Imgix src={src} width={100} type='img' />
 </Imgix>
 ```
-The final `type='img'` component will be created with the options passed into the parent `<picture>` container if it's not provided so the above is equivelant to:
+The final `type='img'` component will be created with the options passed into the parent `<picture>` container if it's not provided so the above is equivalent to:
 ```js
 <Imgix src={src} width={100} type='picture'>
   <Imgix src={src} width={400} type='source' imgProps={{media: '(min-width: 768px)'}}/>

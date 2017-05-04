@@ -235,29 +235,6 @@ describe('background type with background contain', () => {
   shouldBehaveLikeBg('contain');
 });
 
-// same as above but with bg prop instead of type='bg'
-describe('background mode', () => {
-  let sandbox;
-  beforeEach(() => {
-    sandbox = sinon.sandbox.create();
-    sandbox.stub(console, 'warn');
-    tree = sd.shallowRender(<Imgix src={src} bg aggressiveLoad />);
-    vdom = tree.getRenderOutput();
-    instance = tree.getMountedInstance();
-  });
-  afterEach(() => {
-    sandbox.restore();
-  });
-
-  // this test has to come first since react-is-deprecated only prints a warning
-  // the first time it's called
-  it('should print deprecation error', () => {
-    sinon.assert.calledWithExactly(console.warn, 'bg is deprecated, use type="bg" instead');
-  });
-
-  shouldBehaveLikeBg();
-});
-
 // These tests emulate the pre-mount state as `tree.getMountedInstance()` isn't called
 describe('background mode - pre-mount', () => {
   beforeEach(() => {
