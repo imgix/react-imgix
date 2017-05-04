@@ -1,3 +1,27 @@
+v6.0.0 / 2017-05-05
+==================
+
+### Breaking Changes
+
+* **React 0.14 no longer supported.** This `react-imgix` version drops official support for React 0.14. This package will probably still work with 0.14, but we will not accept bugs or issues relating to React 0.14.
+* **bg prop removed**. This prop was deprecated in the past, and has now been removed. Please upgrade all usages to: `type='bg'`.
+
+### Important Note
+
+Since this package now uses `prop-types`, when using a React version below 15.5, there will be duplicate propTypes. To fix this, please upgrade to 15.5, which no longer exports React.PropTypes.
+
+### Thanks
+
+A massive thanks for @modosc for helping with this release, and upgrading to React 15.5.
+
+  * fix React 15.5 warnings (#104) - @modosc
+  * pull in prop-types from a separate module, fix sinon deprecation warning (#102)
+  * Update travis config
+  * Run prettier on code
+  * Change prettier to 120 line length
+  * Use prettier rather than standard
+  * Add prettier
+  * Update deps
 
 v5.4.0 / 2017-04-06
 ==================
@@ -175,4 +199,3 @@ v1.0.0 / 2015-09-23
   * Change to babel stage 0
   * Add ReactImgix component
   * Initial Commit
-
