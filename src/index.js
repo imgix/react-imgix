@@ -198,16 +198,13 @@ export default class ReactImgix extends Component {
         //    b. if we don't find one, create one.
 
         // make sure all of our children have key set, otherwise we get react warnings
-        _children = React.Children.map(React.Children.toArray(children), (child, idx) =>
-          React.cloneElement(child, Object.assign({}, child.props, { key: buildKey(idx) })));
+        _children = React.Children.map(children, (child, idx) =>
+          React.cloneElement(child, { key: buildKey(idx) })
+        ) || [];
 
         // look for an <img> or <ReactImgix type='img'> - at the bare minimum we
         // have to have a single <img> element or else ie will not work.
-        let imgIdx = _children.findIndex(
-          c =>
-            c.type === 'img' ||
-            (c.type.hasOwnProperty('name') && c.type.name === 'ReactImgix' && c.props.type === 'img')
-        );
+        let imgIdx = _children.findIndex(c => c.type === 'img' || (c.type === ReactImgix && c.props.type === 'img'));
 
         if (imgIdx === -1) {
           // didn't find one or empty array - either way make a new component to
