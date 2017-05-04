@@ -198,9 +198,8 @@ export default class ReactImgix extends Component {
         //    b. if we don't find one, create one.
 
         // make sure all of our children have key set, otherwise we get react warnings
-        _children = React.Children.map(
-          children,
-          (child, idx) => (child.props.key ? child : React.cloneElement(child, { key: buildKey(idx) }))
+        _children = React.Children.map(children, (child, idx) =>
+          React.cloneElement(child, { key: buildKey(idx) })
         ) || [];
 
         // look for an <img> or <ReactImgix type='img'> - at the bare minimum we
