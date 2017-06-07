@@ -121,6 +121,10 @@ yarn add react-imgix
 ```
 
 
+## Docs
+
+> to be continued
+
 Author: [Frederick Fogerty](http://twitter.com/fredfogerty)
 
 License: ISC
