@@ -166,6 +166,9 @@ export default class ReactImgix extends Component {
           _component = 'source';
         }
 
+        // strip out the "alt" tag from childProps since it's not allowed
+        delete childProps.alt;
+
         // inside of a <picture> element a <source> element ignores its src
         // attribute in favor of srcSet so we set that with either an actual
         // srcSet or a single src
@@ -184,6 +187,9 @@ export default class ReactImgix extends Component {
           _component = 'picture';
         }
 
+        // strip out the "alt" tag from childProps since it's not allowed
+        delete childProps.alt;
+
         //
         // we need to make sure an img is the last child so we look for one
         //    in children
@@ -191,9 +197,8 @@ export default class ReactImgix extends Component {
         //    b. if we don't find one, create one.
 
         // make sure all of our children have key set, otherwise we get react warnings
-        _children = React.Children.map(children, (child, idx) =>
-          React.cloneElement(child, { key: buildKey(idx) })
-        ) || [];
+        _children =
+          React.Children.map(children, (child, idx) => React.cloneElement(child, { key: buildKey(idx) })) || [];
 
         // look for an <img> or <ReactImgix type='img'> - at the bare minimum we
         // have to have a single <img> element or else ie will not work.
@@ -236,13 +241,22 @@ export default class ReactImgix extends Component {
           // ..except if you have passed in imgProps you need those to not disappear,
           // so we'll remove the imgProps attribute from our imgProps object (ugh!)
           // and apply them now:
-          delete imgProps.imgProps;
-          Object.assign(imgProps, this.props.imgProps);
+          imgProps.imgProps = { ...this.props.imgProps };
+          ['className', 'styles'].forEach(k => {
+            if (imgProps.imgProps[k]) {
+              imgProps[k] = imgProps.imgProps[k];
+              delete imgProps.imgProps[k];
+            }
+          });
 
-          // have to strip out props set to undefined since they will override
-          // any defaultProps in the child
+          // have to strip out props set to undefined or empty objects since they
+          // will override any defaultProps in the child
           Object.keys(imgProps).forEach(k => {
-            if (imgProps[k] === undefined) delete imgProps[k];
+            if (
+              imgProps[k] === undefined ||
+              (Object.keys(imgProps[k]).length === 0 && imgProps[k].constructor === Object)
+            )
+              delete imgProps[k];
           });
 
           _children.push(<ReactImgix {...imgProps} />);
