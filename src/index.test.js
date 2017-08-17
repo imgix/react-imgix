@@ -53,6 +53,7 @@ describe('<source> type', () => {
     media: '(min-width: 1200px)',
     sizes: '(max-width: 30em) 100vw, (max-width: 50em) 50vw, calc(33vw - 100px)',
     type: 'image/webp',
+    alt: 'alt text',
   };
   const shouldBehaveLikeSource = function() {
     it('should render a source', () => {
@@ -63,10 +64,13 @@ describe('<source> type', () => {
       expect(vdom.props.srcSet).toExist();
     });
 
-    Object.keys(imgProps).forEach(k => {
+    Object.keys(imgProps).filter(k => k !== 'alt').forEach(k => {
       it(`should have props.${k} set`, () => {
         expect(vdom.props[k]).toBe(imgProps[k]);
       });
+    });
+    it(`should not have props.alt set`, () => {
+      expect(vdom.props.alt).toBe(undefined);
     });
   };
 
@@ -101,6 +105,9 @@ describe('<source> type', () => {
 
 describe('<picture> type', () => {
   let children, lastChild;
+  const parentAlt = 'parent alt';
+  const childAlt = 'child alt';
+
   const shouldBehaveLikePicture = function() {
     it('should have key set on every child', () => {
       expect(children.every(c => c.key !== undefined)).toBe(true);
@@ -108,6 +115,10 @@ describe('<picture> type', () => {
 
     it('should render a picture', () => {
       expect(vdom.type).toBe('picture');
+    });
+
+    it('should not have an alt tag', () => {
+      expect(vdom.alt).toBe(undefined);
     });
 
     it('should have either an <img> or a <ReactImgix type=img> as its last child', () => {
@@ -121,8 +132,9 @@ describe('<picture> type', () => {
   };
 
   describe('with no children', () => {
+    const imgProps = { className: 'foobar', alt: parentAlt };
     beforeEach(() => {
-      tree = sd.shallowRender(<Imgix src={src} type="picture" agressiveLoad imgProps={{ className: 'foobar' }} />);
+      tree = sd.shallowRender(<Imgix src={src} type="picture" agressiveLoad imgProps={imgProps} />);
       vdom = tree.getRenderOutput();
       instance = tree.getMountedInstance();
       children = vdom.props.children;
@@ -138,11 +150,12 @@ describe('<picture> type', () => {
     it('should pass props down to automatically added type=img', () => {
       // todo - verify all valid props are passed down to children as defaults
       // except for the ones we specifically exclude
-      let expectedProps = Object.assign({}, instance.props, { type: 'img' }, instance.props.imgProps);
+      let expectedProps = Object.assign({}, instance.props, { type: 'img' }, { imgProps });
+      expectedProps.className = expectedProps.imgProps.className;
       delete expectedProps.bg;
       delete expectedProps.children;
       delete expectedProps.component;
-      delete expectedProps.imgProps;
+      delete expectedProps.imgProps.className;
       expect(lastChild.props).toEqual(expectedProps);
     });
   });
@@ -150,8 +163,8 @@ describe('<picture> type', () => {
   describe('with a <ReactImgix type=img> as a child', () => {
     beforeEach(() => {
       tree = sd.shallowRender(
-        <Imgix src={src} type="picture" agressiveLoad faces={false} entropy>
-          <Imgix src={src} type="img" />
+        <Imgix src={src} type="picture" agressiveLoad faces={false} entropy imgProps={{ alt: parentAlt }}>
+          <Imgix src={src} type="img" imgProps={{ alt: childAlt }} />
         </Imgix>
       );
       vdom = tree.getRenderOutput();
@@ -167,14 +180,15 @@ describe('<picture> type', () => {
     it('should not pass props down to children', () => {
       expect(lastChild.props.faces).toBe(true);
       expect(lastChild.props.entropy).toBe(false);
+      expect(lastChild.props.imgProps.alt).toEqual(childAlt);
     });
   });
 
   describe('with an <img> as a child', () => {
     beforeEach(() => {
       tree = sd.shallowRender(
-        <Imgix src={src} type="picture" agressiveLoad faces={false} entropy>
-          <img src={src} />
+        <Imgix src={src} type="picture" agressiveLoad faces={false} entropy imgProps={{ alt: parentAlt }}>
+          <img src={src} alt={childAlt} />
         </Imgix>
       );
       vdom = tree.getRenderOutput();
@@ -190,6 +204,7 @@ describe('<picture> type', () => {
     it('should not pass props down to children', () => {
       expect(lastChild.props.faces).toBe(undefined);
       expect(lastChild.props.entropy).toBe(undefined);
+      expect(lastChild.props.alt).toEqual(childAlt);
     });
   });
 });
