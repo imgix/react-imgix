@@ -147,7 +147,7 @@ export default class ReactImgix extends Component {
         }
         childProps.style = {
           backgroundSize: 'cover',
-          backgroundImage: isStringNotEmpty(_src) ? `url(${_src})` : null,
+          backgroundImage: isStringNotEmpty(_src) ? `url('${_src}')` : null,
           ...childProps.style,
         };
         break;
