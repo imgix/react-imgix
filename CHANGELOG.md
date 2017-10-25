@@ -1,3 +1,10 @@
+
+v6.0.2 / 2017-10-26
+==================
+
+  * Add single quotes to background url. (#119) - thanks @nickhavenly
+
+
 v6.0.0 / 2017-05-05
 ==================
 
