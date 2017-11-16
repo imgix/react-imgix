@@ -1,15 +1,12 @@
 /* global describe it beforeEach afterEach console */
 
 import expect from 'expect';
-import expectJSX from 'expect-jsx';
 import sinon from 'sinon';
 import sd from 'skin-deep';
 import React from 'react';
 import ReactDOM from 'react-dom';
 
 import Imgix from './index.js';
-
-expect.extend(expectJSX);
 
 const src = 'http://domain.imgix.net/image.jpg';
 let tree, vdom, instance; // eslint-disable-line no-unused-vars
@@ -25,7 +22,7 @@ describe('<img> mode', () => {
     expect(vdom.type).toBe('img');
   });
   it('should have a src tag', () => {
-    expect(vdom.props.src).toInclude(src);
+    expect(vdom.props.src).toContain(src);
   });
 });
 // These tests emulate the pre-mount state as `tree.getMountedInstance()` isn't called
@@ -61,14 +58,16 @@ describe('<source> type', () => {
     });
 
     it('should have a srcSet prop', () => {
-      expect(vdom.props.srcSet).toExist();
+      expect(vdom.props.srcSet).not.toBeUndefined();
     });
 
-    Object.keys(imgProps).filter(k => k !== 'alt').forEach(k => {
-      it(`should have props.${k} set`, () => {
-        expect(vdom.props[k]).toBe(imgProps[k]);
+    Object.keys(imgProps)
+      .filter(k => k !== 'alt')
+      .forEach(k => {
+        it(`should have props.${k} set`, () => {
+          expect(vdom.props[k]).toBe(imgProps[k]);
+        });
       });
-    });
     it(`should not have props.alt set`, () => {
       expect(vdom.props.alt).toBe(undefined);
     });
@@ -83,8 +82,8 @@ describe('<source> type', () => {
 
     shouldBehaveLikeSource();
     it('should have props.srcSet set to a valid src', () => {
-      expect(vdom.props.srcSet).toInclude(src);
-      expect(vdom.props.srcSet).toInclude('2x');
+      expect(vdom.props.srcSet).toContain(src);
+      expect(vdom.props.srcSet).toContain('2x');
     });
   });
 
@@ -214,7 +213,7 @@ const shouldBehaveLikeBg = function(size = 'cover') {
     expect(vdom.type).toBe('div');
   });
   it('should have the appropriate styles', () => {
-    expect(vdom.props.style.backgroundImage).toInclude(src);
+    expect(vdom.props.style.backgroundImage).toContain(src);
     expect(vdom.props.style.backgroundSize).toBe(size);
   });
 };
@@ -268,7 +267,7 @@ describe('custom component', () => {
     instance = tree.getMountedInstance();
   });
   it('should render the custom component', () => {
-    expect(vdom.props.style.backgroundImage).toInclude(src);
+    expect(vdom.props.style.backgroundImage).toContain(src);
     expect(vdom.type).toBe('li');
   });
 });
@@ -282,44 +281,44 @@ describe('image props', () => {
     instance = tree.getMountedInstance();
   });
   it('auto prop', () => {
-    expect(vdom.props.src).toInclude('auto=format%2Cenhance');
+    expect(vdom.props.src).toContain('auto=format%2Cenhance');
   });
   it('className prop', () => {
-    expect(vdom.props.className).toInclude(className);
+    expect(vdom.props.className).toContain(className);
   });
   it('crop prop', () => {
     tree = sd.shallowRender(<Imgix src={src} aggressiveLoad crop="faces,entropy" />);
     vdom = tree.getRenderOutput();
 
-    expect(vdom.props.src).toInclude('crop=faces%2Centropy');
-    expect(vdom.props.src).toInclude('fit=crop');
+    expect(vdom.props.src).toContain('crop=faces%2Centropy');
+    expect(vdom.props.src).toContain('fit=crop');
   });
   it('crop prop overrides faces prop', () => {
     tree = sd.shallowRender(<Imgix src={src} aggressiveLoad faces crop="faces,entropy" />);
     vdom = tree.getRenderOutput();
 
-    expect(vdom.props.src).toInclude('crop=faces%2Centropy');
-    expect(vdom.props.src).toInclude('fit=crop');
+    expect(vdom.props.src).toContain('crop=faces%2Centropy');
+    expect(vdom.props.src).toContain('fit=crop');
   });
   it('crop prop overrides entropy prop', () => {
     tree = sd.shallowRender(<Imgix src={src} aggressiveLoad entropy crop="faces,entropy" />);
     vdom = tree.getRenderOutput();
 
-    expect(vdom.props.src).toInclude('crop=faces%2Centropy');
-    expect(vdom.props.src).toInclude('fit=crop');
+    expect(vdom.props.src).toContain('crop=faces%2Centropy');
+    expect(vdom.props.src).toContain('fit=crop');
   });
   it('faces prop', () => {
-    expect(vdom.props.src).toInclude('crop=faces');
+    expect(vdom.props.src).toContain('crop=faces');
   });
   it('fit prop', () => {
-    expect(vdom.props.src).toInclude('fit=crop');
+    expect(vdom.props.src).toContain('fit=crop');
   });
   it('entropy prop', () => {
     tree = sd.shallowRender(<Imgix src={src} aggressiveLoad entropy />);
     vdom = tree.getRenderOutput();
 
-    expect(vdom.props.src).toInclude('crop=entropy');
-    expect(vdom.props.src).toInclude('fit=crop');
+    expect(vdom.props.src).toContain('crop=entropy');
+    expect(vdom.props.src).toContain('fit=crop');
   });
   it('url encodes param keys', () => {
     tree = sd.shallowRender(
@@ -382,8 +381,8 @@ describe('image props', () => {
     tree = sd.shallowRender(<Imgix src={src} aggressiveLoad generateSrcSet />);
     vdom = tree.getRenderOutput();
 
-    expect(vdom.props.srcSet).toInclude('dpr=2');
-    expect(vdom.props.srcSet).toInclude('dpr=3');
+    expect(vdom.props.srcSet).toContain('dpr=2');
+    expect(vdom.props.srcSet).toContain('dpr=3');
   });
   it('height passed to url param', () => {
     const height = 300;
