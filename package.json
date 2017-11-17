@@ -11,17 +11,19 @@
     "build:lib": "babel src --out-dir lib",
     "build:watch": "babel src --out-dir lib --watch",
     "prepublish": "npm run build",
-    "test": "npm run pretty && mocha --require babel-core/register --recursive src/*.test.js",
-    "pretty": "./node_modules/.bin/prettier --single-quote --trailing-comma es5 --print-width 120 --write \"src/**/*.js\"",
-    "test:watch": "mocha --require babel-core/register --recursive src/*.test.js --watch --reporter min"
+    "test":
+      "npm run pretty && mocha --require babel-core/register --recursive src/*.test.js",
+    "pretty":
+      "./node_modules/.bin/prettier --single-quote --trailing-comma es5 --print-width 120 --write \"src/**/*.js\"",
+    "test:watch":
+      "mocha --require babel-core/register --recursive src/*.test.js --watch --reporter min",
+    "release": "standard-version"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/imgix/react-imgix.git"
   },
-  "keywords": [
-    "react"
-  ],
+  "keywords": ["react"],
   "author": "Frederick Fogerty",
   "license": "ISC",
   "bugs": {
@@ -53,6 +55,7 @@
     "react-dom": "^16.1.1",
     "react-test-renderer": "^16.1.1",
     "sinon": "^4.1.2",
-    "skin-deep": "^1.1.0"
+    "skin-deep": "^1.1.0",
+    "standard-version": "^4.2.0"
   }
 }
