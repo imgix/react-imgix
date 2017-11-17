@@ -120,6 +120,19 @@ With [yarn](https://yarnpkg.com):
 yarn add react-imgix
 ```
 
+## Contributing
+
+### Cutting a release
+
+Ensure all commits are correctly described using the [Conventional Commits Specification](https://conventionalcommits.org/)
+
+```sh
+
+npm run release
+git push --follow-tags origin master; npm publish
+
+```
+
 
 Author: [Frederick Fogerty](http://twitter.com/fredfogerty)
 
