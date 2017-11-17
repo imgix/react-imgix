@@ -1,4 +1,9 @@
 {
-	"presets": ["react", "env", "stage-0"],
-	"plugins": ["transform-object-assign"]
+	"presets": ["react", ["env", { "modules": false }], "stage-0"],
+	"plugins": ["transform-object-assign"],
+	"env": {
+		"commonjs": {
+			"presets": ["react", "env", "stage-0"]
+		}
+	}
 }
