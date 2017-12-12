@@ -64,6 +64,12 @@ force images to be a certain height, overrides `precision`
 #### width={number}
 force images to be a certain width, overrides `precision`
 
+#### defaultHeight={number}
+fallback height for images, useful for SSR or static site generation
+
+#### defaultWidth={number}
+fallback width for images, useful for SSR or static site generation
+
 #### generateSrcSet={bool}
 generate `2x` and `3x` src sets when using an `<img>` tag. Defaults to `true`
 

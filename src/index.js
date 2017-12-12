@@ -47,6 +47,10 @@ export default class ReactImgix extends Component {
     onMounted: PropTypes.func,
     src: PropTypes.string.isRequired,
     type: PropTypes.oneOf(validTypes),
+    width: PropTypes.number,
+    height: PropTypes.number,
+    defaultHeight: PropTypes.number,
+    defaultWidth: PropTypes.number,
   };
   static defaultProps = {
     aggressiveLoad: false,
