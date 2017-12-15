@@ -3,18 +3,23 @@
   "version": "7.1.0",
   "description": "React Component for displaying an image from Imgix",
   "main": "lib/index.js",
-  "standard": {
-    "parser": "babel-eslint"
-  },
+  "module": "es/index.js",
+  "jsnext:main": "es/index.js",
+  "files": [
+    "lib/*",
+    "es/*"
+  ],
   "scripts": {
-    "build": "npm run build:lib",
-    "build:lib": "babel src --out-dir lib",
-    "build:watch": "babel src --out-dir lib --watch",
+    "build": "npm run clean && npm run build:commonjs && npm run build:es",
+    "build:commonjs": "cross-env BABEL_ENV=commonjs babel src --out-dir lib --source-maps",
+    "build:es": "cross-env BABEL_ENV=es babel src --out-dir es --source-maps",
+    "build:watch": "cross-env BABEL_ENV=commonjs babel src --out-dir lib --watch",
+    "clean": "rimraf lib es",
     "prepublish": "npm run build",
-    "test": "npm run pretty && mocha --require babel-core/register --recursive src/*.test.js",
-    "pretty": "./node_modules/.bin/prettier --single-quote --trailing-comma es5 --print-width 120 --write \"src/**/*.js\"",
-    "test:watch": "mocha --require babel-core/register --recursive src/*.test.js --watch --reporter min",
-    "release": "standard-version"
+    "pretty": "cross-env BABEL_ENV=commonjs prettier --single-quote --trailing-comma es5 --print-width 120 --write \"src/**/*.js\"",
+    "release": "standard-version",
+    "test:watch": "cross-env BABEL_ENV=commonjs mocha --require babel-core/register --recursive src/*.test.js --watch --reporter min",
+    "test": "npm run pretty && cross-env BABEL_ENV=commonjs mocha --require babel-core/register --recursive src/*.test.js"
   },
   "repository": {
     "type": "git",
@@ -46,6 +51,7 @@
     "babel-preset-env": "^1.6.1",
     "babel-preset-react": "^6.24.1",
     "babel-preset-stage-0": "^6.24.1",
+    "cross-env": "^5.1.1",
     "expect": "^21.2.1",
     "mocha": "^4.0.1",
     "mocha-babel": "^3.0.3",
@@ -53,6 +59,7 @@
     "react": "^16.1.1",
     "react-dom": "^16.1.1",
     "react-test-renderer": "^16.1.1",
+    "rimraf": "^2.6.2",
     "sinon": "^4.1.2",
     "skin-deep": "^1.1.0",
     "standard-version": "^4.2.0"

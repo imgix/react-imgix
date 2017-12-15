@@ -9,7 +9,7 @@ import ReactDOM from 'react-dom';
 import Imgix from './index.js';
 
 const src = 'http://domain.imgix.net/image.jpg';
-let tree, vdom, instance; // eslint-disable-line no-unused-vars
+let tree, vdom, instance;
 
 describe('<img> mode', () => {
   beforeEach(() => {
