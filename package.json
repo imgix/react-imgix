@@ -16,7 +16,7 @@
     "build:watch": "cross-env BABEL_ENV=commonjs babel src --out-dir lib --watch",
     "clean": "rimraf lib es",
     "prepublish": "npm run build",
-    "pretty": "cross-env BABEL_ENV=commonjs prettier --single-quote --trailing-comma es5 --print-width 120 --write \"src/**/*.js\"",
+    "pretty": "prettier --write \"src/**/*.js\"",
     "release": "standard-version",
     "test:watch": "cross-env BABEL_ENV=commonjs mocha --require babel-core/register --recursive src/*.test.js --watch --reporter min",
     "test": "npm run pretty && cross-env BABEL_ENV=commonjs mocha --require babel-core/register --recursive src/*.test.js"
