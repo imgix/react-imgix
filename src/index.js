@@ -1,21 +1,23 @@
-import './array-findindex';
+import "./array-findindex";
 
-import ReactDOM from 'react-dom';
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
+import ReactDOM from "react-dom";
+import React, { Component } from "react";
+import PropTypes from "prop-types";
 
-import processImage from './support.js';
+import processImage from "./support.js";
 
-const roundToNearest = (size, precision) => precision * Math.ceil(size / precision);
+const roundToNearest = (size, precision) =>
+  precision * Math.ceil(size / precision);
 
-const isStringNotEmpty = str => str && typeof str === 'string' && str.length > 0;
+const isStringNotEmpty = str =>
+  str && typeof str === "string" && str.length > 0;
 const buildKey = idx => `react-imgix-${idx}`;
 
-const validTypes = ['bg', 'img', 'picture', 'source'];
+const validTypes = ["bg", "img", "picture", "source"];
 
 const defaultMap = {
-  width: 'defaultWidth',
-  height: 'defaultHeight',
+  width: "defaultWidth",
+  height: "defaultHeight"
 };
 
 const findSizeForDimension = (dim, props = {}, state = {}) => {
@@ -50,24 +52,24 @@ export default class ReactImgix extends Component {
     width: PropTypes.number,
     height: PropTypes.number,
     defaultHeight: PropTypes.number,
-    defaultWidth: PropTypes.number,
+    defaultWidth: PropTypes.number
   };
   static defaultProps = {
     aggressiveLoad: false,
-    auto: ['format'],
+    auto: ["format"],
     entropy: false,
     faces: true,
-    fit: 'crop',
+    fit: "crop",
     fluid: true,
     generateSrcSet: true,
     onMounted: () => {},
     precision: 100,
-    type: 'img',
+    type: "img"
   };
   state = {
     width: null,
     height: null,
-    mounted: false,
+    mounted: false
   };
 
   forceLayout = () => {
@@ -75,7 +77,7 @@ export default class ReactImgix extends Component {
     this.setState({
       width: node.scrollWidth,
       height: node.scrollHeight,
-      mounted: true,
+      mounted: true
     });
     this.props.onMounted(node);
   };
@@ -84,7 +86,8 @@ export default class ReactImgix extends Component {
     this.forceLayout();
   };
 
-  _findSizeForDimension = dim => findSizeForDimension(dim, this.props, this.state);
+  _findSizeForDimension = dim =>
+    findSizeForDimension(dim, this.props, this.state);
 
   render() {
     const {
@@ -107,16 +110,16 @@ export default class ReactImgix extends Component {
     let srcSet = null;
     let _component = component;
 
-    let width = this._findSizeForDimension('width');
-    let height = this._findSizeForDimension('height');
+    let width = this._findSizeForDimension("width");
+    let height = this._findSizeForDimension("height");
 
     let _crop = false;
-    if (faces) _crop = 'faces';
-    if (entropy) _crop = 'entropy';
+    if (faces) _crop = "faces";
+    if (entropy) _crop = "entropy";
     if (crop) _crop = crop;
 
     let _fit = false;
-    if (entropy) _fit = 'crop';
+    if (entropy) _fit = "crop";
     if (fit) _fit = fit;
 
     let _children = children;
@@ -128,7 +131,7 @@ export default class ReactImgix extends Component {
         crop: _crop,
         fit: _fit,
         width,
-        height,
+        height
       };
 
       _src = processImage(src, srcOptions);
@@ -141,23 +144,23 @@ export default class ReactImgix extends Component {
       ...this.props.imgProps,
       className: this.props.className,
       width: other.width <= 1 ? null : other.width,
-      height: other.height <= 1 ? null : other.height,
+      height: other.height <= 1 ? null : other.height
     };
 
     switch (type) {
-      case 'bg':
+      case "bg":
         if (!component) {
-          _component = 'div';
+          _component = "div";
         }
         childProps.style = {
-          backgroundSize: 'cover',
+          backgroundSize: "cover",
           backgroundImage: isStringNotEmpty(_src) ? `url('${_src}')` : null,
-          ...childProps.style,
+          ...childProps.style
         };
         break;
-      case 'img':
+      case "img":
         if (!component) {
-          _component = 'img';
+          _component = "img";
         }
 
         if (generateSrcSet) {
@@ -165,9 +168,9 @@ export default class ReactImgix extends Component {
         }
         childProps.src = _src;
         break;
-      case 'source':
+      case "source":
         if (!component) {
-          _component = 'source';
+          _component = "source";
         }
 
         // strip out the "alt" tag from childProps since it's not allowed
@@ -186,9 +189,9 @@ export default class ReactImgix extends Component {
         //   b) passing objects as props means that react will always rerender
         //      since objects dont respond correctly to ===
         break;
-      case 'picture':
+      case "picture":
         if (!component) {
-          _component = 'picture';
+          _component = "picture";
         }
 
         // strip out the "alt" tag from childProps since it's not allowed
@@ -202,11 +205,17 @@ export default class ReactImgix extends Component {
 
         // make sure all of our children have key set, otherwise we get react warnings
         _children =
-          React.Children.map(children, (child, idx) => React.cloneElement(child, { key: buildKey(idx) })) || [];
+          React.Children.map(children, (child, idx) =>
+            React.cloneElement(child, { key: buildKey(idx) })
+          ) || [];
 
         // look for an <img> or <ReactImgix type='img'> - at the bare minimum we
         // have to have a single <img> element or else ie will not work.
-        let imgIdx = _children.findIndex(c => c.type === 'img' || (c.type === ReactImgix && c.props.type === 'img'));
+        let imgIdx = _children.findIndex(
+          c =>
+            c.type === "img" ||
+            (c.type === ReactImgix && c.props.type === "img")
+        );
 
         if (imgIdx === -1) {
           // didn't find one or empty array - either way make a new component to
@@ -230,10 +239,10 @@ export default class ReactImgix extends Component {
             fit,
             generateSrcSet,
             src,
-            type: 'img',
+            type: "img",
             ...other,
             // make sure to set a unique key too
-            key: buildKey(_children.length + 1),
+            key: buildKey(_children.length + 1)
           };
 
           // we also remove className and styles if they exist - those passed in
@@ -246,7 +255,7 @@ export default class ReactImgix extends Component {
           // so we'll remove the imgProps attribute from our imgProps object (ugh!)
           // and apply them now:
           imgProps.imgProps = { ...this.props.imgProps };
-          ['className', 'styles'].forEach(k => {
+          ["className", "styles"].forEach(k => {
             if (imgProps.imgProps[k]) {
               imgProps[k] = imgProps.imgProps[k];
               delete imgProps.imgProps[k];
@@ -258,7 +267,8 @@ export default class ReactImgix extends Component {
           Object.keys(imgProps).forEach(k => {
             if (
               imgProps[k] === undefined ||
-              (Object.keys(imgProps[k]).length === 0 && imgProps[k].constructor === Object)
+              (Object.keys(imgProps[k]).length === 0 &&
+                imgProps[k].constructor === Object)
             )
               delete imgProps[k];
           });
@@ -266,7 +276,11 @@ export default class ReactImgix extends Component {
           _children.push(<ReactImgix {...imgProps} />);
         } else if (imgIdx !== _children.length - 1) {
           // found one, need to move it to the end
-          _children.splice(_children.length - 1, 0, _children.splice(imgIdx, 1)[0]);
+          _children.splice(
+            _children.length - 1,
+            0,
+            _children.splice(imgIdx, 1)[0]
+          );
         }
         break;
       default:
