@@ -16,6 +16,6 @@
 
 **Related:**
 
-React Version: 
-Browser(s): 
-OS Version: 
+React Version:
+Browser(s):
+OS Version:
