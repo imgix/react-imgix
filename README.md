@@ -1,7 +1,7 @@
 <img src="https://assets.imgix.net/imgix-logo-web-2014.pdf?page=2&fm=png&w=120" srcset="https://assets.imgix.net/imgix-logo-web-2014.pdf?page=2&fm=png&w=120 1x,
  https://assets.imgix.net/imgix-logo-web-2014.pdf?page=2&fm=png&w=120&dpr=2 2x, https://assets.imgix.net/imgix-logo-web-2014.pdf?page=2&fm=png&w=120&dpr=3 3x" alt="imgix logo">
 
-# React Imgix
+# Imgix for React
 
 [![npm](https://img.shields.io/npm/dm/react-imgix.svg)](https://www.npmjs.com/package/react-imgix)
 [![npm version](https://img.shields.io/npm/v/react-imgix.svg)](https://www.npmjs.com/package/react-imgix)
@@ -13,9 +13,15 @@
 
 A [React](https://facebook.github.io/react/) component that renders images using the [Imgix](https://www.imgix.com/) API. It uses the smallest images possible, and does cool stuff, like [cropping to faces](https://www.imgix.com/docs/reference/size#param-crop) by default.
 
+- [Installation](#installation)
+- [Usage](#usage)
+- [Props](#props)
+- [Browser Support](#browser-support)
+- [Meta](#meta)
+
 ## Installation
 
-- **NPM**: `npm install --save react-imgix`
+- **NPM**: `npm install react-imgix`
 - **Yarn**: `yarn add react-imgix`
 
 This module exports two transpiled versions. If a ES6-module-aware bundler is being used to consume this module, it will pick up an ES6 module version and can perform tree-shaking. **If you are not using ES6 modules, you don't have to do anything**
@@ -147,32 +153,11 @@ The final `type='img'` component will be created with the options passed into th
 </Imgix>
 ```
 
-## Installation
+## Browser Support
 
-With npm:
-```
-npm install --save react-imgix
-```
+We support the latest version of Google Chrome (which [automatically updates](https://support.google.com/chrome/answer/95414) whenever it detects that a new version of the browser is available). We also support the current and previous major releases of desktop Firefox, Internet Explorer, and Safari on a rolling basis. Mobile support is tested on the most recent minor version of the current and previous major release for the default browser on iOS and Android (e.g., iOS 9.2 and 8.4). Each time a new version is released, we begin supporting that version and stop supporting the third most recent version.
 
-With [yarn](https://yarnpkg.com):
-```
-yarn add react-imgix
-```
+## Meta
 
-## Contributing
+React-imgix was originally created by [Frederick Fogerty](http://twitter.com/fredfogerty). It's licensed under the ISC license (see the [license file](https://github.com/imgix/react-imgix/blob/master/LICENSE.md) for more info). Any contribution is absolutely welcome, but please review the [contribution guidelines](https://github.com/imgix/react-imgix/blob/master/CONTRIBUTING.md) before getting started.
 
-### Cutting a release
-
-Ensure all commits are correctly described using the [Conventional Commits Specification](https://conventionalcommits.org/)
-
-```sh
-
-npm run release
-git push --follow-tags origin master; npm publish
-
-```
-
-
-Author: [Frederick Fogerty](http://twitter.com/fredfogerty)
-
-License: ISC

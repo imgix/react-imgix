@@ -159,7 +159,18 @@ Once you're configured, building the JavaScript from the command line is easy:
 
 ```
 npm run build   		# build react-imgix from source
-npm run build:watch	# watch for changes and build automatically
-npm run test 				# run the test suite
-npm run test:watch	# run the test suite, watching for changes (good for TDD)
+npm run build:watch		# watch for changes and build automatically
+npm run test 			# run the test suite
+npm run test:watch		# run the test suite, watching for changes (good for TDD)
+```
+o
+### Cutting a release
+
+Ensure all commits are correctly described using the [Conventional Commits Specification](https://conventionalcommits.org/)
+
+```sh
+
+npm run release
+git push --follow-tags origin master; npm publish
+
 ```
