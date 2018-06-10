@@ -2,12 +2,12 @@ Hello, and thanks for contributing to react-imgix! 🎉🙌
 
 **Before submitting a pull request,** please make sure the following is done:
 
-1. Fork [the repository](https://github.com/imgix/react-imgix) and create your branch from `master`.
-2. Run `npm install` in the repository root.
-3. If you've fixed a bug or added code that should be tested, add tests!
-4. Ensure the test suite passes (`npm run test`). Tip: `npm run --watch` is helpful in development.
-7. Format your code with [prettier](https://github.com/prettier/prettier) (`npm run pretty`). Don't worry too much if you haven't done this, we have a bot that will do this for you when you submit a PR.
-8. Fill out the template below and delete everything above the line.
+1.  Fork [the repository](https://github.com/imgix/react-imgix) and create your branch from `master`.
+2.  Run `npm install` in the repository root.
+3.  If you've fixed a bug or added code that should be tested, add tests!
+4.  Ensure the test suite passes (`npm run test`). Tip: `npm run --watch` is helpful in development.
+5.  Format your code with [prettier](https://github.com/prettier/prettier) (`npm run pretty`). Don't worry too much if you haven't done this, we have a bot that will do this for you when you submit a PR.
+6.  Fill out the template below and delete everything above the line.
 
 **Learn more about contributing:** https://github.com/imgix/react-imgix/blob/master/CONTRIBUTING.md
 
@@ -31,6 +31,7 @@ The following sections provide more detail on each.
 Please don't hesitate to [ask questions][issues] for clarification, or to [make suggestions][issues] (or a pull request) to improve this document.
 
 ## Description
+
 _To help the project's maintainers and community to quickly understand the nature of your pull requeset, please create a description that incorporates the following elements:_
 
 - [] what is accomplished by the pr
@@ -77,6 +78,7 @@ Please use the checklist that is most closely related to your pr _(you only need
 - [ ] Add your info to the [contributors](#packagejson-contributors) array in package.json!
 
 ## Steps to Test
+
 _A code example or a set of steps is preferred._
 
 Related issue: [e.g. #42]
@@ -86,6 +88,7 @@ Code:
 ```js
 // A standalone JS example of what the PR solves
 ```
+
 A link to a codepen is also an option.
 
 Steps:
@@ -121,7 +124,7 @@ full name <email@address.com> (https://website.com)
   "name": "react-imgix",
   "contributors": [
     "Brian Woodward <jon.schlinkert@sellside.com> (https://github.com/jonschlinkert)",
-    "Jon Schlinkert <brian.woodward@sellside.com> (https://github.com/doowb)",
+    "Jon Schlinkert <brian.woodward@sellside.com> (https://github.com/doowb)"
   ]
 }
 ```
