@@ -11,11 +11,6 @@ Hello, and thanks for contributing to react-imgix! 🎉🙌
 
 **Learn more about contributing:** https://github.com/imgix/react-imgix/blob/master/CONTRIBUTING.md
 
-<!--
-DELETE EVERYTHING ABOVE THIS LINE
--------------------------------------------
--->
-
 ## tldr
 
 There are three main goals in this document, depending on the nature of your pr:
@@ -29,6 +24,16 @@ The following sections provide more detail on each.
 **Improve this document**
 
 Please don't hesitate to [ask questions][issues] for clarification, or to [make suggestions][issues] (or a pull request) to improve this document.
+
+
+
+
+Delete everything above this line
+---------------------
+
+
+
+
 
 ## Description
 
@@ -97,6 +102,17 @@ Steps:
 2.  Click on '....'
 3.  Scroll down to '....'
 4.  See that the error has been fixed
+
+
+
+
+Delete everything below this line
+----------
+
+
+
+
+
 
 ## Conventional Commit Spec
 
