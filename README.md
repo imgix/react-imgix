@@ -10,7 +10,6 @@
 [![Code Climate](https://codeclimate.com/github/imgix/react-imgix/badges/gpa.svg)](https://codeclimate.com/github/imgix/react-imgix)
 [![styled with prettier](https://img.shields.io/badge/styled_with-prettier-ff69b4.svg)](https://github.com/prettier/prettier)
 
-
 A [React](https://facebook.github.io/react/) component that renders images using the [Imgix](https://www.imgix.com/) API. It uses the smallest images possible, and does cool stuff, like [cropping to faces](https://www.imgix.com/docs/reference/size#param-crop) by default.
 
 - [Installation](#installation)
@@ -25,7 +24,6 @@ A [React](https://facebook.github.io/react/) component that renders images using
 - **Yarn**: `yarn add react-imgix`
 
 This module exports two transpiled versions. If a ES6-module-aware bundler is being used to consume this module, it will pick up an ES6 module version and can perform tree-shaking. **If you are not using ES6 modules, you don't have to do anything**
-
 
 ## Usage
 
@@ -115,11 +113,10 @@ Generate `2x` and `3x` src sets when using an `<img>` tag. Defaults to `true`
 Any other Imgix params to add to the image `src`
 
 _For example_:
+
 ```js
-<Imgix
-    customParams={{mask: 'ellipse'}}
-/>
- ```
+<Imgix customParams={{ mask: "ellipse" }} />
+```
 
 #### imgProps :: object
 
@@ -129,27 +126,50 @@ _Note_: if you use type='bg' the css property background-size is set to 'cover' 
 
 ```js
 <Imgix
-    src={src}
-    type='bg'
-    imgProps={{style: {backgroundSize: 'contain'}}}
+  src={src}
+  type="bg"
+  imgProps={{ style: { backgroundSize: "contain" } }}
 />
- ```
+```
 
 ### Picture Support
 
 Using the [<picture> element](https://docs.imgix.com/tutorials/using-imgix-picture-element) you can create responsive images:
+
 ```js
-<Imgix src={src} type='picture'>
-  <Imgix src={src} width={400} type='source' imgProps={{media: '(min-width: 768px)'}}/>
-  <Imgix src={src} width={200} type='source' imgProps={{media: '(min-width: 320px)'}}/>
-  <Imgix src={src} width={100} type='img' />
+<Imgix src={src} type="picture">
+  <Imgix
+    src={src}
+    width={400}
+    type="source"
+    imgProps={{ media: "(min-width: 768px)" }}
+  />
+  <Imgix
+    src={src}
+    width={200}
+    type="source"
+    imgProps={{ media: "(min-width: 320px)" }}
+  />
+  <Imgix src={src} width={100} type="img" />
 </Imgix>
 ```
+
 The final `type='img'` component will be created with the options passed into the parent `<picture>` container if it's not provided so the above is equivalent to:
+
 ```js
-<Imgix src={src} width={100} type='picture'>
-  <Imgix src={src} width={400} type='source' imgProps={{media: '(min-width: 768px)'}}/>
-  <Imgix src={src} width={200} type='source' imgProps={{media: '(min-width: 320px)'}}/>
+<Imgix src={src} width={100} type="picture">
+  <Imgix
+    src={src}
+    width={400}
+    type="source"
+    imgProps={{ media: "(min-width: 768px)" }}
+  />
+  <Imgix
+    src={src}
+    width={200}
+    type="source"
+    imgProps={{ media: "(min-width: 320px)" }}
+  />
 </Imgix>
 ```
 
@@ -160,4 +180,3 @@ We support the latest version of Google Chrome (which [automatically updates](ht
 ## Meta
 
 React-imgix was originally created by [Frederick Fogerty](http://twitter.com/fredfogerty). It's licensed under the ISC license (see the [license file](https://github.com/imgix/react-imgix/blob/master/LICENSE.md) for more info). Any contribution is absolutely welcome, but please review the [contribution guidelines](https://github.com/imgix/react-imgix/blob/master/CONTRIBUTING.md) before getting started.
-

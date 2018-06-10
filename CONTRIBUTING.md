@@ -145,7 +145,7 @@ license your work under the same license as that used by the project.
 ## Code Conventions
 
 1.  Make all changes to files under `./src`, **not** `./dist` or `./es`.
-3.  Use [Prettier](https://prettier.io/) for code formatting. Code will automatically be formatted upon submitting a PR.
+2.  Use [Prettier](https://prettier.io/) for code formatting. Code will automatically be formatted upon submitting a PR.
 
 ### Using ES6
 
@@ -163,14 +163,14 @@ npm run build:watch		# watch for changes and build automatically
 npm run test 			# run the test suite
 npm run test:watch		# run the test suite, watching for changes (good for TDD)
 ```
+
 o
+
 ### Cutting a release
 
 Ensure all commits are correctly described using the [Conventional Commits Specification](https://conventionalcommits.org/)
 
 ```sh
-
 npm run release
 git push --follow-tags origin master; npm publish
-
 ```

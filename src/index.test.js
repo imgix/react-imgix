@@ -456,9 +456,7 @@ describe("image props", () => {
     vdom = tree.getRenderOutput();
 
     expect(vdom.props.src).toEqual(
-      `https://mysource.imgix.net/demo.png?auto=format&dpr=1&crop=faces&fit=crop&w=1&h=${
-        height
-      }`
+      `https://mysource.imgix.net/demo.png?auto=format&dpr=1&crop=faces&fit=crop&w=1&h=${height}`
     );
   });
 
@@ -502,9 +500,7 @@ describe("image props", () => {
     vdom = tree.getRenderOutput();
 
     expect(vdom.props.src).toEqual(
-      `https://mysource.imgix.net/demo.png?auto=format&dpr=1&crop=faces&fit=crop&w=${
-        width
-      }&h=1`
+      `https://mysource.imgix.net/demo.png?auto=format&dpr=1&crop=faces&fit=crop&w=${width}&h=1`
     );
   });
 
