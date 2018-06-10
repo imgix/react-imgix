@@ -25,15 +25,7 @@ The following sections provide more detail on each.
 
 Please don't hesitate to [ask questions][issues] for clarification, or to [make suggestions][issues] (or a pull request) to improve this document.
 
-
-
-
-Delete everything above this line
----------------------
-
-
-
-
+## Delete everything above this line
 
 ## Description
 
@@ -103,16 +95,7 @@ Steps:
 3.  Scroll down to '....'
 4.  See that the error has been fixed
 
-
-
-
-Delete everything below this line
-----------
-
-
-
-
-
+## Delete everything below this line
 
 ## Conventional Commit Spec
 
