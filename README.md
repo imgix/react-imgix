@@ -1,4 +1,7 @@
-# React Imgix
+<img src="https://assets.imgix.net/imgix-logo-web-2014.pdf?page=2&fm=png&w=120" srcset="https://assets.imgix.net/imgix-logo-web-2014.pdf?page=2&fm=png&w=120 1x,
+ https://assets.imgix.net/imgix-logo-web-2014.pdf?page=2&fm=png&w=120&dpr=2 2x, https://assets.imgix.net/imgix-logo-web-2014.pdf?page=2&fm=png&w=120&dpr=3 3x" alt="imgix logo">
+
+# Imgix for React
 
 [![npm](https://img.shields.io/npm/dm/react-imgix.svg)](https://www.npmjs.com/package/react-imgix)
 [![npm version](https://img.shields.io/npm/v/react-imgix.svg)](https://www.npmjs.com/package/react-imgix)
@@ -9,91 +12,105 @@
 
 A [React](https://facebook.github.io/react/) component that renders images using the [Imgix](https://www.imgix.com/) API. It uses the smallest images possible, and does cool stuff, like [cropping to faces](https://www.imgix.com/docs/reference/size#param-crop) by default.
 
+- [Installation](#installation)
+- [Usage](#usage)
+- [Props](#props)
+- [Browser Support](#browser-support)
+- [Meta](#meta)
+
+## Installation
+
+- **NPM**: `npm install react-imgix`
+- **Yarn**: `yarn add react-imgix`
+
+This module exports two transpiled versions. If a ES6-module-aware bundler is being used to consume this module, it will pick up an ES6 module version and can perform tree-shaking. **If you are not using ES6 modules, you don't have to do anything**
+
 ## Usage
 
 ```js
 import Imgix from 'react-imgix'
 
+// in react component
 <Imgix src={string} />
 ```
 
 ### Props
 
-#### src={string}
+#### src :: string, required
 
-required, usually in the form: `https://[your_domain].imgix.net/[image]`. Don't include any parameters.
+Usually in the form: `https://[your_domain].imgix.net/[image]`. Don't include any parameters.
 
-#### aggressiveLoad={bool}
+#### aggressiveLoad :: bool, default = false
 
-whether to wait until the component has mounted to render the image, useful for auto-sizing and server-side rendering, defaults to false
+Whether to wait until the component has mounted to render the image, useful for auto-sizing and server-side rendering, defaults to false
 
-#### auto={array}
+#### auto :: array, default = ['format']
 
-array of values to pass to Imgix's auto param, defaults to `['format']`
+Array of values to pass to Imgix's auto param
 
-#### type={string}
+#### type :: string, default = 'img'
 
-what kind of component to render, one of `img`, `bg`, `picture`, `source`. Defaults to `img`
+What kind of component to render, one of `img`, `bg`, `picture`, `source`.
 
-#### component={string}
+#### component :: string, default = 'div'
 
-wrapper component to use when rendering a `bg`, defaults to `div`
+Wrapper component to use when rendering a `bg`, defaults to `div`
 
-#### className={string}
+#### className :: string
 
 `className` applied to top level component. To set `className` on the image itself see `imgProps`.
 
-#### entropy={bool}
+#### entropy :: bool, default = false
 
-whether or not to crop using points of interest. See Imgix API for more details. Defaults to `false`
+Whether or not to crop using points of interest. See Imgix API for more details.
 
-#### faces={bool}
+#### faces :: bool, default = true
 
-whether to crop to faces, defaults to `true`
+Whether to crop to faces
 
-#### crop={string}
+#### crop :: string
 
-sets specific crop, overriding faces and entropy flags. Useful for specifying fallbacks for faces like `faces,top,right`
+Sets specific crop, overriding faces and entropy flags. Useful for specifying fallbacks for faces like `faces,top,right`
 
-#### fit={string}
+#### fit :: string
 
-see Imgix's API, defaults to `crop`
+See Imgix's API, defaults to `crop`
 
-#### fluid={bool}
+#### fluid :: bool, default = true
 
-whether to fit the image requested to the size of the component rendered, defaults to `true`
+Whether to fit the image requested to the size of the component rendered.
 
-#### onMounted={func}
+#### onMounted :: func
 
-called on `componentDidMount` with the mounted DOM node as an argument
+Called on `componentDidMount` with the mounted DOM node as an argument
 
-#### precision={number}
+#### precision :: number
 
-round to nearest x for image width and height, useful for caching, defaults to `100`
+Round to nearest x for image width and height, useful for caching, defaults to `100`
 
-#### height={number}
+#### height :: number
 
-force images to be a certain height, overrides `precision`
+Force images to be a certain height, overrides `precision`
 
-#### width={number}
+#### width :: number
 
-force images to be a certain width, overrides `precision`
+Force images to be a certain width, overrides `precision`
 
-#### defaultHeight={number}
+#### defaultHeight :: number
 
-fallback height for images, useful for SSR or static site generation
+Fallback height for images, useful for SSR or static site generation
 
-#### defaultWidth={number}
+#### defaultWidth :: number
 
-fallback width for images, useful for SSR or static site generation
+Fallback width for images, useful for SSR or static site generation
 
-#### generateSrcSet={bool}
+#### generateSrcSet :: bool
 
-generate `2x` and `3x` src sets when using an `<img>` tag. Defaults to `true`
+Generate `2x` and `3x` src sets when using an `<img>` tag. Defaults to `true`
 
-#### customParams={object}
+#### customParams :: object
 
-any other Imgix params to add to the image `src`
+Any other Imgix params to add to the image `src`
 
 _For example_:
 
@@ -101,9 +118,9 @@ _For example_:
 <Imgix customParams={{ mask: "ellipse" }} />
 ```
 
-#### imgProps={object}
+#### imgProps :: object
 
-any other attributes to add to the html node (example: `alt`, `data-*`, `className`)
+Any other attributes to add to the html node (example: `alt`, `data-*`, `className`)
 
 _Note_: if you use type='bg' the css property background-size is set to 'cover' by default. To override this behaviour you can change the background size by overriding it with a string such as `'contain'`, or to `null` for controlling the style with CSS.
 
@@ -156,31 +173,10 @@ The final `type='img'` component will be created with the options passed into th
 </Imgix>
 ```
 
-## Installation
+## Browser Support
 
-With npm:
+We support the latest version of Google Chrome (which [automatically updates](https://support.google.com/chrome/answer/95414) whenever it detects that a new version of the browser is available). We also support the current and previous major releases of desktop Firefox, Internet Explorer, and Safari on a rolling basis. Mobile support is tested on the most recent minor version of the current and previous major release for the default browser on iOS and Android (e.g., iOS 9.2 and 8.4). Each time a new version is released, we begin supporting that version and stop supporting the third most recent version.
 
-```
-npm install --save react-imgix
-```
+## Meta
 
-With [yarn](https://yarnpkg.com):
-
-```
-yarn add react-imgix
-```
-
-## Contributing
-
-### Cutting a release
-
-Ensure all commits are correctly described using the [Conventional Commits Specification](https://conventionalcommits.org/)
-
-```sh
-npm run release
-git push --follow-tags origin master; npm publish
-```
-
-Author: [Frederick Fogerty](http://twitter.com/fredfogerty)
-
-License: ISC
+React-imgix was originally created by [Frederick Fogerty](http://twitter.com/fredfogerty). It's licensed under the ISC license (see the [license file](https://github.com/imgix/react-imgix/blob/master/LICENSE.md) for more info). Any contribution is absolutely welcome, but please review the [contribution guidelines](https://github.com/imgix/react-imgix/blob/master/CONTRIBUTING.md) before getting started.
