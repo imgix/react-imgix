@@ -2,6 +2,22 @@
   "name": "react-imgix",
   "version": "7.1.1",
   "description": "React Component for displaying an image from Imgix",
+  "author": "Frederick Fogerty <frederick.fogerty@gmail.com> (https://github.com/frederickfogerty)",
+  "contributors": [
+    "Frederick Fogerty <frederick.fogerty@gmail.com> (https://github.com/frederickfogerty)"
+  ],
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/imgix/react-imgix/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/imgix/react-imgix.git"
+  },
+  "homepage": "https://github.com/imgix/react-imgix#readme",
+  "keywords": [
+    "react"
+  ],
   "main": "lib/index.js",
   "module": "es/index.js",
   "jsnext:main": "es/index.js",
@@ -21,19 +37,6 @@
     "test:watch": "cross-env BABEL_ENV=commonjs mocha --require babel-core/register --recursive src/*.test.js --watch --reporter min",
     "test": "npm run pretty && cross-env BABEL_ENV=commonjs mocha --require babel-core/register --recursive src/*.test.js"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/imgix/react-imgix.git"
-  },
-  "keywords": [
-    "react"
-  ],
-  "author": "Frederick Fogerty",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/imgix/react-imgix/issues"
-  },
-  "homepage": "https://github.com/imgix/react-imgix#readme",
   "peerDependencies": {
     "prop-types": ">=15.5.6",
     "react": ">=15",
