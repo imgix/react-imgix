@@ -72,7 +72,7 @@
   "jest": {
     "roots": [
       "<rootDir>/src/",
-      "<rootDir>/test/"
+      "<rootDir>/test/unit/"
     ],
     "moduleDirectories": [
       "node_modules",
