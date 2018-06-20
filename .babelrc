@@ -4,6 +4,9 @@
 	"env": {
 		"commonjs": {
 			"presets": ["react", "env", "stage-0"]
+		},
+		"test": {
+			"presets": ["react", "env", "stage-0"]
 		}
 	}
 }
