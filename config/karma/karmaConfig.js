@@ -1,55 +1,48 @@
 const webpack = require("karma-webpack");
 const webpackConfig = require("../webpackConfig");
 const baseConfig = {
-  frameworks: [
-    "mocha"
-    // , "chai", "sinon", "sinon-chai"
-  ],
-  files: [
-    // { pattern: "src/**/*.js", included: false, served: false },
-    "../../test/tests.webpack.js"
-    // "test/integration/**/*.js"
-  ],
+  frameworks: ["mocha"],
+  files: ["../../test/tests.webpack.js"],
   plugins: [
     webpack,
     "karma-mocha",
-    // "karma-coverage",
-    // "karma-spec-reporter",
-    // "karma-chai",
+    "karma-mocha-reporter",
     "karma-chrome-launcher"
-    // "karma-sourcemap-loader",
-    // "karma-webpack",
-    // "karma-mocha-reporter",
-    // "karma-sinon",
-    // "karma-sinon-chai"
   ],
   preprocessors: {
-    // "src/**/*.js": "webpack",
-    // "test/**/*.js": "webpack"
     "../../test/tests.webpack.js": "webpack"
   },
+  reporters: ["mocha"],
   concurrency: 5,
   captureTimeout: 90000,
   browserConnectTimeout: 3000,
   browserNoActivityTimeout: 15000,
-  webpack: webpackConfig
+  webpack: webpackConfig,
+  webpackMiddleware: {}
 };
 
-exports.headless = karmaConfig => {
+const headlessConfig = karmaConfig => {
   process.env.CHROME_BIN = require("puppeteer").executablePath();
   const headlessConfig = {
     ...baseConfig,
-    browsers: ["ChromeHeadless"]
+    browsers: ["ChromeHeadless"],
+    webpack: {
+      ...baseConfig.webpack,
+      stats: "errors-only"
+    },
+    webpackMiddleware: {
+      ...baseConfig.webpackMiddleware,
+      stats: "errors-only"
+    }
   };
   karmaConfig.set(headlessConfig);
 };
 
-const localConfig = {
-  ...baseConfig,
-  browsers: [
-    "Chrome"
-    // , "Firefox"
-  ]
+const localConfig = karmaConfig => {
+  karmaConfig.set({
+    ...baseConfig,
+    browsers: ["Chrome", "Firefox"]
+  });
 };
 
 const browserslist = require("browserslist");
@@ -123,12 +116,12 @@ const mapBrowsersListToBrowserStackLaunchers = browserslistList => {
   };
 };
 
-var fullConfig = karmaConfig => {
+const fullConfig = karmaConfig => {
   const browserslist = require("browserslist");
   const { browsers, customLaunchers } = mapBrowsersListToBrowserStackLaunchers(
     browserslist()
   );
-  console.log(browsers, customLaunchers);
+  console.log("Testing on browsers:", browsers.join(", "));
 
   karmaConfig.set({
     ...baseConfig,
@@ -136,17 +129,13 @@ var fullConfig = karmaConfig => {
       username: process.env.BROWSERSTACK_USERNAME,
       accessKey: process.env.BROWSERSTACK_ACCESS_KEY
     },
-    reporters: ["dots", "BrowserStack"],
-    // TODO: Remove slice, used for testing browserstack on CI
-    browsers: browsers.slice(0, 1),
+    reporters: [...baseConfig.reporters, "BrowserStack"],
+    browsers: browsers,
     customLaunchers,
     plugins: [...baseConfig.plugins, "karma-browserstack-launcher"]
   });
 };
 
-const wrapInSetConfig = configObject => karmaConfig =>
-  karmaConfig.set(configObject);
-
-// exports.headless = wrapInSetConfig(headlessConfig);
-exports.local = wrapInSetConfig(localConfig);
 exports.full = fullConfig;
+exports.local = localConfig;
+exports.headless = headlessConfig;
