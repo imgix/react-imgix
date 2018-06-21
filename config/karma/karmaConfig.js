@@ -62,12 +62,39 @@ const oldestVersionFromRange = versionRange => {
 };
 const isDesktop = browserOrPlatform =>
   ["chrome", "firefox", "safari", "edge", "ie"].includes(browserOrPlatform);
-const getOSVersionForMobileChromeVersion = version => {
+// Update these values from https://www.browserstack.com/automate/capabilities#test-configuration-capabilities if the build fails
+const getOSVersionAndDeviceForMobileChromeVersion = version => {
   if (Number.parseFloat(version) >= 5) {
     // Have to approximate os version as chrome versions are not tied to android versions after 4.4
-    return "8.0";
+    return {
+      os_version: "8.0",
+      device: "Google Pixel 2"
+    };
   }
-  return version;
+  return {
+    os_version: "4.4",
+    device: "Samsung Galaxy Tab 4"
+  };
+};
+const getOSVersionAndDeviceForMobileSafariVersion = version => {
+  const versionNumber = Number.parseFloat(versionNumber);
+  if (10 <= versionNumber && versionNumber < 11) {
+    return {
+      os_version: "10.3",
+      device: "iPhone 7"
+    };
+  }
+  if (11 <= versionNumber && versionNumber < 12) {
+    return {
+      os_version: "11.0",
+      device: "iPhone X"
+    };
+  }
+  // Try run test if version number is outside expected range
+  return {
+    os_version: `${Math.floor(versionNumber)}.0`,
+    device: "iPhone X"
+  };
 };
 const mapBrowsersListToBrowserStackLaunchers = browserslistList => {
   let browserStackConfigurationObjects = {};
@@ -99,14 +126,15 @@ const mapBrowsersListToBrowserStackLaunchers = browserslistList => {
       }
     } else {
       const isIOS = browserOrPlatform === "ios_saf";
+      const { os_version, device } = isIOS
+        ? getOSVersionAndDeviceForMobileSafariVersion(version)
+        : getOSVersionAndDeviceForMobileChromeVersion(version);
       browserStackConfigurationObjects[`bs_${browserOrPlatform}_${version}`] = {
         base: "BrowserStack",
-        device: isIOS ? "iPhone X" : "Google Pixel 2",
+        device,
         real_mobile: true,
         os: isIOS ? "ios" : "android",
-        os_version: isIOS
-          ? version
-          : getOSVersionForMobileChromeVersion(version)
+        os_version
       };
     }
   });
