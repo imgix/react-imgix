@@ -40,7 +40,7 @@
     "test:browser:watch": "karma start config/karma/karmaConfigLocal.js",
     "test:browser:all": "karma start config/karma/karmaConfigBrowserStack.js --singleRun",
     "test:watch": "jest --watch",
-    "test": "jest"
+    "test": "jest && npm run test:browser:all"
   },
   "peerDependencies": {
     "prop-types": ">=15.5.6",

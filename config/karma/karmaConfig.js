@@ -122,13 +122,13 @@ const mapBrowsersListToBrowserStackLaunchers = browserslistList => {
     customLaunchers: browserStackConfigurationObjects
   };
 };
-console.log(mapBrowsersListToBrowserStackLaunchers(browsers));
 
 var fullConfig = karmaConfig => {
   const browserslist = require("browserslist");
   const { browsers, customLaunchers } = mapBrowsersListToBrowserStackLaunchers(
     browserslist()
   );
+  console.log(browsers, customLaunchers);
 
   karmaConfig.set({
     ...baseConfig,
@@ -136,9 +136,9 @@ var fullConfig = karmaConfig => {
       username: process.env.BROWSERSTACK_USERNAME,
       accessKey: process.env.BROWSERSTACK_ACCESS_KEY
     },
-    // reporters: ["progress", "saucelabs"],
     reporters: ["dots", "BrowserStack"],
-    browsers,
+    // TODO: Remove slice, used for testing browserstack on CI
+    browsers: browsers.slice(0, 1),
     customLaunchers,
     plugins: [...baseConfig.plugins, "karma-browserstack-launcher"]
   });
