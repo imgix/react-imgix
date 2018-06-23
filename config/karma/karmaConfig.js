@@ -77,7 +77,7 @@ const getOSVersionAndDeviceForMobileChromeVersion = version => {
   };
 };
 const getOSVersionAndDeviceForMobileSafariVersion = version => {
-  const versionNumber = Number.parseFloat(versionNumber);
+  const versionNumber = Number.parseFloat(version);
   if (10 <= versionNumber && versionNumber < 11) {
     return {
       os_version: "10.3",
@@ -129,7 +129,9 @@ const mapBrowsersListToBrowserStackLaunchers = browserslistList => {
       const { os_version, device } = isIOS
         ? getOSVersionAndDeviceForMobileSafariVersion(version)
         : getOSVersionAndDeviceForMobileChromeVersion(version);
-      browserStackConfigurationObjects[`bs_${browserOrPlatform}_${version}`] = {
+      browserStackConfigurationObjects[
+        `bs_${browserOrPlatform}_${device}_${os_version}`
+      ] = {
         base: "BrowserStack",
         device,
         real_mobile: true,
