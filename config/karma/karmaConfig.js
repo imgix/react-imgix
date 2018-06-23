@@ -5,6 +5,7 @@ const baseConfig = {
   files: ["../../test/tests.webpack.js"],
   plugins: [
     webpack,
+    require("karma-firefox-launcher"),
     "karma-mocha",
     "karma-mocha-reporter",
     "karma-chrome-launcher"
@@ -41,7 +42,22 @@ const headlessConfig = karmaConfig => {
 const localConfig = karmaConfig => {
   karmaConfig.set({
     ...baseConfig,
-    browsers: ["Chrome", "Firefox"]
+    browsers: ["ChromeHeadless", "FirefoxHeadless"],
+    customLaunchers: {
+      FirefoxHeadless: {
+        base: "Firefox",
+        flags: ["-headless"]
+      }
+    },
+
+    webpack: {
+      ...baseConfig.webpack,
+      stats: "errors-only"
+    },
+    webpackMiddleware: {
+      ...baseConfig.webpackMiddleware,
+      stats: "errors-only"
+    }
   });
 };
 

@@ -42,14 +42,6 @@ describe("When in default mode", () => {
     expect(renderImage().find("img")).toHaveLength(1);
   });
   it("the rendered element's src should be set", () => {
-    const renderedImage = renderImage();
-    renderedImage.getDOMNode().style.height = "220px";
-    console.log(
-      JSON.stringify(
-        renderedImage.getDOMNode().children[0].getBoundingClientRect()
-      )
-      // .getBoundingClientRect().height
-    );
     expect(
       renderImage()
         .find("img")
