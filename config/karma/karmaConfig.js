@@ -6,6 +6,7 @@ const baseConfig = {
   plugins: [
     webpack,
     require("karma-firefox-launcher"),
+    require("karma-safari-launcher"),
     "karma-mocha",
     "karma-mocha-reporter",
     "karma-chrome-launcher"
@@ -40,9 +41,14 @@ const headlessConfig = karmaConfig => {
 };
 
 const localConfig = karmaConfig => {
+  const browsers = [
+    "ChromeHeadless",
+    "FirefoxHeadless",
+    ...(process.platform === "darwin" ? ["Safari"] : [])
+  ];
   karmaConfig.set({
     ...baseConfig,
-    browsers: ["ChromeHeadless", "FirefoxHeadless"],
+    browsers,
     customLaunchers: {
       FirefoxHeadless: {
         base: "Firefox",
