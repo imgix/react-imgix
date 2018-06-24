@@ -1,13 +1,38 @@
 import sinon from "sinon";
 import React from "react";
 import ReactDOM from "react-dom";
-import { shallow } from "enzyme";
+import { shallow, mount } from "enzyme";
 import PropTypes from "prop-types";
 
 import Imgix from "react-imgix";
 
 const src = "http://domain.imgix.net/image.jpg";
 let sut, vdom, instance;
+const EMPTY_IMAGE_SRC = "//:0";
+
+const renderImageAndBreakInStages = async ({
+  element,
+  mockImage = <img />,
+  afterFirstRender = async () => {},
+  afterSecondRender = async () => {}
+}) => {
+  sinon.stub(ReactDOM, "findDOMNode").callsFake(() => mockImage);
+
+  const sut = shallow(element, {
+    disableLifecycleMethods: true
+  });
+
+  await afterFirstRender(sut);
+
+  await sut.instance().componentDidMount();
+  sut.update();
+
+  await afterSecondRender(sut);
+
+  ReactDOM.findDOMNode.restore();
+
+  return sut;
+};
 
 describe("When using aggressiveLoad", () => {
   const renderImage = () =>
@@ -33,9 +58,9 @@ describe("When in image mode", () => {
       shallow(<Imgix type="img" src={src} />, {
         disableLifecycleMethods: true
       });
-    it("the rendered element's src should be null", () => {
+    it("the rendered element's src should be empty", () => {
       const props = renderImage().props();
-      expect(props.src).toBe(null);
+      expect(props.src).toBe(EMPTY_IMAGE_SRC);
       expect(props.srcSet).toBe(null);
     });
   });
@@ -321,7 +346,7 @@ describe("When in background mode", () => {
     it("the element's url() should not be set", () => {
       expect(sut.props()).toMatchObject({
         style: {
-          backgroundImage: null,
+          backgroundImage: `url('//:0')`,
           backgroundSize: "cover"
         }
       });
@@ -572,9 +597,60 @@ describe("When using the component", () => {
     expect(sut.props().width).toEqual(width);
   });
 
+  it("an alt attribute should be set if loading aggressively", async () => {
+    const imgProps = {
+      alt: "Example alt attribute"
+    };
+    sut = await renderImageAndBreakInStages({
+      element: (
+        <Imgix
+          src={"https://mysource.imgix.net/demo.png"}
+          imgProps={imgProps}
+          aggressiveLoad
+        />
+      ),
+      afterFirstRender: async sut => {
+        expect(
+          sut
+            .find("img")
+            .first()
+            .props().alt
+        ).toEqual(imgProps.alt);
+      }
+    });
+  });
+  it("an alt attribute should only be set after the component's size has been found", async () => {
+    const imgProps = {
+      alt: "Example alt attribute"
+    };
+    sut = await renderImageAndBreakInStages({
+      element: (
+        <Imgix
+          src={"https://mysource.imgix.net/demo.png"}
+          imgProps={imgProps}
+        />
+      ),
+      afterFirstRender: async sut => {
+        expect(
+          sut
+            .find("img")
+            .first()
+            .props().alt
+        ).toBeFalsy();
+      },
+      afterSecondRender: async sut => {
+        expect(
+          sut
+            .find("img")
+            .first()
+            .props().alt
+        ).toEqual(imgProps.alt);
+      }
+    });
+  });
+
   it("any attributes passed via imgProps should be added to the rendered element", () => {
     const imgProps = {
-      alt: "Example alt attribute",
       "data-src": "https://mysource.imgix.net/demo.png"
     };
     sut = shallow(
@@ -584,7 +660,6 @@ describe("When using the component", () => {
       }
     );
 
-    expect(sut.props().alt).toEqual(imgProps.alt);
     expect(sut.props()["data-src"]).toEqual(imgProps["data-src"]);
   });
 
