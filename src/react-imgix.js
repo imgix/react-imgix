@@ -6,6 +6,9 @@ import PropTypes from "prop-types";
 
 import processImage from "./support.js";
 
+// Best way to include an img with an empty src https://stackoverflow.com/a/5775621/515634 and https://stackoverflow.com/a/19126281/515634
+const EMPTY_IMAGE_SRC = "//:0";
+
 const roundToNearest = (size, precision) =>
   precision * Math.ceil(size / precision);
 
@@ -106,7 +109,7 @@ export default class ReactImgix extends Component {
       type,
       ...other
     } = this.props;
-    let _src = null;
+    let _src = EMPTY_IMAGE_SRC;
     let srcSet = null;
     let _component = component;
 
@@ -140,11 +143,14 @@ export default class ReactImgix extends Component {
       srcSet = `${dpr2} 2x, ${dpr3} 3x`;
     }
 
+    let _alt = (this.props.imgProps || {}).alt;
+
     let childProps = {
       ...this.props.imgProps,
       className: this.props.className,
       width: other.width <= 1 ? null : other.width,
-      height: other.height <= 1 ? null : other.height
+      height: other.height <= 1 ? null : other.height,
+      alt: this.state.mounted || aggressiveLoad ? _alt : undefined
     };
 
     switch (type) {
