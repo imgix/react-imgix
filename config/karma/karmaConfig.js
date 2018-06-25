@@ -118,32 +118,61 @@ const getOSVersionAndDeviceForMobileSafariVersion = version => {
     device: "iPhone X"
   };
 };
+const ensureBrowserVersionExistsOnBrowserStack = (browser, version) => {
+  const versionNumber = Number.parseFloat(version);
+  if (browser.toLowerCase() === "safari") {
+    if (11 <= versionNumber && versionNumber < 12) {
+      return "11.1";
+    }
+    if (10 <= versionNumber && versionNumber < 11) {
+      return "10.1";
+    }
+  }
+  return version;
+};
+
+const ensureOSXVersionIsCorrect = (browser, version) => {
+  const versionNumber = Number.parseFloat(version);
+  if (browser.toLowerCase() === "safari") {
+    if (11 <= versionNumber && versionNumber < 12) {
+      return "High Sierra";
+    }
+    if (10 <= versionNumber && versionNumber < 11) {
+      return "Sierra";
+    }
+  }
+  return "High Sierra";
+};
 const mapBrowsersListToBrowserStackLaunchers = browserslistList => {
   let browserStackConfigurationObjects = {};
-  browserslistList.map(browsersListItem => {
+  browserslistList.forEach(browsersListItem => {
     const [browserOrPlatform, versionRange] = browsersListItem.split(" ");
     const version = oldestVersionFromRange(versionRange);
     if (isDesktop(browserOrPlatform)) {
+      const versionSafe = ensureBrowserVersionExistsOnBrowserStack(
+        browserOrPlatform,
+        version
+      );
       if (availableOnWindows(browserOrPlatform)) {
         browserStackConfigurationObjects[
-          `bs_${browserOrPlatform}_${version}_windows`
+          `bs_${browserOrPlatform}_${versionSafe}_windows`
         ] = {
           base: "BrowserStack",
           browser: browserOrPlatform,
-          browser_version: version,
+          browser_version: versionSafe,
           os: "WINDOWS",
           os_version: "10"
         };
       }
       if (availableOnOSX(browserOrPlatform)) {
         browserStackConfigurationObjects[
-          `bs_${browserOrPlatform}_${version}_os_x`
+          `bs_${browserOrPlatform}_${versionSafe}_os_x`
         ] = {
           base: "BrowserStack",
           browser: browserOrPlatform,
-          browser_version: version,
+          browser_version: versionSafe,
           os: "OS X",
-          os_version: "High Sierra"
+          os_version: ensureOSXVersionIsCorrect(browserOrPlatform, versionSafe)
         };
       }
     } else {
@@ -173,7 +202,10 @@ const fullConfig = karmaConfig => {
   const { browsers, customLaunchers } = mapBrowsersListToBrowserStackLaunchers(
     browserslist()
   );
-  console.log("Testing on browsers:", browsers.join(", "));
+  console.log(
+    "Testing on browsers:\n",
+    browsers.map(browser => ` - ${browser}`).join("\n")
+  );
 
   karmaConfig.set({
     ...baseConfig,
