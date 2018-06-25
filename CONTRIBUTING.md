@@ -173,7 +173,7 @@ npm run test:browser:watch		# runs the tests in Chrome, Firefox, and, if on OS X
 To run the integration tests across all browsers, a BrowserStack account must be available.
 
 ```sh
-BROWSERSTACK_USERNAME=xxx && BROWSERSTACK_ACCESs_KEY=xxx && npm run test:browser:all
+BUILD_TAG=test-xxx && BROWSERSTACK_USERNAME=xxx && BROWSERSTACK_ACCESS_KEY=xxx && npm run test:browser:all
 ```
 
 ### Cutting a release
