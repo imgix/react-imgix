@@ -15,7 +15,6 @@ const baseConfig = {
     "../../test/tests.webpack.js": "webpack"
   },
   reporters: ["mocha"],
-  concurrency: 5,
   captureTimeout: 90000,
   browserConnectTimeout: 3000,
   browserNoActivityTimeout: 15000,
