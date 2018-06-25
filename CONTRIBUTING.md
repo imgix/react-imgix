@@ -161,8 +161,6 @@ npm run test 			# run the test suite
 npm run test:watch		# run the test suite, watching for changes (good for TDD)
 ```
 
-o
-
 ### Cutting a release
 
 Ensure all commits are correctly described using the [Conventional Commits Specification](https://conventionalcommits.org/)
