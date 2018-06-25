@@ -19,24 +19,7 @@ const renderIntoContainer = element => {
 };
 
 describe("When in default mode", () => {
-  const renderImage = () =>
-    renderIntoContainer(
-      <div
-        style={{
-          width: 105,
-          height: 100,
-          display: "flex",
-          alignItems: "stretch"
-        }}
-      >
-        <Imgix
-          src={src}
-          // width={100}
-          // height={100}
-          // style={{ height: 100, width: 100 }}
-        />
-      </div>
-    );
+  const renderImage = () => renderIntoContainer(<Imgix src={src} />);
 
   it("an <img> should be rendered", () => {
     expect(renderImage().find("img")).toHaveLength(1);
