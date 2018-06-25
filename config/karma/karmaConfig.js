@@ -108,13 +108,13 @@ const getOSVersionAndDeviceForMobileSafariVersion = version => {
   if (11 <= versionNumber && versionNumber < 12) {
     return {
       os_version: "11.0",
-      device: "iPhone X"
+      device: "iPhone 8"
     };
   }
   // Try run test if version number is outside expected range
   return {
     os_version: `${Math.floor(versionNumber)}.0`,
-    device: "iPhone X"
+    device: "iPhone 8"
   };
 };
 const ensureBrowserVersionExistsOnBrowserStack = (browser, version) => {
