@@ -213,7 +213,8 @@ const fullConfig = karmaConfig => {
       accessKey: process.env.BROWSERSTACK_ACCESS_KEY
     },
     reporters: [...baseConfig.reporters, "BrowserStack"],
-    browsers: browsers,
+    // TODO: Enable iPhone tests when BrowserStack support replies
+    browsers: browsers.filter(v => !v.includes("iPhone")),
     customLaunchers,
     plugins: [...baseConfig.plugins, "karma-browserstack-launcher"]
   });
