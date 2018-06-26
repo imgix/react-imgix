@@ -154,11 +154,26 @@ npm install
 
 Once you're configured, building the JavaScript from the command line is easy:
 
-```
+```sh
 npm run build   		# build react-imgix from source
 npm run build:watch		# watch for changes and build automatically
 npm run test 			# run the test suite
 npm run test:watch		# run the test suite, watching for changes (good for TDD)
+```
+
+To run the browser integration tests, use one of the following commands:
+
+```sh
+npm run test:headless			# runs the tests in Chrome headlessly
+npm run test:headless:watch		# runs the tests in Chrome headlessly and watches for changes
+npm run test:browser			# runs the tests in Chrome, Firefox, and, if on OS X, Safari, headlessly (excl. Safari)
+npm run test:browser:watch		# runs the tests in Chrome, Firefox, and, if on OS X, Safari, headlessly (excl. Safari), and watches for changes
+```
+
+To run the integration tests across all browsers, a BrowserStack account must be available.
+
+```sh
+BUILD_TAG=test-xxx && BROWSERSTACK_USERNAME=xxx && BROWSERSTACK_ACCESS_KEY=xxx && npm run test:browser:all
 ```
 
 ### Cutting a release
