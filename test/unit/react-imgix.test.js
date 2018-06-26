@@ -604,4 +604,35 @@ describe("When using the component", () => {
 
     ReactDOM.findDOMNode.restore();
   });
+
+  it("an ixlib parameter should be included by default in the computed src", () => {
+    const expectedVersion = require("read-pkg-up").sync().pkg.version;
+
+    sut = shallow(
+      <Imgix src="https://mysource.imgix.net/demo.png" aggressiveLoad />,
+      {
+        disableLifecycleMethods: true
+      }
+    );
+    sut.props();
+    expect(sut.props().src).toContain(`ixlib=react-${expectedVersion}`);
+  });
+  it("an ixlib parameter should be included by default in the computed srcSet", () => {
+    const expectedVersion = require("read-pkg-up").sync().pkg.version;
+    const expectedParam = `ixlib=react-${expectedVersion}`;
+
+    sut = shallow(
+      <Imgix src="https://mysource.imgix.net/demo.png" aggressiveLoad />,
+      {
+        disableLifecycleMethods: true
+      }
+    );
+
+    sut
+      .props()
+      .srcSet.split(",")
+      .forEach(srcSet => {
+        expect(srcSet).toContain(expectedParam);
+      });
+  });
 });
