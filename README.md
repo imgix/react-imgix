@@ -108,6 +108,10 @@ Fallback width for images, useful for SSR or static site generation
 
 Generate `2x` and `3x` src sets when using an `<img>` tag. Defaults to `true`
 
+#### disableLibraryParam :: bool
+
+By default this component adds a parameter to the generated url to help Imgix with analytics and support for this library. This can be disabled by setting this prop to `true`.
+
 #### customParams :: object
 
 Any other Imgix params to add to the image `src`
