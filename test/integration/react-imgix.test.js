@@ -66,4 +66,23 @@ describe("When in default mode", () => {
       height: 800
     });
   });
+  it("should render image with dimensions of the size of the element", async () => {
+    const sut = renderIntoContainer(
+      <div>
+        <style>
+          {`
+					img {
+						width: 266px;
+						height: 400px;
+					}
+					`}
+        </style>
+        <Imgix src={src} precision={1} />
+      </div>
+    );
+
+    let renderedSrc = sut.find("img").props().src;
+    expect(renderedSrc).toContain(`w=266`);
+    expect(renderedSrc).toContain(`h=400`);
+  });
 });
