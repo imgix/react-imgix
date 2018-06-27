@@ -8,7 +8,8 @@ import Imgix from "react-imgix";
 
 const src = "http://domain.imgix.net/image.jpg";
 let sut, vdom, instance;
-const EMPTY_IMAGE_SRC = "//:0";
+const EMPTY_IMAGE_SRC =
+  "data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=";
 
 const renderImageAndBreakInStages = async ({
   element,
@@ -346,7 +347,7 @@ describe("When in background mode", () => {
     it("the element's url() should not be set", () => {
       expect(sut.props()).toMatchObject({
         style: {
-          backgroundImage: `url('//:0')`,
+          backgroundImage: `url('${EMPTY_IMAGE_SRC}')`,
           backgroundSize: "cover"
         }
       });

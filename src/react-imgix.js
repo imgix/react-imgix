@@ -7,7 +7,9 @@ import PropTypes from "prop-types";
 import processImage from "./support.js";
 
 // Best way to include an img with an empty src https://stackoverflow.com/a/5775621/515634 and https://stackoverflow.com/a/19126281/515634
-const EMPTY_IMAGE_SRC = "//:0";
+// Using '//:0' doesn't work in IE 11, but using a data-uri works.
+const EMPTY_IMAGE_SRC =
+  "data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=";
 
 const roundToNearest = (size, precision) =>
   precision * Math.ceil(size / precision);
