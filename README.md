@@ -1,7 +1,7 @@
 <img src="https://assets.imgix.net/imgix-logo-web-2014.pdf?page=2&fm=png&w=120" srcset="https://assets.imgix.net/imgix-logo-web-2014.pdf?page=2&fm=png&w=120 1x,
  https://assets.imgix.net/imgix-logo-web-2014.pdf?page=2&fm=png&w=120&dpr=2 2x, https://assets.imgix.net/imgix-logo-web-2014.pdf?page=2&fm=png&w=120&dpr=3 3x" alt="imgix logo">
 
-# Imgix for React
+# imgix for React
 
 [![npm](https://img.shields.io/npm/dm/react-imgix.svg)](https://www.npmjs.com/package/react-imgix)
 [![npm version](https://img.shields.io/npm/v/react-imgix.svg)](https://www.npmjs.com/package/react-imgix)
@@ -10,7 +10,7 @@
 [![Code Climate](https://codeclimate.com/github/imgix/react-imgix/badges/gpa.svg)](https://codeclimate.com/github/imgix/react-imgix)
 [![styled with prettier](https://img.shields.io/badge/styled_with-prettier-ff69b4.svg)](https://github.com/prettier/prettier)
 
-A [React](https://facebook.github.io/react/) component that renders images using the [Imgix](https://www.imgix.com/) API. It uses the smallest images possible, and does cool stuff, like [cropping to faces](https://www.imgix.com/docs/reference/size#param-crop) by default.
+A [React](https://facebook.github.io/react/) component that renders images using the [imgix](https://www.imgix.com/) API. It uses the smallest images possible, and does cool stuff, like [cropping to faces](https://www.imgix.com/docs/reference/size#param-crop) by default.
 
 - [Installation](#installation)
 - [Usage](#usage)
@@ -46,7 +46,7 @@ Whether to wait until the component has mounted to render the image, useful for 
 
 #### auto :: array, default = ['format']
 
-Array of values to pass to Imgix's auto param
+Array of values to pass to imgix's auto param
 
 #### type :: string, default = 'img'
 
@@ -62,7 +62,7 @@ Wrapper component to use when rendering a `bg`, defaults to `div`
 
 #### entropy :: bool, default = false
 
-Whether or not to crop using points of interest. See Imgix API for more details.
+Whether or not to crop using points of interest. See imgix API for more details.
 
 #### faces :: bool, default = true
 
@@ -74,7 +74,7 @@ Sets specific crop, overriding faces and entropy flags. Useful for specifying fa
 
 #### fit :: string
 
-See Imgix's API, defaults to `crop`
+See imgix's API, defaults to `crop`
 
 #### fluid :: bool, default = true
 
@@ -108,9 +108,13 @@ Fallback width for images, useful for SSR or static site generation
 
 Generate `2x` and `3x` src sets when using an `<img>` tag. Defaults to `true`
 
+#### disableLibraryParam :: bool
+
+By default this component adds a parameter to the generated url to help imgix with analytics and support for this library. This can be disabled by setting this prop to `true`.
+
 #### customParams :: object
 
-Any other Imgix params to add to the image `src`
+Any other imgix params to add to the image `src`
 
 _For example_:
 
