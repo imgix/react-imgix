@@ -75,6 +75,13 @@ describe("When in <source> mode", () => {
     it(`props.alt should not be defined`, () => {
       expect(renderImage().props().alt).toBe(undefined);
     });
+
+    it("an ixlib param should be added to the src", () => {
+      renderImage()
+        .props()
+        .srcSet.split(",")
+        .forEach(srcSet => expectUrlToContainIxLibParam(srcSet));
+    });
   };
 
   describe("with the generateSrcSet prop", () => {
@@ -411,12 +418,14 @@ describe("When using the component", () => {
     expect(sut.props().src).toContain("fit=crop");
   });
   it("the keys of custom url parameters should be url encoded", () => {
+    const helloWorldKey = "hello world";
+    const expectedKey = "hello%20world";
     sut = shallow(
       <Imgix
         src={"https://mysource.imgix.net/demo.png"}
         aggressiveLoad
         customParams={{
-          "hello world": "interesting"
+          [helloWorldKey]: "interesting"
         }}
       />,
       {
@@ -424,17 +433,19 @@ describe("When using the component", () => {
       }
     );
 
-    expect(sut.props().src).toEqual(
-      "https://mysource.imgix.net/demo.png?auto=format&dpr=1&hello%20world=interesting&crop=faces&fit=crop&w=1&h=1"
-    );
+    expect(sut.props().src).toContain(`${expectedKey}=interesting`);
+    expect(sut.props().src).not.toContain(`${helloWorldKey}=interesting`);
   });
   it("the values of custom url parameters should be url encoded", () => {
+    const helloWorldValue = '/foo"> <script>alert("hacked")</script><';
+    const expectedValue =
+      "%2Ffoo%22%3E%20%3Cscript%3Ealert(%22hacked%22)%3C%2Fscript%3E%3C";
     sut = shallow(
       <Imgix
         src={"https://mysource.imgix.net/demo.png"}
         aggressiveLoad
         customParams={{
-          hello_world: '/foo"> <script>alert("hacked")</script><'
+          hello_world: helloWorldValue
         }}
       />,
       {
@@ -442,17 +453,18 @@ describe("When using the component", () => {
       }
     );
 
-    expect(sut.props().src).toEqual(
-      "https://mysource.imgix.net/demo.png?auto=format&dpr=1&hello_world=%2Ffoo%22%3E%20%3Cscript%3Ealert(%22hacked%22)%3C%2Fscript%3E%3C&crop=faces&fit=crop&w=1&h=1"
-    );
+    expect(sut.props().src).toContain(`hello_world=${expectedValue}`);
+    expect(sut.props().src).not.toContain(`hello_world=${helloWorldValue}`);
   });
   it("the base64 custom parameter values should be base64 encoded", () => {
+    const txt64Value = "I cannøt belîév∑ it wors! 😱";
+    const expectedValue = "SSBjYW5uw7h0IGJlbMOuw6l24oiRIGl0IHdvcu-jv3MhIPCfmLE";
     sut = shallow(
       <Imgix
         src={"https://mysource.imgix.net/~text"}
         aggressiveLoad
         customParams={{
-          txt64: "I cannøt belîév∑ it wors! 😱"
+          txt64: txt64Value
         }}
       />,
       {
@@ -460,9 +472,8 @@ describe("When using the component", () => {
       }
     );
 
-    expect(sut.props().src).toEqual(
-      "https://mysource.imgix.net/~text?auto=format&dpr=1&txt64=SSBjYW5uw7h0IGJlbMOuw6l24oiRIGl0IHdvcu-jv3MhIPCfmLE&crop=faces&fit=crop&w=1&h=1"
-    );
+    expect(sut.props().src).toContain(`txt64=${expectedValue}`);
+    expect(sut.props().src).not.toContain(`txt64=${txt64Value}`);
   });
   it("the generateSrcSet prop should add dpr=2 and dpr=3 to the srcSet attribute", () => {
     sut = shallow(<Imgix src={src} aggressiveLoad generateSrcSet />, {
@@ -485,9 +496,7 @@ describe("When using the component", () => {
       }
     );
 
-    expect(sut.props().src).toEqual(
-      `https://mysource.imgix.net/demo.png?auto=format&dpr=1&crop=faces&fit=crop&w=1&h=${height}`
-    );
+    expect(sut.props().src).toContain(`h=${height}`);
   });
 
   it("a height prop between 0 and 1 should not be passed as a prop to the child element rendered", () => {
@@ -535,9 +544,7 @@ describe("When using the component", () => {
       }
     );
 
-    expect(sut.props().src).toEqual(
-      `https://mysource.imgix.net/demo.png?auto=format&dpr=1&crop=faces&fit=crop&w=${width}&h=1`
-    );
+    expect(sut.props().src).toContain(`w=${width}`);
   });
 
   it("a width prop between 0 and 1 should not be passed as a prop to the child element rendered", () => {
@@ -604,4 +611,50 @@ describe("When using the component", () => {
 
     ReactDOM.findDOMNode.restore();
   });
+
+  it("an ixlib parameter should be included by default in the computed src", () => {
+    sut = shallow(
+      <Imgix src="https://mysource.imgix.net/demo.png" aggressiveLoad />,
+      {
+        disableLifecycleMethods: true
+      }
+    );
+    expectUrlToContainIxLibParam(sut.props().src);
+  });
+  it("an ixlib parameter should be included by default in the computed srcSet", () => {
+    sut = shallow(
+      <Imgix src="https://mysource.imgix.net/demo.png" aggressiveLoad />,
+      {
+        disableLifecycleMethods: true
+      }
+    );
+
+    sut
+      .props()
+      .srcSet.split(",")
+      .forEach(srcSet => {
+        expectUrlToContainIxLibParam(srcSet);
+      });
+  });
+  it("the addition of the ixlib parameter to the url can be disabled", () => {
+    sut = shallow(
+      <Imgix
+        src="https://mysource.imgix.net/demo.png"
+        aggressiveLoad
+        disableLibraryParam
+      />,
+      {
+        disableLifecycleMethods: true
+      }
+    );
+
+    expect(sut.props().src).not.toContain(`ixlib=`);
+  });
 });
+
+const expectUrlToContainIxLibParam = url => {
+  const expectedVersion = require("read-pkg-up").sync().pkg.version;
+  const expectedParam = `ixlib=react-${expectedVersion}`;
+
+  expect(url).toContain(expectedParam);
+};

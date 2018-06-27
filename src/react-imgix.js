@@ -6,6 +6,8 @@ import PropTypes from "prop-types";
 
 import processImage from "./support.js";
 
+const PACKAGE_VERSION = require("../package.json").version;
+
 const roundToNearest = (size, precision) =>
   precision * Math.ceil(size / precision);
 
@@ -52,7 +54,8 @@ export default class ReactImgix extends Component {
     width: PropTypes.number,
     height: PropTypes.number,
     defaultHeight: PropTypes.number,
-    defaultWidth: PropTypes.number
+    defaultWidth: PropTypes.number,
+    disableLibraryParam: PropTypes.bool
   };
   static defaultProps = {
     aggressiveLoad: false,
@@ -131,7 +134,10 @@ export default class ReactImgix extends Component {
         crop: _crop,
         fit: _fit,
         width,
-        height
+        height,
+        ...(this.props.disableLibraryParam
+          ? {}
+          : { ixlib: `react-${PACKAGE_VERSION}` })
       };
 
       _src = processImage(src, srcOptions);
