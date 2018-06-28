@@ -89,8 +89,10 @@ const oldestVersionFromRange = versionRange => {
   }
   return versionRange;
 };
+
 const isDesktop = browserOrPlatform =>
   ["chrome", "firefox", "safari", "edge", "ie"].includes(browserOrPlatform);
+
 // Update these values from https://www.browserstack.com/automate/capabilities#test-configuration-capabilities if the build fails
 const getOSVersionAndDeviceForMobileChromeVersion = version => {
   if (Number.parseFloat(version) >= 5) {
@@ -125,6 +127,7 @@ const getOSVersionAndDeviceForMobileSafariVersion = version => {
     device: "iPhone 8"
   };
 };
+
 const ensureBrowserVersionExistsOnBrowserStack = (browser, version) => {
   const versionNumber = Number.parseFloat(version);
   if (browser.toLowerCase() === "safari") {
@@ -137,7 +140,6 @@ const ensureBrowserVersionExistsOnBrowserStack = (browser, version) => {
   }
   return version;
 };
-
 const ensureOSXVersionIsCorrect = (browser, version) => {
   const versionNumber = Number.parseFloat(version);
   if (browser.toLowerCase() === "safari") {
@@ -150,6 +152,7 @@ const ensureOSXVersionIsCorrect = (browser, version) => {
   }
   return "High Sierra";
 };
+
 const mapBrowsersListToBrowserStackLaunchers = browserslistList => {
   let browserStackConfigurationObjects = {};
   browserslistList.forEach(browsersListItem => {
