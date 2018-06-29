@@ -1,3 +1,8 @@
 language: node_js
+
+addons:
+  chrome: beta
+  firefox: latest
+
 node_js:
   - "9"

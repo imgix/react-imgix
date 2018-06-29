@@ -22,6 +22,10 @@ const baseConfig = {
   webpackMiddleware: {}
 };
 
+/**
+ * Local testing - headless browsers
+ */
+
 const headlessConfig = karmaConfig => {
   process.env.CHROME_BIN = require("puppeteer").executablePath();
   const headlessConfig = {
@@ -38,6 +42,10 @@ const headlessConfig = karmaConfig => {
   };
   karmaConfig.set(headlessConfig);
 };
+
+/**
+ * Local testing - full browsers
+ */
 
 const localConfig = karmaConfig => {
   const browsers = [
@@ -66,9 +74,9 @@ const localConfig = karmaConfig => {
   });
 };
 
-const browserslist = require("browserslist");
-
-const browsers = browserslist();
+/**
+ * CI testing - Chrome, Firefox, and (if available) BrowserStack
+ */
 
 const availableOnWindows = browser =>
   ["ie", "edge", "chrome", "firefox"].includes(browser);
@@ -81,8 +89,10 @@ const oldestVersionFromRange = versionRange => {
   }
   return versionRange;
 };
+
 const isDesktop = browserOrPlatform =>
   ["chrome", "firefox", "safari", "edge", "ie"].includes(browserOrPlatform);
+
 // Update these values from https://www.browserstack.com/automate/capabilities#test-configuration-capabilities if the build fails
 const getOSVersionAndDeviceForMobileChromeVersion = version => {
   if (Number.parseFloat(version) >= 5) {
@@ -117,6 +127,7 @@ const getOSVersionAndDeviceForMobileSafariVersion = version => {
     device: "iPhone 8"
   };
 };
+
 const ensureBrowserVersionExistsOnBrowserStack = (browser, version) => {
   const versionNumber = Number.parseFloat(version);
   if (browser.toLowerCase() === "safari") {
@@ -129,7 +140,6 @@ const ensureBrowserVersionExistsOnBrowserStack = (browser, version) => {
   }
   return version;
 };
-
 const ensureOSXVersionIsCorrect = (browser, version) => {
   const versionNumber = Number.parseFloat(version);
   if (browser.toLowerCase() === "safari") {
@@ -142,6 +152,7 @@ const ensureOSXVersionIsCorrect = (browser, version) => {
   }
   return "High Sierra";
 };
+
 const mapBrowsersListToBrowserStackLaunchers = browserslistList => {
   let browserStackConfigurationObjects = {};
   browserslistList.forEach(browsersListItem => {
@@ -197,28 +208,79 @@ const mapBrowsersListToBrowserStackLaunchers = browserslistList => {
 };
 
 const fullConfig = karmaConfig => {
-  const browserslist = require("browserslist");
-  const { browsers, customLaunchers } = mapBrowsersListToBrowserStackLaunchers(
-    browserslist()
-  );
-  console.log(
-    "Testing on browsers:\n",
-    browsers.map(browser => ` - ${browser}`).join("\n")
-  );
-
-  karmaConfig.set({
+  let config = {
     ...baseConfig,
-    browserStack: {
+    reporters: [...baseConfig.reporters],
+    browsers: ["ChromeTravis", "FirefoxHeadless"],
+    customLaunchers: {
+      ChromeTravis: {
+        base: "ChromeHeadless",
+        flags: ["--no-sandbox"]
+      },
+      FirefoxHeadless: {
+        base: "Firefox",
+        flags: ["-headless"]
+      }
+    },
+    plugins: [...baseConfig.plugins]
+  };
+
+  if (isBrowserStackAvailable()) {
+    const browserslist = require("browserslist");
+    const {
+      browsers: bsBrowsers,
+      customLaunchers: customBSLaunchers
+    } = mapBrowsersListToBrowserStackLaunchers(browserslist());
+
+    config.browserStack = {
       username: process.env.BROWSERSTACK_USERNAME,
       accessKey: process.env.BROWSERSTACK_ACCESS_KEY
-    },
-    reporters: [...baseConfig.reporters, "BrowserStack"],
+    };
+
+    config.reporters = [...config.reporters, "BrowserStack"];
+
+    const bsBrowsersWithoutChromeAndFirefox = bsBrowsers.filter(
+      browser => !(browser.includes("chrome") || browser.includes("firefox"))
+    );
     // TODO: Enable iPhone tests when BrowserStack support replies
-    browsers: browsers.filter(v => !v.includes("iPhone")),
-    customLaunchers,
-    plugins: [...baseConfig.plugins, "karma-browserstack-launcher"]
-  });
+    const bsBrowsersWithoutChromeAndFirefoxAndIOS = bsBrowsersWithoutChromeAndFirefox.filter(
+      browser => !browser.includes("iPhone")
+    );
+
+    config.browsers = [
+      ...config.browsers,
+      ...bsBrowsersWithoutChromeAndFirefoxAndIOS
+    ];
+
+    config.customLaunchers = {
+      ...config.customLaunchers,
+      ...customBSLaunchers
+    };
+
+    config.plugins = [...config.plugins, "karma-browserstack-launcher"];
+  }
+
+  console.log(
+    "Testing on browsers:\n",
+    config.browsers.map(browser => ` - ${browser}`).join("\n")
+  );
+
+  karmaConfig.set(config);
 };
+
+function isBrowserStackAvailable() {
+  if (
+    !(process.env.BROWSERSTACK_USERNAME && process.env.BROWSERSTACK_ACCESS_KEY)
+  ) {
+    return false;
+  }
+
+  // If the slugs are different, the PR comes from an outsider (not a collaborator)
+  return (
+    process.env.TRAVIS_EVENT_TYPE !== "pull_request" ||
+    process.env.TRAVIS_PULL_REQUEST_SLUG === process.env.TRAVIS_REPO_SLUG
+  );
+}
 
 exports.full = fullConfig;
 exports.local = localConfig;
