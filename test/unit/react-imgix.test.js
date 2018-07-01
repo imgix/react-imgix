@@ -1,6 +1,6 @@
 import sinon from "sinon";
 import React from "react";
-import ReactDOM from "react-dom";
+import ReactDOM, { render } from "react-dom";
 import { shallow, mount } from "enzyme";
 import PropTypes from "prop-types";
 
@@ -183,43 +183,26 @@ describe("When in picture mode", () => {
     });
   };
 
-  describe("with no children passed as props", () => {
-    const imgProps = { className: "foobar", alt: parentAlt };
-    beforeEach(() => {
-      sut = shallow(
-        <Imgix
-          src={src}
-          type="picture"
-          aggressiveLoad
-          imgProps={imgProps}
-          width={100}
-          height={100}
-        />,
-        { disableLifecycleMethods: true }
-      );
-      children = sut.children();
-      lastChild = children.last();
-    });
+  it("should throw an error when no children passed", () => {
+    const oldConsole = global.console;
+    global.console = { warn: jest.fn() };
 
-    shouldBehaveLikePicture();
+    shallow(
+      <Imgix
+        src={src}
+        type="picture"
+        aggressiveLoad
+        width={100}
+        height={100}
+      />,
+      { disableLifecycleMethods: true }
+    );
 
-    it("only one child should exist", () => {
-      expect(children.length).toBe(1);
-    });
+    expect(console.warn).toHaveBeenCalledWith(
+      expect.stringContaining("No fallback image found")
+    );
 
-    it("props should be passed down to the automatically added element, and type should be img", () => {
-      // todo - verify all valid props are passed down to children as defaults
-      // except for the ones we specifically exclude
-      let expectedProps = {
-        ...sut.props(),
-        type: "img",
-        imgProps
-      };
-      expectedProps.className = expectedProps.imgProps.className;
-      delete expectedProps.children;
-      delete expectedProps.imgProps.className;
-      expect(lastChild.props()).toMatchObject(expectedProps);
-    });
+    global.console = oldConsole;
   });
 
   describe("with a <ReactImgix type=img> passed as a child", () => {
