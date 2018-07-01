@@ -158,24 +158,7 @@ Using the [<picture> element](https://docs.imgix.com/tutorials/using-imgix-pictu
 </Imgix>
 ```
 
-The final `type='img'` component will be created with the options passed into the parent `<picture>` container if it's not provided so the above is equivalent to:
-
-```js
-<Imgix src={src} width={100} type="picture">
-  <Imgix
-    src={src}
-    width={400}
-    type="source"
-    imgProps={{ media: "(min-width: 768px)" }}
-  />
-  <Imgix
-    src={src}
-    width={200}
-    type="source"
-    imgProps={{ media: "(min-width: 320px)" }}
-  />
-</Imgix>
-```
+It is highly recommended that a fallback `img` be passed as the last child to a picture component so that the image will render for all screen resolutions.
 
 ## Browser Support
 
