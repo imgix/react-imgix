@@ -187,4 +187,4 @@ This browser support is made possible by the great support from [BrowserStack](h
 
 ## Meta
 
-React-imgix was originally created by [Frederick Fogerty](http://twitter.com/fredfogerty). It's licensed under the ISC license (see the [license file](https://github.com/imgix/react-imgix/blob/master/LICENSE.md) for more info). Any contribution is absolutely welcome, but please review the [contribution guidelines](https://github.com/imgix/react-imgix/blob/master/CONTRIBUTING.md) before getting started.
+React-imgix was originally created by [Frederick Fogerty](http://twitter.com/fredfogerty). It's licensed under the ISC license (see the [license file](https://github.com/imgix/react-imgix/blob/master/LICENSE) for more info). Any contribution is absolutely welcome, but please review the [contribution guidelines](https://github.com/imgix/react-imgix/blob/master/CONTRIBUTING.md) before getting started.
