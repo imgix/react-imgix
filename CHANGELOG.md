@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="7.2.0"></a>
+# [7.2.0](https://github.com/imgix/react-imgix/compare/v7.1.1...v7.2.0) (2018-06-30)
+
+
+### Bug Fixes
+
+* alt text no longer cause images to render at wrong dimensions ([#146](https://github.com/imgix/react-imgix/issues/146)) ([d3183a6](https://github.com/imgix/react-imgix/commit/d3183a6)), closes [#41](https://github.com/imgix/react-imgix/issues/41)
+* typo in CONTRIBUTING ([74b996e](https://github.com/imgix/react-imgix/commit/74b996e))
+
+
+### Features
+
+* add ixlib url parameter to help Imgix support and analytics ([#145](https://github.com/imgix/react-imgix/issues/145)) ([44f3d32](https://github.com/imgix/react-imgix/commit/44f3d32))
+
+
+
 <a name="7.1.1"></a>
 
 ## [7.1.1](https://github.com/imgix/react-imgix/compare/v7.1.0...v7.1.1) (2017-12-15)
