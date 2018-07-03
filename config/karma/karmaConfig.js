@@ -94,7 +94,12 @@ const headlessConfigCI = karmaConfig => {
         flags: ["-headless"]
       }
     },
-    plugins: [...baseConfig.plugins]
+    plugins: [...baseConfig.plugins],
+    client: {
+      mocha: {
+        timeout: 20000 // 20 seconds
+      }
+    }
   };
 
   karmaConfig.set(config);
@@ -258,7 +263,11 @@ const fullConfig = karmaConfig => {
     reporters: [...baseConfig.reporters, "BrowserStack"],
     customLaunchers: customBSLaunchers,
     plugins: [...baseConfig.plugins, "karma-browserstack-launcher"],
-    autoWatch: false
+    client: {
+      mocha: {
+        timeout: 20000 // 20 seconds
+      }
+    }
   };
 
   console.log(
