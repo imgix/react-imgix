@@ -215,7 +215,7 @@ export default class ReactImgix extends Component {
         // we need to make sure an img is the last child so we look for one
         //    in children
         //    a. if we find one, move it to the last entry if it's not already there
-        //    b. if we don't find one, create one.
+        //    b. if we don't find one, warn the user as they probably want to pass one.
 
         // make sure all of our children have key set, otherwise we get react warnings
         _children =
@@ -232,62 +232,9 @@ export default class ReactImgix extends Component {
         );
 
         if (imgIdx === -1) {
-          // didn't find one or empty array - either way make a new component to
-          // put at the end. we pass in almost all of our props as defaults to
-          // our children, exceptions are:
-          //
-          //    bg - only <source> and <img> elements are allowable as children of
-          //         <picture> so we strip this option
-          //    children - we don't want to get recursive here
-          //    component - same reason as bg
-          //    type - specifically we're adding an img type so we hard-code this,
-          //           also letting type=picture through would infinitely loop
-
-          let imgProps = {
-            aggressiveLoad,
-            auto,
-            customParams,
-            crop,
-            entropy,
-            faces,
-            fit,
-            generateSrcSet,
-            src,
-            type: "img",
-            ...other,
-            // make sure to set a unique key too
-            key: buildKey(_children.length + 1)
-          };
-
-          // we also remove className and styles if they exist - those passed in
-          // to our top-level component are set there, if you want them set on
-          // the child <img> element you can use `imgProps`.
-          delete imgProps.className;
-          delete imgProps.styles;
-
-          // ..except if you have passed in imgProps you need those to not disappear,
-          // so we'll remove the imgProps attribute from our imgProps object (ugh!)
-          // and apply them now:
-          imgProps.imgProps = { ...this.props.imgProps };
-          ["className", "styles"].forEach(k => {
-            if (imgProps.imgProps[k]) {
-              imgProps[k] = imgProps.imgProps[k];
-              delete imgProps.imgProps[k];
-            }
-          });
-
-          // have to strip out props set to undefined or empty objects since they
-          // will override any defaultProps in the child
-          Object.keys(imgProps).forEach(k => {
-            if (
-              imgProps[k] === undefined ||
-              (Object.keys(imgProps[k]).length === 0 &&
-                imgProps[k].constructor === Object)
-            )
-              delete imgProps[k];
-          });
-
-          _children.push(<ReactImgix {...imgProps} />);
+          console.warn(
+            "No fallback image found in the children of a <picture> component. A fallback image should be passed to ensure the image renders correctly at all dimensions."
+          );
         } else if (imgIdx !== _children.length - 1) {
           // found one, need to move it to the end
           _children.splice(
