@@ -222,7 +222,12 @@ const fullConfig = karmaConfig => {
         flags: ["-headless"]
       }
     },
-    plugins: [...baseConfig.plugins]
+    plugins: [...baseConfig.plugins],
+    client: {
+      mocha: {
+        timeout: 20000 // 20 seconds
+      }
+    }
   };
 
   if (isBrowserStackAvailable()) {
