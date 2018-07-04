@@ -38,7 +38,7 @@ import Imgix from 'react-imgix'
 
 #### Basic use case
 
-For simply using as you would use an <img>, react-imgix can be used as follows:
+For simply using as you would use an `<img>`, react-imgix can be used as follows:
 
 ```js
 import Imgix from "react-imgix";
