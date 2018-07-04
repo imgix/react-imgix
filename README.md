@@ -34,6 +34,148 @@ import Imgix from 'react-imgix'
 <Imgix src={string} />
 ```
 
+### Examples
+
+#### Basic use case
+
+For simply using as you would use an <img>, react-imgix can be used as follows:
+
+```js
+import Imgix from "react-imgix";
+
+<Imgix src="https://assets.imgix.net/examples/pione.jpg" />;
+```
+
+<iframe src="https://codesandbox.io/embed/xp0348lv0z?hidenavigation=1" style="width:100%; height:500px; border:0; border-radius: 4px; overflow:hidden;" sandbox="allow-modals allow-forms allow-popups allow-scripts allow-same-origin"></iframe>
+
+#### Server-side rendering
+
+For server rendering, `aggressiveLoad` should be used. This component renders nothing on the first render as it tries to work out what the size of the container it will be rendering in, and only loads an image at the resolution required. For server rendering this will mean no image will be rendered.
+
+To keep some of this dynamic behaviour, this configuration is recommended. This will render an image on the server at the default dimensions specified, but will then check what size the element is once on the client, and load a second image.
+
+```js
+import Imgix from "react-imgix";
+
+<Imgix
+  src="https://assets.imgix.net/examples/pione.jpg"
+  aggressiveLoad
+  defaultWidth={100} // This sets what resolution the component should load from the CDN
+  defaultHeight={200}
+/>;
+```
+
+Alternatively, if this dynamic behaviour is not desired, of if the width and height are known beforehand, the following is recommended.
+
+```js
+import Imgix from "react-imgix";
+
+<Imgix
+  src="https://assets.imgix.net/examples/pione.jpg"
+  aggressiveLoad
+  width={100} // This sets what resolution the component should load from the CDN and the size of the resulting image
+  height={200}
+/>;
+```
+
+#### Flexible image rendering
+
+This component acts dynamically by default. The component will try and work out what the size of the image element is before loading an image from the CDN. Once it knows the dimensions of the element, it will only load an image at an appropriate size for that element, rather than loading the full-size image.
+
+react-imgix implements this by rendering nothing on the first render pass, and then trying to work out what the size of the container it will be rendering in. Then, it will render a second time with a resized src.
+
+Nothing has to be configured for this to work, but to work well some styling should be used to set the size of the component rendered. Without correct styling the image might render at full-size.
+
+`./styles.css`
+
+```css
+.App {
+  display: flex;
+}
+
+.App > img {
+  margin: 0 auto;
+  width: 200px;
+  height: 200px;
+}
+```
+
+`./app.css`
+
+```js
+import "./styles.css";
+
+<div className="App">
+  <Imgix src="https://assets.imgix.net/examples/pione.jpg" />
+</div>;
+```
+
+<iframe src="https://codesandbox.io/embed/xp0348lv0z?hidenavigation=1" style="width:100%; height:500px; border:0; border-radius: 4px; overflow:hidden;" sandbox="allow-modals allow-forms allow-popups allow-scripts allow-same-origin"></iframe>
+
+#### Fixed image rendering (i.e. non-flexible)
+
+If the fluid, dynamic nature explained above is not desired, the width and height can be set explicitly.
+
+```js
+import Imgix from "react-imgix";
+
+<Imgix
+  src="https://assets.imgix.net/examples/pione.jpg"
+  width={100} // This sets what resolution the component should load from the CDN and the size of the resulting image
+  height={200}
+/>;
+```
+
+#### Picture support
+
+Using the [<picture> element](https://docs.imgix.com/tutorials/using-imgix-picture-element) you can create responsive images:
+
+```js
+<Imgix src={src} type="picture">
+  <Imgix
+    src={src}
+    width={400}
+    type="source"
+    imgProps={{ media: "(min-width: 768px)" }}
+  />
+  <Imgix
+    src={src}
+    width={200}
+    type="source"
+    imgProps={{ media: "(min-width: 320px)" }}
+  />
+  <Imgix src={src} width={100} type="img" />
+</Imgix>
+```
+
+#### Background mode
+
+When it's desired for the image to render as the background for an element such as div, `type=bg` can be used. The image will be set using `background-image: url()`.
+
+```js
+<Imgix src="https://assets.imgix.net/examples/pione.jpg" type="bg">
+  <span>Blog Title</span>
+</Imgix>
+```
+
+<iframe src="https://codesandbox.io/embed/zq80p61r4l?hidenavigation=1" style="width:100%; height:500px; border:0; border-radius: 4px; overflow:hidden;" sandbox="allow-modals allow-forms allow-popups allow-scripts allow-same-origin"></iframe>
+
+_Note_: if you use type='bg' the css property background-size is set to 'cover' by default. To override this behaviour you can change the background size by overriding it with a string such as `'contain'`, or to `null` for controlling the style with CSS.
+
+```js
+<Imgix
+  src={src}
+  type="bg"
+  imgProps={{ style: { backgroundSize: "contain" } }}
+/>
+```
+
+A custom component can be used when in bg mode by setting the `component` prop.
+
+```js
+<Imgix src={src} type="bg" component="header" />
+```
+
 ### Props
 
 #### src :: string, required
@@ -126,40 +268,6 @@ _For example_:
 
 Any other attributes to add to the html node (example: `alt`, `data-*`, `className`)
 
-_Note_: if you use type='bg' the css property background-size is set to 'cover' by default. To override this behaviour you can change the background size by overriding it with a string such as `'contain'`, or to `null` for controlling the style with CSS.
-
-```js
-<Imgix
-  src={src}
-  type="bg"
-  imgProps={{ style: { backgroundSize: "contain" } }}
-/>
-```
-
-### Picture Support
-
-Using the [<picture> element](https://docs.imgix.com/tutorials/using-imgix-picture-element) you can create responsive images:
-
-```js
-<Imgix src={src} type="picture">
-  <Imgix
-    src={src}
-    width={400}
-    type="source"
-    imgProps={{ media: "(min-width: 768px)" }}
-  />
-  <Imgix
-    src={src}
-    width={200}
-    type="source"
-    imgProps={{ media: "(min-width: 320px)" }}
-  />
-  <Imgix src={src} width={100} type="img" />
-</Imgix>
-```
-
-It is highly recommended that a fallback `img` be passed as the last child to a picture component so that the image will render for all screen resolutions.
-
 ## Browser Support
 
 We support the latest version of Google Chrome (which [automatically updates](https://support.google.com/chrome/answer/95414) whenever it detects that a new version of the browser is available). We also support the current and previous major releases of desktop Firefox, Internet Explorer, and Safari on a rolling basis. Mobile support is tested on the most recent minor version of the current and previous major release for the default browser on iOS and Android (e.g., iOS 9.2 and 8.4). Each time a new version is released, we begin supporting that version and stop supporting the third most recent version.
@@ -170,4 +278,4 @@ This browser support is made possible by the great support from [BrowserStack](h
 
 ## Meta
 
-React-imgix was originally created by [Frederick Fogerty](http://twitter.com/fredfogerty). It's licensed under the ISC license (see the [license file](https://github.com/imgix/react-imgix/blob/master/LICENSE.md) for more info). Any contribution is absolutely welcome, but please review the [contribution guidelines](https://github.com/imgix/react-imgix/blob/master/CONTRIBUTING.md) before getting started.
+React-imgix was originally created by [Frederick Fogerty](http://twitter.com/fredfogerty). It's licensed under the ISC license (see the [license file](https://github.com/imgix/react-imgix/blob/master/LICENSE) for more info). Any contribution is absolutely welcome, but please review the [contribution guidelines](https://github.com/imgix/react-imgix/blob/master/CONTRIBUTING.md) before getting started.

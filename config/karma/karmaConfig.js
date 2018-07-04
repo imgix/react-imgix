@@ -19,7 +19,8 @@ const baseConfig = {
   browserConnectTimeout: 3000,
   browserNoActivityTimeout: 15000,
   webpack: webpackConfig,
-  webpackMiddleware: {}
+  webpackMiddleware: {},
+  concurrency: 5
 };
 
 /**
@@ -77,6 +78,32 @@ const localConfig = karmaConfig => {
 /**
  * CI testing - Chrome, Firefox, and (if available) BrowserStack
  */
+
+const headlessConfigCI = karmaConfig => {
+  const config = {
+    ...baseConfig,
+    reporters: [...baseConfig.reporters],
+    browsers: ["ChromeTravis", "FirefoxHeadless"],
+    customLaunchers: {
+      ChromeTravis: {
+        base: "ChromeHeadless",
+        flags: ["--no-sandbox"]
+      },
+      FirefoxHeadless: {
+        base: "Firefox",
+        flags: ["-headless"]
+      }
+    },
+    plugins: [...baseConfig.plugins],
+    client: {
+      mocha: {
+        timeout: 20000 // 20 seconds
+      }
+    }
+  };
+
+  karmaConfig.set(config);
+};
 
 const availableOnWindows = browser =>
   ["ie", "edge", "chrome", "firefox"].includes(browser);
@@ -208,57 +235,40 @@ const mapBrowsersListToBrowserStackLaunchers = browserslistList => {
 };
 
 const fullConfig = karmaConfig => {
-  let config = {
+  if (!isBrowserStackAvailable()) {
+    console.log("BrowserStack not available");
+    process.exit(0);
+  }
+
+  const browserslist = require("browserslist");
+  const {
+    browsers: bsBrowsers,
+    customLaunchers: customBSLaunchers
+  } = mapBrowsersListToBrowserStackLaunchers(browserslist());
+  const bsBrowsersWithoutChromeAndFirefox = bsBrowsers.filter(
+    browser => !(browser.includes("chrome") || browser.includes("firefox"))
+  );
+
+  const config = {
     ...baseConfig,
-    reporters: [...baseConfig.reporters],
-    browsers: ["ChromeTravis", "FirefoxHeadless"],
-    customLaunchers: {
-      ChromeTravis: {
-        base: "ChromeHeadless",
-        flags: ["--no-sandbox"]
-      },
-      FirefoxHeadless: {
-        base: "Firefox",
-        flags: ["-headless"]
-      }
-    },
-    plugins: [...baseConfig.plugins]
-  };
 
-  if (isBrowserStackAvailable()) {
-    const browserslist = require("browserslist");
-    const {
-      browsers: bsBrowsers,
-      customLaunchers: customBSLaunchers
-    } = mapBrowsersListToBrowserStackLaunchers(browserslist());
-
-    config.browserStack = {
+    hostname: "bs-local.com",
+    port: 9876,
+    browserStack: {
       username: process.env.BROWSERSTACK_USERNAME,
       accessKey: process.env.BROWSERSTACK_ACCESS_KEY
-    };
+    },
 
-    config.reporters = [...config.reporters, "BrowserStack"];
-
-    const bsBrowsersWithoutChromeAndFirefox = bsBrowsers.filter(
-      browser => !(browser.includes("chrome") || browser.includes("firefox"))
-    );
-    // TODO: Enable iPhone tests when BrowserStack support replies
-    const bsBrowsersWithoutChromeAndFirefoxAndIOS = bsBrowsersWithoutChromeAndFirefox.filter(
-      browser => !browser.includes("iPhone")
-    );
-
-    config.browsers = [
-      ...config.browsers,
-      ...bsBrowsersWithoutChromeAndFirefoxAndIOS
-    ];
-
-    config.customLaunchers = {
-      ...config.customLaunchers,
-      ...customBSLaunchers
-    };
-
-    config.plugins = [...config.plugins, "karma-browserstack-launcher"];
-  }
+    browsers: bsBrowsersWithoutChromeAndFirefox,
+    reporters: [...baseConfig.reporters, "BrowserStack"],
+    customLaunchers: customBSLaunchers,
+    plugins: [...baseConfig.plugins, "karma-browserstack-launcher"],
+    client: {
+      mocha: {
+        timeout: 20000 // 20 seconds
+      }
+    }
+  };
 
   console.log(
     "Testing on browsers:\n",
@@ -285,3 +295,4 @@ function isBrowserStackAvailable() {
 exports.full = fullConfig;
 exports.local = localConfig;
 exports.headless = headlessConfig;
+exports.headlessCI = headlessConfigCI;

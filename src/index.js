@@ -1,3 +1,3 @@
-import ReactImgix from "react-imgix";
+import ReactImgix from "./react-imgix";
 
 export default ReactImgix;
