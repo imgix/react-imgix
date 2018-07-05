@@ -38,7 +38,7 @@ import Imgix from 'react-imgix'
 
 #### Basic use case
 
-For simply using as you would use an <img>, react-imgix can be used as follows:
+For simply using as you would use an `<img>`, react-imgix can be used as follows:
 
 ```js
 import Imgix from "react-imgix";
@@ -46,7 +46,7 @@ import Imgix from "react-imgix";
 <Imgix src="https://assets.imgix.net/examples/pione.jpg" />;
 ```
 
-<iframe src="https://codesandbox.io/embed/xp0348lv0z?hidenavigation=1" style="width:100%; height:500px; border:0; border-radius: 4px; overflow:hidden;" sandbox="allow-modals allow-forms allow-popups allow-scripts allow-same-origin"></iframe>
+[![Edit xp0348lv0z](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/xp0348lv0z?view=preview)
 
 #### Server-side rendering
 
@@ -110,7 +110,7 @@ import "./styles.css";
 </div>;
 ```
 
-<iframe src="https://codesandbox.io/embed/xp0348lv0z?hidenavigation=1" style="width:100%; height:500px; border:0; border-radius: 4px; overflow:hidden;" sandbox="allow-modals allow-forms allow-popups allow-scripts allow-same-origin"></iframe>
+[![Edit xp0348lv0z](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/xp0348lv0z?view=preview)
 
 #### Fixed image rendering (i.e. non-flexible)
 
@@ -158,7 +158,7 @@ When it's desired for the image to render as the background for an element such 
 </Imgix>
 ```
 
-<iframe src="https://codesandbox.io/embed/zq80p61r4l?hidenavigation=1" style="width:100%; height:500px; border:0; border-radius: 4px; overflow:hidden;" sandbox="allow-modals allow-forms allow-popups allow-scripts allow-same-origin"></iframe>
+[![Edit zq80p61r4l](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/zq80p61r4l?view=preview)
 
 _Note_: if you use type='bg' the css property background-size is set to 'cover' by default. To override this behaviour you can change the background size by overriding it with a string such as `'contain'`, or to `null` for controlling the style with CSS.
 
