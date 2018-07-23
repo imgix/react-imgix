@@ -53,7 +53,6 @@ export default class ReactImgix extends Component {
     this.props.onMounted(node);
   };
 
-  // TODO: Add fallback srcSet
   buildSrcs = () => {
     const props = this.props;
     const {
@@ -107,7 +106,10 @@ export default class ReactImgix extends Component {
           });
           return `${url} ${targetWidth}w`;
         };
-        srcSet = targetWidths.map(buildSrcSetPair).join(", ");
+        const addFallbackSrc = srcSet => srcSet.concat(`, ${src}`);
+        const _srcSet = targetWidths.map(buildSrcSetPair).join(", ");
+        const _srcSetWithFallback = addFallbackSrc(_srcSet);
+        srcSet = _srcSetWithFallback;
       }
     }
 
