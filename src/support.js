@@ -101,8 +101,7 @@ var PARAM_EXPANSION = Object.freeze({
 });
 
 var DEFAULT_OPTIONS = Object.freeze({
-  auto: "format", // http://www.imgix.com/docs/reference/automatic#param-auto
-  dpr: 1
+  auto: "format" // http://www.imgix.com/docs/reference/automatic#param-auto
 });
 
 function constructUrl(src, params) {
