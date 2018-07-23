@@ -5,8 +5,7 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 
 import targetWidths from "./targetWidths";
-import processImage from "./support";
-import { invariant } from "./common";
+import constructUrl from "./constructUrl";
 
 const PACKAGE_VERSION = require("../package.json").version;
 const NODE_ENV = process.env.NODE_ENV;
@@ -54,6 +53,7 @@ export default class ReactImgix extends Component {
     this.props.onMounted(node);
   };
 
+  // TODO: Add fallback srcSet
   buildSrcs = () => {
     const props = this.props;
     const {
@@ -88,7 +88,7 @@ export default class ReactImgix extends Component {
       ...(fixedSize && width ? { width } : {})
     };
 
-    const src = processImage(this.props.src, srcOptions);
+    const src = constructUrl(this.props.src, srcOptions);
 
     let srcSet;
 
@@ -96,12 +96,12 @@ export default class ReactImgix extends Component {
       srcSet = src;
     } else {
       if (fixedSize) {
-        const dpr2 = processImage(this.props.src, { ...srcOptions, dpr: 2 });
-        const dpr3 = processImage(this.props.src, { ...srcOptions, dpr: 3 });
+        const dpr2 = constructUrl(this.props.src, { ...srcOptions, dpr: 2 });
+        const dpr3 = constructUrl(this.props.src, { ...srcOptions, dpr: 3 });
         srcSet = `${dpr2} 2x, ${dpr3} 3x`;
       } else {
         const buildSrcSetPair = targetWidth => {
-          const url = processImage(this.props.src, {
+          const url = constructUrl(this.props.src, {
             ...srcOptions,
             width: targetWidth
           });
