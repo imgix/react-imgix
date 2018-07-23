@@ -129,12 +129,9 @@ export default class ReactImgix extends Component {
       faces,
       fit,
       disableSrcSet,
-      // TODO: stop using ...other
-      src_,
       type,
       width,
-      height,
-      ...other
+      height
     } = this.props;
 
     // Pre-render checks
