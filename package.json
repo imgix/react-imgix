@@ -29,7 +29,7 @@
     "build": "npm run clean && npm run build:commonjs && npm run build:es",
     "build:commonjs": "cross-env BABEL_ENV=commonjs babel src --out-dir lib --source-maps",
     "build:es": "cross-env BABEL_ENV=es babel src --out-dir es --source-maps",
-    "build:watch": "cross-env BABEL_ENV=commonjs babel src --out-dir lib --watch",
+    "build:watch": "cross-env BABEL_ENV=es babel src --out-dir es --watch",
     "clean": "rimraf lib es",
     "prepublish": "npm run build",
     "pretty": "prettier --write \"src/**/*.js\"",
