@@ -151,6 +151,7 @@ function targetWidths() {
       ? Math.floor(maxPossibleWidth * dpr)
       : MAXIMUM_SCREEN_WIDTH;
 
+  // TODO: Remove maxScreenWidthRequired
   var width, i;
   for (i = 0; i < allWidths.length; i++) {
     width = allWidths[i];

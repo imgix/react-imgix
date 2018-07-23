@@ -571,30 +571,14 @@ describe("When using the component", () => {
     ReactDOM.findDOMNode.restore();
   });
 
-  it("an ixlib parameter should be included by default in the computed src", () => {
+  it("an ixlib parameter should be included by default in the computed src and srcSet", () => {
     sut = shallow(
       <Imgix src="https://mysource.imgix.net/demo.png" sizes="100vw" />,
       {
         disableLifecycleMethods: true
       }
     );
-    // TODO: refactor to use expectSrcTo
-    expectUrlToContainIxLibParam(sut.props().src);
-  });
-  it("an ixlib parameter should be included by default in the computed srcSet", () => {
-    sut = shallow(
-      <Imgix src="https://mysource.imgix.net/demo.png" sizes="100vw" />,
-      {
-        disableLifecycleMethods: true
-      }
-    );
-
-    sut
-      .props()
-      .srcSet.split(",")
-      .forEach(srcSet => {
-        expectUrlToContainIxLibParam(srcSet);
-      });
+    expectSrcsTo(sut, createIxLibParamMatcher());
   });
   it("the addition of the ixlib parameter to the url can be disabled", () => {
     sut = shallow(
@@ -608,7 +592,7 @@ describe("When using the component", () => {
       }
     );
 
-    expect(sut.props().src).not.toContain(`ixlib=`);
+    expectSrcsTo(sut, expect.not.stringContaining(`ixlib=`));
   });
 });
 
@@ -630,8 +614,11 @@ const expectSrcsToContain = (sut, shouldContainString) =>
   expectSrcsTo(sut, expect.stringContaining(shouldContainString));
 
 const expectUrlToContainIxLibParam = url => {
+  expect(url).toEqual(createIxLibParamMatcher());
+};
+const createIxLibParamMatcher = () => {
   const expectedVersion = require("read-pkg-up").sync().pkg.version;
   const expectedParam = `ixlib=react-${expectedVersion}`;
 
-  expect(url).toContain(expectedParam);
+  return expect.stringContaining(expectedParam);
 };
