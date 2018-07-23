@@ -11,4 +11,11 @@ const configureEnzymeWithAdapter = () => {
   configure({ adapter: new Adapter() });
 };
 
+const mockScreen = () => {
+  const constants = require("../src/constants").default;
+  constants.availWidth = 2000;
+  constants.availHeight = 2000;
+};
+
 configureEnzymeWithAdapter();
+mockScreen();
