@@ -520,28 +520,19 @@ describe("When using the component", () => {
     expect(sut.props().width).toEqual(width);
   });
 
-  it("an alt attribute should be set if loading aggressively", async () => {
+  it("an alt attribute should be set given imgProps.alt", async () => {
     const imgProps = {
       alt: "Example alt attribute"
     };
-    // TODO: Update
-    sut = await renderImageAndBreakInStages({
-      element: (
-        <Imgix
-          src={"https://mysource.imgix.net/demo.png"}
-          sizes="100vw"
-          imgProps={imgProps}
-        />
-      ),
-      afterFirstRender: async sut => {
-        expect(
-          sut
-            .find("img")
-            .first()
-            .props().alt
-        ).toEqual(imgProps.alt);
-      }
-    });
+    sut = shallow(
+      <Imgix
+        src={"https://mysource.imgix.net/demo.png"}
+        sizes="100vw"
+        imgProps={imgProps}
+      />,
+      { disableLifecycleMethods: true }
+    );
+    expect(sut.props().alt).toEqual(imgProps.alt);
   });
 
   it("any attributes passed via imgProps should be added to the rendered element", () => {
