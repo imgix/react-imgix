@@ -456,7 +456,6 @@ describe("When using the component", () => {
       }
     );
 
-    // TODO: should set sizes automatically?
     expectSrcsToContain(sut, `h=${height}`);
   });
 
