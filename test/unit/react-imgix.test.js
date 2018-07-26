@@ -108,6 +108,17 @@ describe("When in <source> mode", () => {
     it("props.srcSet should be set to a valid src", () => {
       expect(renderImage().props().srcSet).toContain(src);
     });
+    it("srcSet should be in the form src, src 2x, src 3x", () => {
+      const srcSet = renderImage().props().srcSet;
+
+      const srcSets = srcSet.split(", ");
+      expect(srcSets).toHaveLength(3);
+      srcSets.forEach(srcSet => {
+        expect(srcSet).toContain(src);
+      });
+      expect(srcSets[1].split(" ")[1]).toBe("2x");
+      expect(srcSets[2].split(" ")[1]).toBe("3x");
+    });
   });
 
   describe("with disableSrcSet prop", () => {
