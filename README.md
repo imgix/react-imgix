@@ -74,7 +74,7 @@ This will generate HTML similar to the following:
 >
 ```
 
-Since imgix can generate as many derivative resolutions as needed, react-imgix calculates them programmatically, using the dimensions you specify (note that the w and h params scale appropriately to maintain the correct aspect ratio). All of this information has been placed into the srcset and sizes attributes.
+Since imgix can generate as many derivative resolutions as needed, react-imgix calculates them programmatically, using the dimensions you specify. All of this information has been placed into the srcset and sizes attributes.
 
 **Width and height known:** If the width and height are known beforehand, it is recommended that they are set explicitly:
 
