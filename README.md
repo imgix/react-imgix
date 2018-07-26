@@ -195,6 +195,10 @@ This feature has been removed from react-imgix when `sizes` and `srcset` was imp
 
 Usually in the form: `https://[your_domain].imgix.net/[image]`. Don't include any parameters.
 
+#### sizes :: string
+
+Specified the developer's expected size of the image element when rendered on the page. Similar to width. E.g. `100vw`, `calc(50vw - 50px)`, `500px`. Highly recommended when not passing `width` or `height`. [Eric Portis' "Srcset and sizes"](https://ericportis.com/posts/2014/srcset-sizes/) article goes into depth on how to use the `sizes` attribute.
+
 #### auto :: array, default = ['format']
 
 Array of values to pass to imgix's auto param.
