@@ -17,7 +17,7 @@ A [React](https://facebook.github.io/react/) component that renders images using
 - [Examples](#examples)
   - [Basic Use Case](#basic-use-case)
   - [Server-side rendering](#server-side-rendering)
-  - [Flexible image rendering](#flexible-image-rendering)
+  - [Flexible image rendering](#fixed-image-rendering-ie-non-flexible)
   - [Fixed image rendering](#fixed-image-rendering)
   - [Picture support](#picture-support)
   - [Background mode](#background-mode)
