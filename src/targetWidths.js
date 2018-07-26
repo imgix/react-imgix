@@ -22,7 +22,7 @@ const _screen = {
   availHeight: CONSTANTS.availHeight
 };
 
-const MINIMUM_SCREE_WIDTH = 160;
+const MINIMUM_SCREEN_WIDTH = 100;
 const MAXIMUM_SCREEN_WIDTH = 2560;
 const MAX_DPR = 2;
 const SCREEN_STEP = 100;
@@ -83,7 +83,7 @@ function deviceWidths() {
 function screenWidths(maxWidth) {
   const widths = [];
 
-  for (let i = SCREEN_STEP; i < maxWidth; i += SCREEN_STEP) {
+  for (let i = MINIMUM_SCREEN_WIDTH; i < maxWidth; i += SCREEN_STEP) {
     widths.push(i);
   }
   widths.push(maxWidth);
