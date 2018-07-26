@@ -14,7 +14,7 @@ const isStringNotEmpty = str =>
   str && typeof str === "string" && str.length > 0;
 const buildKey = idx => `react-imgix-${idx}`;
 
-const validTypes = ["bg", "img", "picture", "source"];
+const validTypes = ["img", "picture", "source"];
 
 export default class ReactImgix extends Component {
   static propTypes = {
@@ -34,8 +34,6 @@ export default class ReactImgix extends Component {
     type: PropTypes.oneOf(validTypes),
     width: PropTypes.number,
     height: PropTypes.number,
-    defaultHeight: PropTypes.number,
-    defaultWidth: PropTypes.number,
     disableLibraryParam: PropTypes.bool
   };
   static defaultProps = {
@@ -123,7 +121,6 @@ export default class ReactImgix extends Component {
   render() {
     const {
       auto,
-      bg,
       children,
       component,
       customParams,
@@ -170,15 +167,10 @@ export default class ReactImgix extends Component {
 
     switch (type) {
       case "bg":
-        if (!component) {
-          _component = "div";
-        }
-        delete childProps.sizes;
-        childProps.style = {
-          backgroundSize: "cover",
-          backgroundImage: isStringNotEmpty(src) ? `url('${src}')` : null,
-          ...childProps.style
-        };
+        // TODO: Remove in v9
+        throw new Error(
+          `type='bg' has been removed in this version of react-imgix. If you would like this re-implemented please give this issues a thumbs up: https://github.com/imgix/react-imgix/issues/160`
+        );
         break;
       case "img":
         if (!component) {

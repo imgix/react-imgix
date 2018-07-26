@@ -187,7 +187,7 @@ Using the [<picture> element](https://docs.imgix.com/tutorials/using-imgix-pictu
 
 #### Background mode
 
-This feature has been removed from react-imgix when `sizes` and `srcset` was implemented. It was decided that it was too hard to implement this feature consistently. If you would still like to use this feature, please open an issue! If we get enough requests for this, we will re-implement it.
+This feature has been removed from react-imgix when `sizes` and `srcset` was implemented. It was decided that it was too hard to implement this feature consistently. If you would still like to use this feature, please give this issue a thumbs up: https://github.com/imgix/react-imgix/issues/160! If we get enough requests for this, we will re-implement it.
 
 ### Props
 
@@ -205,7 +205,7 @@ Array of values to pass to imgix's auto param.
 
 #### type :: string, default = 'img'
 
-What kind of component to render, one of `img`, `bg`, `picture`, `source`.
+What kind of component to render, one of `img`, picture`,`source`.
 
 #### className :: string
 
