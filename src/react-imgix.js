@@ -99,9 +99,6 @@ export default class ReactImgix extends Component {
         const dpr2 = constructUrl(this.props.src, { ...srcOptions, dpr: 2 });
         const dpr3 = constructUrl(this.props.src, { ...srcOptions, dpr: 3 });
         srcSet = `${dpr2} 2x, ${dpr3} 3x`;
-        // if (type === "source") {
-        //   srcSet = `${src}, ${srcSet}`;
-        // }
       } else {
         const buildSrcSetPair = targetWidth => {
           const url = constructUrl(this.props.src, {
