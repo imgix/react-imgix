@@ -63,7 +63,8 @@ export default class ReactImgix extends Component {
       auto,
       customParams,
       disableLibraryParam,
-      disableSrcSet
+      disableSrcSet,
+      type
     } = props;
 
     let crop = false;
@@ -94,10 +95,13 @@ export default class ReactImgix extends Component {
     if (disableSrcSet) {
       srcSet = src;
     } else {
-      if (fixedSize) {
+      if (fixedSize || type === "source") {
         const dpr2 = constructUrl(this.props.src, { ...srcOptions, dpr: 2 });
         const dpr3 = constructUrl(this.props.src, { ...srcOptions, dpr: 3 });
         srcSet = `${dpr2} 2x, ${dpr3} 3x`;
+        // if (type === "source") {
+        //   srcSet = `${src}, ${srcSet}`;
+        // }
       } else {
         const buildSrcSetPair = targetWidth => {
           const url = constructUrl(this.props.src, {
@@ -196,6 +200,7 @@ export default class ReactImgix extends Component {
 
         // strip out the "alt" tag from childProps since it's not allowed
         delete childProps.alt;
+        delete childProps.src;
 
         // inside of a <picture> element a <source> element ignores its src
         // attribute in favor of srcSet so we set that with either an actual
