@@ -1,6 +1,3 @@
-const CONSTANTS = {
-  availWidth: window.screen.availWidth,
-  availHeight: window.screen.availHeight
-};
+const CONSTANTS = {};
 
 export default CONSTANTS;

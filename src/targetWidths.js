@@ -15,13 +15,6 @@ function uniq(arr) {
   return r;
 }
 
-import CONSTANTS from "./constants";
-
-const _screen = {
-  availWidth: CONSTANTS.availWidth,
-  availHeight: CONSTANTS.availHeight
-};
-
 const MINIMUM_SCREEN_WIDTH = 100;
 const MAXIMUM_SCREEN_WIDTH = 2560;
 const MAX_DPR = 2;
