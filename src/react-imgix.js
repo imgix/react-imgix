@@ -71,7 +71,7 @@ export default class ReactImgix extends Component {
     if (props.crop) crop = props.crop;
 
     let fit = false;
-    if (entropy) fit = "crop";
+    if (entropy || faces) fit = "crop";
     if (props.fit) fit = props.fit;
 
     const fixedSize = width != null || height != null;
