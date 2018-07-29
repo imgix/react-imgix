@@ -105,10 +105,8 @@ export default class ReactImgix extends Component {
           });
           return `${url} ${targetWidth}w`;
         };
-        const addFallbackSrc = srcSet => srcSet.concat(`, ${src}`);
-        const _srcSet = targetWidths.map(buildSrcSetPair).join(", ");
-        const _srcSetWithFallback = addFallbackSrc(_srcSet);
-        srcSet = _srcSetWithFallback;
+        const addFallbackSrc = srcSet => srcSet.concat(src);
+        srcSet = addFallbackSrc(targetWidths.map(buildSrcSetPair)).join(", ");
       }
     }
 
