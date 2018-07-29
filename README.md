@@ -23,6 +23,7 @@ A [React](https://facebook.github.io/react/) component that renders images using
   - [Background mode](#background-mode)
 - [Props](#props)
 - [Browser Support](#browser-support)
+- [Upgrade Guides](#upgrade-guides)
 - [Meta](#meta)
 
 ## Overview / Resources
@@ -187,7 +188,7 @@ Using the [<picture> element](https://docs.imgix.com/tutorials/using-imgix-pictu
 
 #### Background mode
 
-This feature has been removed from react-imgix when `sizes` and `srcset` was implemented. It was decided that it was too hard to implement this feature consistently. If you would still like to use this feature, please give this issue a thumbs up: https://github.com/imgix/react-imgix/issues/160! If we get enough requests for this, we will re-implement it.
+This feature has been removed from react-imgix when `sizes` and `srcset` was implemented. It was decided that it was too hard to implement this feature consistently. If you would still like to use this feature, please give this issue a thumbs up: [https://github.com/imgix/react-imgix/issues/160].(https://github.com/imgix/react-imgix/issues/160) If we get enough requests for this, we will re-implement it.
 
 ### Props
 
@@ -260,6 +261,21 @@ _For example_:
 #### imgProps :: object
 
 Any other attributes to add to the html node (example: `alt`, `data-*`, `className`).
+
+## Upgrade Guides
+
+### 7.x to 8.0
+
+The largest change in this major version bump is the move to width-based `srcSet` and `sizes` for responsiveness. This has a host of benefits, including better server rendering, better responsiveness, less potential for bugs, perfomance improvements
+
+To upgrade to version 8, the following changes should be made.
+
+- A `sizes` prop should be added to all usages of Imgix. If `sizes` is new to you (or even if it's not), Eric's [seminal article on `srcset` and `sizes`](https://ericportis.com/posts/2014/srcset-sizes/) is highly recommended.
+- Remove all usage of `type='bg'` as it is no longer supported. It was decided that it was too hard to implement this feature consistently. If you would still like to use this feature, please give this issue a thumbs up: [https://github.com/imgix/react-imgix/issues/160].(https://github.com/imgix/react-imgix/issues/160) If we get enough requests for this, we will re-implement it.
+- Remove props `aggressiveLoad`, `component`, `fluid`, `precision` as they are no longer used.
+- Change all usages of `defaultHeight` and `defaultWidth` to `width` and `height` props.
+- Rename `generateSrcSet` to `disableSrcSet` and invert the value passed down as the prop's value. i.e. `generateSrcSet={false}` becomes `disableSrcSet={true}` or simply `disableSrcSet`
+- If support is needed for a [browser which does not support the new usage of srcSet](https://caniuse.com/#feat=srcset) (such as IE 11), we recommended adding a polyfill, such as the great [Picturefill](https://github.com/scottjehl/picturefill).
 
 ## Browser Support
 
