@@ -65,8 +65,6 @@ describe("When in default mode", () => {
   });
   it("the rendered element should have a srcSet set correctly", async () => {
     const sut = shallow(<Imgix src={src} sizes="100vw" />);
-    // Use https://github.com/airbnb/enzyme/issues/539
-    // i.e. const wrapper = shallow(<Foo />).find(UnwrappedFoo).shallow();
     const srcSet = sut.props().srcSet;
     expect(srcSet).not.toBeUndefined();
     expect(srcSet.split(", ")[0].split(" ")).toHaveLength(2);
