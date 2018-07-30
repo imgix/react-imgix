@@ -101,11 +101,10 @@ var PARAM_EXPANSION = Object.freeze({
 });
 
 var DEFAULT_OPTIONS = Object.freeze({
-  auto: "format", // http://www.imgix.com/docs/reference/automatic#param-auto
-  dpr: 1
+  auto: "format" // http://www.imgix.com/docs/reference/automatic#param-auto
 });
 
-function constructUrl(src, params) {
+function constructUrlFromParams(src, params) {
   var optionKeys = Object.keys(params);
   var fullUrl = optionKeys.reduce(function(uri, key) {
     return uri.addQueryParam(key, params[key]);
@@ -121,7 +120,7 @@ function constructUrl(src, params) {
  * @param  {Object} longOptions map of image API options, in long or short form per expansion rules
  * @return {String}             URL of image src transformed by Imgix
  */
-function processImage(src, longOptions) {
+function constructUrl(src, longOptions) {
   if (!src) {
     return "";
   }
@@ -143,7 +142,7 @@ function processImage(src, longOptions) {
     shortOptions[key] = val;
   });
 
-  return constructUrl(src, shortOptions);
+  return constructUrlFromParams(src, shortOptions);
 }
 
-module.exports = processImage;
+export default constructUrl;

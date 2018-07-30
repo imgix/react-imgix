@@ -35,50 +35,32 @@ const renderImageAndBreakInStages = async ({
   return sut;
 };
 
-describe("When using aggressiveLoad", () => {
-  const renderImage = () =>
-    shallow(<Imgix src={src} aggressiveLoad />, {
-      disableLifecycleMethods: true
-    });
-
-  it("an image should be rendered immediately", () => {
-    expect(renderImage().find("img")).toHaveLength(1);
-  });
-  it("the rendered image's src should be set", () => {
-    expect(
-      renderImage()
-        .find("img")
-        .props().src
-    ).toContain(src);
-  });
-});
-
-describe("When in image mode", () => {
-  describe("before mount", () => {
-    const renderImage = () =>
-      shallow(<Imgix type="img" src={src} />, {
-        disableLifecycleMethods: true
-      });
-    it("the rendered element's src should be empty", () => {
-      const props = renderImage().props();
-      expect(props.src).toBe(EMPTY_IMAGE_SRC);
-      expect(props.srcSet).toBe(null);
-    });
-  });
-});
-
 describe("When in default mode", () => {
   it("the rendered element's type should be img", () => {
-    const component = <Imgix src={src} />;
+    const component = <Imgix src={src} sizes="100vw" />;
     expect(component.props.type).toBe("img");
+  });
+  it("the rendered element should have a srcSet set correctly", () => {
+    const sut = shallow(<Imgix src={src} sizes="100vw" />, {
+      disableLifecycleMethods: true
+    });
+    const srcSet = sut.props().srcSet;
+    expect(srcSet).not.toBeUndefined();
+    expect(srcSet.split(", ")[0].split(" ")).toHaveLength(2);
+    const aSrcFromSrcSet = srcSet.split(", ")[0].split(" ")[0];
+    expect(aSrcFromSrcSet).toContain(src);
+    const aWidthFromSrcSet = srcSet.split(", ")[0].split(" ")[1];
+    expect(aWidthFromSrcSet).toMatch(/^\d+w$/);
   });
 });
 
+describe("When in image mode", () => {});
+
 describe("When in <source> mode", () => {
+  const sizes =
+    "(max-width: 30em) 100vw, (max-width: 50em) 50vw, calc(33vw - 100px)";
   const imgProps = {
     media: "(min-width: 1200px)",
-    sizes:
-      "(max-width: 30em) 100vw, (max-width: 50em) 50vw, calc(33vw - 100px)",
     type: "image/webp",
     alt: "alt text"
   };
@@ -90,6 +72,9 @@ describe("When in <source> mode", () => {
     it("srcSet prop should exist", () => {
       expect(renderImage().props().srcSet).not.toBeUndefined();
     });
+
+    it("props.sizes should be defined and equal to the image's props", () =>
+      expect(renderImage().props().sizes).toEqual(sizes));
 
     Object.keys(imgProps)
       .filter(k => k !== "alt")
@@ -110,16 +95,10 @@ describe("When in <source> mode", () => {
     });
   };
 
-  describe("with the generateSrcSet prop", () => {
+  describe("by default", () => {
     const renderImage = () =>
       shallow(
-        <Imgix
-          src={src}
-          type="source"
-          generateSrcSet
-          aggressiveLoad
-          imgProps={imgProps}
-        />,
+        <Imgix src={src} type="source" imgProps={imgProps} sizes={sizes} />,
         {
           disableLifecycleMethods: true
         }
@@ -128,19 +107,29 @@ describe("When in <source> mode", () => {
     shouldBehaveLikeSource(renderImage);
     it("props.srcSet should be set to a valid src", () => {
       expect(renderImage().props().srcSet).toContain(src);
-      expect(renderImage().props().srcSet).toContain("2x");
+    });
+    it("srcSet should be in the form src, src 2x, src 3x", () => {
+      const srcSet = renderImage().props().srcSet;
+
+      const srcSets = srcSet.split(", ");
+      expect(srcSets).toHaveLength(3);
+      srcSets.forEach(srcSet => {
+        expect(srcSet).toContain(src);
+      });
+      expect(srcSets[1].split(" ")[1]).toBe("2x");
+      expect(srcSets[2].split(" ")[1]).toBe("3x");
     });
   });
 
-  describe("without the generateSrcSet prop", () => {
+  describe("with disableSrcSet prop", () => {
     const renderImage = () =>
       shallow(
         <Imgix
           src={src}
           type="source"
-          generateSrcSet={false}
-          aggressiveLoad
+          disableSrcSet
           imgProps={imgProps}
+          sizes={sizes}
         />,
         {
           disableLifecycleMethods: true
@@ -275,156 +264,69 @@ describe("When in picture mode", () => {
   });
 });
 
-describe("When in background mode", () => {
-  const shouldBehaveLikeBg = function(size = "cover") {
-    it("a div should be rendered", () => {
-      expect(sut.type()).toBe("div");
-    });
-    it("the element should have backgroundImage and backgroundSize set", () => {
-      expect(sut.props()).toMatchObject({
-        style: {
-          backgroundImage: expect.stringContaining(src),
-          backgroundSize: size
-        }
-      });
-    });
-  };
-  beforeEach(() => {
-    sut = shallow(<Imgix src={src} type="bg" aggressiveLoad />, {
-      disableLifecycleMethods: true
-    });
-  });
-  shouldBehaveLikeBg();
-
-  describe("without the backgroundSize prop set", () => {
-    beforeEach(() => {
-      sut = shallow(
-        <Imgix
-          src={src}
-          type="bg"
-          imgProps={{ style: { backgroundSize: null } }}
-          aggressiveLoad
-        />,
-        {
-          disableLifecycleMethods: true
-        }
-      );
-    });
-    shouldBehaveLikeBg(null);
-  });
-
-  describe("with the backgroundSize prop set to 'contain'", () => {
-    beforeEach(() => {
-      sut = shallow(
-        <Imgix
-          src={src}
-          type="bg"
-          imgProps={{ style: { backgroundSize: "contain" } }}
-          aggressiveLoad
-        />,
-        { disableLifecycleMethods: true }
-      );
-    });
-    shouldBehaveLikeBg("contain");
-  });
-
-  describe("before mounting", () => {
-    beforeEach(() => {
-      sut = shallow(<Imgix src={src} type="bg" />, {
-        disableLifecycleMethods: true
-      });
-    });
-    it("the element's url() should not be set", () => {
-      expect(sut.props()).toMatchObject({
-        style: {
-          backgroundImage: `url('${EMPTY_IMAGE_SRC}')`,
-          backgroundSize: "cover"
-        }
-      });
-    });
-  });
-});
-describe("When using a custom component", () => {
-  describe("when in background mode", () => {
-    beforeEach(() => {
-      sut = shallow(
-        <Imgix src={src} component="li" type="bg" aggressiveLoad />,
-        {
-          disableLifecycleMethods: true
-        }
-      );
-    });
-    it("the rendered element should be of the type of the custom component", () => {
-      expect(sut.type()).toBe("li");
-    });
-    it("the image shall be displayed as a background image", () => {
-      expect(sut.props().style.backgroundImage).toContain(src);
-    });
-  });
-});
 describe("When using the component", () => {
   let className = "img--enabled";
   beforeEach(() => {
     sut = shallow(
       <Imgix
         src={src}
+        sizes="100vw"
         auto={["format", "enhance"]}
         className={className}
-        aggressiveLoad
         faces
       />,
       { disableLifecycleMethods: true }
     );
   });
   it("the auto prop should alter the url correctly", () => {
-    expect(sut.props().src).toContain("auto=format%2Cenhance");
+    expectSrcsToContain(sut, "auto=format%2Cenhance");
   });
   it("the rendered element should contain the class name provided", () => {
     expect(sut.props().className).toContain(className);
   });
   it("the crop prop should alter the crop and fit query parameters correctly", () => {
-    sut = shallow(<Imgix src={src} aggressiveLoad crop="faces,entropy" />, {
+    sut = shallow(<Imgix src={src} sizes="100vw" crop="faces,entropy" />, {
       disableLifecycleMethods: true
     });
 
-    expect(sut.props().src).toContain("crop=faces%2Centropy");
-    expect(sut.props().src).toContain("fit=crop");
+    expectSrcsToContain(sut, "crop=faces%2Centropy");
+    expectSrcsToContain(sut, "fit=crop");
   });
   it("the crop prop should override the faces prop", () => {
     sut = shallow(
-      <Imgix src={src} aggressiveLoad faces crop="faces,entropy" />,
+      <Imgix src={src} sizes="100vw" faces crop="faces,entropy" />,
       {
         disableLifecycleMethods: true
       }
     );
 
-    expect(sut.props().src).toContain("crop=faces%2Centropy");
-    expect(sut.props().src).toContain("fit=crop");
+    expectSrcsToContain(sut, "crop=faces%2Centropy");
+    expectSrcsToContain(sut, "fit=crop");
   });
   it("the crop prop should override the entropy prop", () => {
     sut = shallow(
-      <Imgix src={src} aggressiveLoad entropy crop="faces,entropy" />,
+      <Imgix src={src} sizes="100vw" entropy crop="faces,entropy" />,
       {
         disableLifecycleMethods: true
       }
     );
 
-    expect(sut.props().src).toContain("crop=faces%2Centropy");
-    expect(sut.props().src).toContain("fit=crop");
+    expectSrcsToContain(sut, "crop=faces%2Centropy");
+    expectSrcsToContain(sut, "fit=crop");
   });
   it("the faces prop should alter the crop query parameter correctly", () => {
-    expect(sut.props().src).toContain("crop=faces");
+    expectSrcsToContain(sut, "crop=faces");
   });
   it("the fit prop should alter the fit query pararmeter correctly", () => {
-    expect(sut.props().src).toContain("fit=crop");
+    expectSrcsToContain(sut, "fit=crop");
   });
   it("the entropy prop should alter the crop and fit query parameters correctly", () => {
-    sut = shallow(<Imgix src={src} aggressiveLoad entropy />, {
+    sut = shallow(<Imgix src={src} sizes="100vw" entropy />, {
       disableLifecycleMethods: true
     });
 
-    expect(sut.props().src).toContain("crop=entropy");
-    expect(sut.props().src).toContain("fit=crop");
+    expectSrcsToContain(sut, "crop=entropy");
+    expectSrcsToContain(sut, "fit=crop");
   });
   it("the keys of custom url parameters should be url encoded", () => {
     const helloWorldKey = "hello world";
@@ -432,7 +334,7 @@ describe("When using the component", () => {
     sut = shallow(
       <Imgix
         src={"https://mysource.imgix.net/demo.png"}
-        aggressiveLoad
+        sizes="100vw"
         customParams={{
           [helloWorldKey]: "interesting"
         }}
@@ -442,8 +344,11 @@ describe("When using the component", () => {
       }
     );
 
-    expect(sut.props().src).toContain(`${expectedKey}=interesting`);
-    expect(sut.props().src).not.toContain(`${helloWorldKey}=interesting`);
+    expectSrcsToContain(sut, `${expectedKey}=interesting`);
+    expectSrcsTo(
+      sut,
+      expect.not.stringContaining(`${helloWorldKey}=interesting`)
+    );
   });
   it("the values of custom url parameters should be url encoded", () => {
     const helloWorldValue = '/foo"> <script>alert("hacked")</script><';
@@ -452,7 +357,7 @@ describe("When using the component", () => {
     sut = shallow(
       <Imgix
         src={"https://mysource.imgix.net/demo.png"}
-        aggressiveLoad
+        sizes="100vw"
         customParams={{
           hello_world: helloWorldValue
         }}
@@ -462,8 +367,11 @@ describe("When using the component", () => {
       }
     );
 
-    expect(sut.props().src).toContain(`hello_world=${expectedValue}`);
-    expect(sut.props().src).not.toContain(`hello_world=${helloWorldValue}`);
+    expectSrcsToContain(sut, `hello_world=${expectedValue}`);
+    expectSrcsTo(
+      sut,
+      expect.not.stringContaining(`hello_world=${helloWorldValue}`)
+    );
   });
   it("the base64 custom parameter values should be base64 encoded", () => {
     const txt64Value = "I cannøt belîév∑ it wors! 😱";
@@ -471,7 +379,7 @@ describe("When using the component", () => {
     sut = shallow(
       <Imgix
         src={"https://mysource.imgix.net/~text"}
-        aggressiveLoad
+        sizes="100vw"
         customParams={{
           txt64: txt64Value
         }}
@@ -481,41 +389,25 @@ describe("When using the component", () => {
       }
     );
 
-    expect(sut.props().src).toContain(`txt64=${expectedValue}`);
-    expect(sut.props().src).not.toContain(`txt64=${txt64Value}`);
-  });
-  it("the generateSrcSet prop should add dpr=2 and dpr=3 to the srcSet attribute", () => {
-    sut = shallow(<Imgix src={src} aggressiveLoad generateSrcSet />, {
-      disableLifecycleMethods: true
-    });
-
-    expect(sut.props().srcSet).toContain("dpr=2");
-    expect(sut.props().srcSet).toContain("dpr=3");
+    expectSrcsToContain(sut, `txt64=${expectedValue}`);
+    expectSrcsTo(sut, expect.not.stringContaining(`txt64=${txt64Value}`));
   });
   it("a custom height should alter the height query parameter correctly", () => {
     const height = 300;
     sut = shallow(
-      <Imgix
-        src={"https://mysource.imgix.net/demo.png"}
-        aggressiveLoad
-        height={height}
-      />,
+      <Imgix src={"https://mysource.imgix.net/demo.png"} height={height} />,
       {
         disableLifecycleMethods: true
       }
     );
 
-    expect(sut.props().src).toContain(`h=${height}`);
+    expectSrcsToContain(sut, `h=${height}`);
   });
 
   it("a height prop between 0 and 1 should not be passed as a prop to the child element rendered", () => {
     const height = 0.5;
     sut = shallow(
-      <Imgix
-        src={"https://mysource.imgix.net/demo.png"}
-        aggressiveLoad
-        height={height}
-      />,
+      <Imgix src={"https://mysource.imgix.net/demo.png"} height={height} />,
       {
         disableLifecycleMethods: true
       }
@@ -527,11 +419,7 @@ describe("When using the component", () => {
   it("a height prop greater than 1 should be passed to the the child element rendered", () => {
     const height = 300;
     sut = shallow(
-      <Imgix
-        src={"https://mysource.imgix.net/demo.png"}
-        aggressiveLoad
-        height={height}
-      />,
+      <Imgix src={"https://mysource.imgix.net/demo.png"} height={height} />,
       {
         disableLifecycleMethods: true
       }
@@ -543,27 +431,19 @@ describe("When using the component", () => {
   it("the width prop should alter the width query parameter correctly", () => {
     const width = 300;
     sut = shallow(
-      <Imgix
-        src={"https://mysource.imgix.net/demo.png"}
-        aggressiveLoad
-        width={width}
-      />,
+      <Imgix src={"https://mysource.imgix.net/demo.png"} width={width} />,
       {
         disableLifecycleMethods: true
       }
     );
 
-    expect(sut.props().src).toContain(`w=${width}`);
+    expectSrcsToContain(sut, `w=${width}`);
   });
 
   it("a width prop between 0 and 1 should not be passed as a prop to the child element rendered", () => {
     const width = 0.5;
     sut = shallow(
-      <Imgix
-        src={"https://mysource.imgix.net/demo.png"}
-        aggressiveLoad
-        width={width}
-      />,
+      <Imgix src={"https://mysource.imgix.net/demo.png"} width={width} />,
       {
         disableLifecycleMethods: true
       }
@@ -575,11 +455,7 @@ describe("When using the component", () => {
   it("a width prop greater than 1 should be passed to the the child element rendered", () => {
     const width = 300;
     sut = shallow(
-      <Imgix
-        src={"https://mysource.imgix.net/demo.png"}
-        aggressiveLoad
-        width={width}
-      />,
+      <Imgix src={"https://mysource.imgix.net/demo.png"} width={width} />,
       {
         disableLifecycleMethods: true
       }
@@ -588,56 +464,19 @@ describe("When using the component", () => {
     expect(sut.props().width).toEqual(width);
   });
 
-  it("an alt attribute should be set if loading aggressively", async () => {
+  it("an alt attribute should be set given imgProps.alt", async () => {
     const imgProps = {
       alt: "Example alt attribute"
     };
-    sut = await renderImageAndBreakInStages({
-      element: (
-        <Imgix
-          src={"https://mysource.imgix.net/demo.png"}
-          imgProps={imgProps}
-          aggressiveLoad
-        />
-      ),
-      afterFirstRender: async sut => {
-        expect(
-          sut
-            .find("img")
-            .first()
-            .props().alt
-        ).toEqual(imgProps.alt);
-      }
-    });
-  });
-  it("an alt attribute should only be set after the component's size has been found", async () => {
-    const imgProps = {
-      alt: "Example alt attribute"
-    };
-    sut = await renderImageAndBreakInStages({
-      element: (
-        <Imgix
-          src={"https://mysource.imgix.net/demo.png"}
-          imgProps={imgProps}
-        />
-      ),
-      afterFirstRender: async sut => {
-        expect(
-          sut
-            .find("img")
-            .first()
-            .props().alt
-        ).toBeFalsy();
-      },
-      afterSecondRender: async sut => {
-        expect(
-          sut
-            .find("img")
-            .first()
-            .props().alt
-        ).toEqual(imgProps.alt);
-      }
-    });
+    sut = shallow(
+      <Imgix
+        src={"https://mysource.imgix.net/demo.png"}
+        sizes="100vw"
+        imgProps={imgProps}
+      />,
+      { disableLifecycleMethods: true }
+    );
+    expect(sut.props().alt).toEqual(imgProps.alt);
   });
 
   it("any attributes passed via imgProps should be added to the rendered element", () => {
@@ -645,7 +484,11 @@ describe("When using the component", () => {
       "data-src": "https://mysource.imgix.net/demo.png"
     };
     sut = shallow(
-      <Imgix src={"https://mysource.imgix.net/demo.png"} imgProps={imgProps} />,
+      <Imgix
+        src={"https://mysource.imgix.net/demo.png"}
+        sizes="100vw"
+        imgProps={imgProps}
+      />,
       {
         disableLifecycleMethods: true
       }
@@ -662,6 +505,7 @@ describe("When using the component", () => {
     sut = shallow(
       <Imgix
         src={"https://mysource.imgix.net/demo.png"}
+        sizes="100vw"
         onMounted={onMountedSpy}
       />
     );
@@ -671,49 +515,54 @@ describe("When using the component", () => {
     ReactDOM.findDOMNode.restore();
   });
 
-  it("an ixlib parameter should be included by default in the computed src", () => {
+  it("an ixlib parameter should be included by default in the computed src and srcSet", () => {
     sut = shallow(
-      <Imgix src="https://mysource.imgix.net/demo.png" aggressiveLoad />,
+      <Imgix src="https://mysource.imgix.net/demo.png" sizes="100vw" />,
       {
         disableLifecycleMethods: true
       }
     );
-    expectUrlToContainIxLibParam(sut.props().src);
-  });
-  it("an ixlib parameter should be included by default in the computed srcSet", () => {
-    sut = shallow(
-      <Imgix src="https://mysource.imgix.net/demo.png" aggressiveLoad />,
-      {
-        disableLifecycleMethods: true
-      }
-    );
-
-    sut
-      .props()
-      .srcSet.split(",")
-      .forEach(srcSet => {
-        expectUrlToContainIxLibParam(srcSet);
-      });
+    expectSrcsTo(sut, createIxLibParamMatcher());
   });
   it("the addition of the ixlib parameter to the url can be disabled", () => {
     sut = shallow(
       <Imgix
         src="https://mysource.imgix.net/demo.png"
-        aggressiveLoad
         disableLibraryParam
+        sizes="100vw"
       />,
       {
         disableLifecycleMethods: true
       }
     );
 
-    expect(sut.props().src).not.toContain(`ixlib=`);
+    expectSrcsTo(sut, expect.not.stringContaining(`ixlib=`));
   });
 });
 
+const expectSrcsTo = (sut, matcher) => {
+  const src = sut.props().src;
+  expect(src).toEqual(matcher); // Use jest matchers as param, e.g. jest.stringContaining()
+
+  const srcSet = sut.props().srcSet;
+  if (!srcSet) {
+    fail("No srcSet");
+  }
+  const srcSets = srcSet.split(",").map(v => v.trim());
+  const srcSetUrls = srcSets.map(srcSet => srcSet.split(" ")[0]);
+  srcSetUrls.forEach(srcSetUrl => {
+    expect(srcSetUrl).toEqual(matcher);
+  });
+};
+const expectSrcsToContain = (sut, shouldContainString) =>
+  expectSrcsTo(sut, expect.stringContaining(shouldContainString));
+
 const expectUrlToContainIxLibParam = url => {
+  expect(url).toEqual(createIxLibParamMatcher());
+};
+const createIxLibParamMatcher = () => {
   const expectedVersion = require("read-pkg-up").sync().pkg.version;
   const expectedParam = `ixlib=react-${expectedVersion}`;
 
-  expect(url).toContain(expectedParam);
+  return expect.stringContaining(expectedParam);
 };
