@@ -7,6 +7,8 @@ import PropTypes from "prop-types";
 import targetWidths from "./targetWidths";
 import constructUrl from "./constructUrl";
 
+import { warning, shallowEqual } from "./common";
+
 const PACKAGE_VERSION = require("../package.json").version;
 const NODE_ENV = process.env.NODE_ENV;
 
@@ -16,17 +18,18 @@ const buildKey = idx => `react-imgix-${idx}`;
 
 const validTypes = ["img", "picture", "source"];
 
-export default class ReactImgix extends Component {
+const defaultImgixParams = {
+  auto: ["format"],
+  fit: "crop"
+};
+
+const noop = () => {};
+
+class ReactImgix extends Component {
   static propTypes = {
-    auto: PropTypes.array,
     children: PropTypes.any,
     className: PropTypes.string,
     component: PropTypes.string,
-    crop: PropTypes.string,
-    customParams: PropTypes.object,
-    entropy: PropTypes.bool,
-    faces: PropTypes.bool,
-    fit: PropTypes.string,
     disableSrcSet: PropTypes.bool,
     onMounted: PropTypes.func,
     sizes: PropTypes.string,
@@ -34,15 +37,14 @@ export default class ReactImgix extends Component {
     type: PropTypes.oneOf(validTypes),
     width: PropTypes.number,
     height: PropTypes.number,
-    disableLibraryParam: PropTypes.bool
+    defaultHeight: PropTypes.number,
+    defaultWidth: PropTypes.number,
+    disableLibraryParam: PropTypes.bool,
+    imgixParams: PropTypes.object
   };
   static defaultProps = {
-    auto: ["format"],
-    entropy: false,
-    faces: true,
-    fit: "crop",
     disableSrcSet: false,
-    onMounted: () => {},
+    onMounted: noop,
     type: "img"
   };
 
@@ -51,36 +53,37 @@ export default class ReactImgix extends Component {
     this.props.onMounted(node);
   };
 
+  shouldComponentUpdate = nextProps => {
+    warning(
+      nextProps.onMounted == this.props.onMounted,
+      "props.onMounted() is changing between renders. This is probably not intended. Ensure that a class method is being passed to Imgix rather than a function that is created every render. If this is intended, ignore this warning."
+    );
+
+    const customizer = (oldProp, newProp, key) => {
+      if (key === "children") {
+        return shallowEqual(oldProp, newProp);
+      }
+      if (key === "imgixParams") {
+        return shallowEqual(oldProp, newProp);
+      }
+      if (key === "imgProps") {
+        return shallowEqual(oldProp, newProp);
+      }
+      return undefined; // handled by shallowEqual
+    };
+    const propsAreEqual = shallowEqual(props, nextProps, customizer);
+    return !propsAreEqual;
+  };
+
   buildSrcs = () => {
     const props = this.props;
-    const {
-      width,
-      height,
-      entropy,
-      faces,
-      auto,
-      customParams,
-      disableLibraryParam,
-      disableSrcSet,
-      type
-    } = props;
-
-    let crop = false;
-    if (faces) crop = "faces";
-    if (entropy) crop = "entropy";
-    if (props.crop) crop = props.crop;
-
-    let fit = false;
-    if (entropy || faces) fit = "crop";
-    if (props.fit) fit = props.fit;
+    const { width, height, disableLibraryParam, disableSrcSet, type } = props;
+    const imgixParams = this.imgixParams();
 
     const fixedSize = width != null || height != null;
 
     const srcOptions = {
-      auto,
-      ...customParams,
-      crop,
-      fit,
+      ...imgixParams,
       ...(disableLibraryParam ? {} : { ixlib: `react-${PACKAGE_VERSION}` }),
       ...(fixedSize && height ? { height } : {}),
       ...(fixedSize && width ? { width } : {})
@@ -116,16 +119,34 @@ export default class ReactImgix extends Component {
     };
   };
 
+  imgixParams = () => {
+    const params = {
+      ...defaultImgixParams,
+      ...this.props.imgixParams
+    };
+
+    const { faces, entropy } = params;
+
+    let crop = false;
+    if (faces) crop = "faces";
+    if (entropy) crop = "entropy";
+    if (params.crop) crop = params.crop;
+
+    let fit = false;
+    if (entropy || faces) fit = "crop";
+    if (params.fit) fit = params.fit;
+
+    return {
+      ...params,
+      crop,
+      fit
+    };
+  };
+
   render() {
     const {
-      auto,
       children,
       component,
-      customParams,
-      crop,
-      entropy,
-      faces,
-      fit,
       disableSrcSet,
       type,
       width,
@@ -230,7 +251,8 @@ export default class ReactImgix extends Component {
         let imgIdx = _children.findIndex(
           c =>
             c.type === "img" ||
-            (c.type === ReactImgix && c.props.type === "img")
+            ((c.type === ReactImgix || c.type === ReactImgixWrapped) &&
+              c.props.type === "img")
         );
 
         if (imgIdx === -1) {
@@ -252,3 +274,54 @@ export default class ReactImgix extends Component {
     return React.createElement(_component, childProps, _children);
   }
 }
+
+const DEPRECATED_PROPS = ["auto", "crop", "entropy", "faces", "fit"];
+const deprecateProps = WrappedComponent => {
+  const WithDeprecatedProps = props => {
+    const imgixParams = {
+      ...(props.customParams || {}),
+      ...props.imgixParams
+    };
+    const propsWithOutDeprecated = {
+      ...props,
+      imgixParams
+    };
+    DEPRECATED_PROPS.forEach(deprecatedProp => {
+      warning(
+        !(deprecatedProp in props),
+        `The prop '${deprecatedProp}' has been deprecated and will be removed in v9. Please update the usage to <Imgix imgixParams={{${deprecatedProp}: value}} />`
+      );
+
+      delete propsWithOutDeprecated[deprecatedProp];
+      if (deprecatedProp in props) {
+        imgixParams[deprecatedProp] = props[deprecatedProp];
+      }
+    });
+    warning(
+      !("customParams" in props),
+      `The prop 'customParams' has been replaced with 'imgixParams' and will be removed in v9. Please update usage to <Imgix imgixParams={customParams} />`
+    );
+    delete propsWithOutDeprecated.customParams;
+
+    return <WrappedComponent {...propsWithOutDeprecated} />;
+  };
+  WithDeprecatedProps.propTypes = {
+    ...ReactImgix.propTypes,
+    auto: PropTypes.array,
+    customParams: PropTypes.object,
+    crop: PropTypes.string,
+    entropy: PropTypes.bool,
+    faces: PropTypes.bool,
+    fit: PropTypes.string
+  };
+  WithDeprecatedProps.defaultProps = {
+    imgixParams: {}
+  };
+  WithDeprecatedProps.displayName = "ReactImgix";
+
+  return WithDeprecatedProps;
+};
+
+const ReactImgixWrapped = deprecateProps(ReactImgix);
+export default ReactImgixWrapped;
+export { ReactImgix as __ReactImgix };
