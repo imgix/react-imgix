@@ -64,7 +64,12 @@ class ReactImgix extends Component {
         return shallowEqual(oldProp, newProp);
       }
       if (key === "imgixParams") {
-        return shallowEqual(oldProp, newProp);
+        return shallowEqual(oldProp, newProp, (a, b) => {
+          if (Array.isArray(a)) {
+            return shallowEqual(a, b);
+          }
+          return undefined;
+        });
       }
       if (key === "imgProps") {
         return shallowEqual(oldProp, newProp);
