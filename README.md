@@ -171,22 +171,24 @@ import Imgix from "react-imgix";
 Using the [<picture> element](https://docs.imgix.com/tutorials/using-imgix-picture-element) you can create responsive images:
 
 ```js
-<Imgix src={src} type="picture">
-  <Imgix
+import Imgix, { Picture, Source } from 'react-imgix'
+
+<Picture>
+  <Source
     src={src}
     width={400}
-    type="source"
     imgProps={{ media: "(min-width: 768px)" }}
   />
-  <Imgix
+  <Source
     src={src}
     width={200}
-    type="source"
     imgProps={{ media: "(min-width: 320px)" }}
   />
-  <Imgix src={src} width={100} type="img" />
-</Imgix>
+  <Imgix src={src} width={100} />
+</Picture>
 ```
+
+TODO: Add prop fall-through/default thing support i.e. props on Picture get passed down
 
 #### Background mode
 
@@ -211,10 +213,6 @@ _For example_:
 #### sizes :: string
 
 Specified the developer's expected size of the image element when rendered on the page. Similar to width. E.g. `100vw`, `calc(50vw - 50px)`, `500px`. Highly recommended when not passing `width` or `height`. [Eric Portis' "Srcset and sizes"](https://ericportis.com/posts/2014/srcset-sizes/) article goes into depth on how to use the `sizes` attribute.
-
-#### type :: string, default = 'img'
-
-What kind of component to render, one of `img`, picture`,`source`.
 
 #### className :: string
 
