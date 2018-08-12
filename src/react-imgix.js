@@ -37,8 +37,6 @@ class ReactImgix extends Component {
     type: PropTypes.oneOf(validTypes),
     width: PropTypes.number,
     height: PropTypes.number,
-    defaultHeight: PropTypes.number,
-    defaultWidth: PropTypes.number,
     disableLibraryParam: PropTypes.bool,
     imgixParams: PropTypes.object
   };
@@ -130,20 +128,12 @@ class ReactImgix extends Component {
       ...this.props.imgixParams
     };
 
-    const { faces, entropy } = params;
-
-    let crop = false;
-    if (faces) crop = "faces";
-    if (entropy) crop = "entropy";
-    if (params.crop) crop = params.crop;
-
     let fit = false;
-    if (entropy || faces) fit = "crop";
+    if (params.crop != null) fit = "crop";
     if (params.fit) fit = params.fit;
 
     return {
       ...params,
-      crop,
       fit
     };
   };
@@ -280,7 +270,7 @@ class ReactImgix extends Component {
   }
 }
 
-const DEPRECATED_PROPS = ["auto", "crop", "entropy", "faces", "fit"];
+const DEPRECATED_PROPS = ["auto", "crop", "fit"];
 const deprecateProps = WrappedComponent => {
   const WithDeprecatedProps = props => {
     const imgixParams = {
@@ -297,8 +287,8 @@ const deprecateProps = WrappedComponent => {
         `The prop '${deprecatedProp}' has been deprecated and will be removed in v9. Please update the usage to <Imgix imgixParams={{${deprecatedProp}: value}} />`
       );
 
-      delete propsWithOutDeprecated[deprecatedProp];
       if (deprecatedProp in props) {
+        delete propsWithOutDeprecated[deprecatedProp];
         imgixParams[deprecatedProp] = props[deprecatedProp];
       }
     });
@@ -307,6 +297,27 @@ const deprecateProps = WrappedComponent => {
       `The prop 'customParams' has been replaced with 'imgixParams' and will be removed in v9. Please update usage to <Imgix imgixParams={customParams} />`
     );
     delete propsWithOutDeprecated.customParams;
+
+    if (props.faces) {
+      warning(
+        false,
+        `The prop 'faces' has been deprecated and will be removed in v9. Please update the usage to <Imgix imgixParams={{crop: 'faces'}} />`
+      );
+      delete propsWithOutDeprecated.faces;
+      if (!imgixParams.crop) {
+        imgixParams.crop = "faces";
+      }
+    }
+    if (props.entropy) {
+      warning(
+        false,
+        `The prop 'entropy' has been deprecated and will be removed in v9. Please update the usage to <Imgix imgixParams={{crop: 'entropy'}} />`
+      );
+      delete propsWithOutDeprecated.entropy;
+      if (!imgixParams.crop) {
+        imgixParams.crop = "entropy";
+      }
+    }
 
     return <WrappedComponent {...propsWithOutDeprecated} />;
   };
