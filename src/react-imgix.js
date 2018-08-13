@@ -46,6 +46,7 @@ const ShouldComponentUpdateHOC = WrappedComponent => {
             return undefined;
           });
         }
+        // TODO: change imgProps to htmlAttributes
         if (key === "imgProps") {
           return shallowEqual(oldProp, newProp);
         }
