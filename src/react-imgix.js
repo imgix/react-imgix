@@ -7,7 +7,7 @@ import PropTypes from "prop-types";
 import targetWidths from "./targetWidths";
 import constructUrl from "./constructUrl";
 
-import { warning, shallowEqual } from "./common";
+import { warning, shallowEqual, compose } from "./common";
 
 const PACKAGE_VERSION = require("../package.json").version;
 const NODE_ENV = process.env.NODE_ENV;
@@ -24,6 +24,41 @@ const defaultImgixParams = {
 };
 
 const noop = () => {};
+
+const ShouldComponentUpdateHOC = WrappedComponent => {
+  return class ShouldComponentUpdateHOC extends Component {
+    shouldComponentUpdate = nextProps => {
+      const props = this.props;
+      warning(
+        nextProps.onMounted == this.props.onMounted,
+        "props.onMounted() is changing between renders. This is probably not intended. Ensure that a class method is being passed to Imgix rather than a function that is created every render. If this is intended, ignore this warning."
+      );
+
+      const customizer = (oldProp, newProp, key) => {
+        if (key === "children") {
+          return shallowEqual(oldProp, newProp);
+        }
+        if (key === "imgixParams") {
+          return shallowEqual(oldProp, newProp, (a, b) => {
+            if (Array.isArray(a)) {
+              return shallowEqual(a, b);
+            }
+            return undefined;
+          });
+        }
+        if (key === "imgProps") {
+          return shallowEqual(oldProp, newProp);
+        }
+        return undefined; // handled by shallowEqual
+      };
+      const propsAreEqual = shallowEqual(props, nextProps, customizer);
+      return !propsAreEqual;
+    };
+    render() {
+      return <WrappedComponent {...this.props} />;
+    }
+  };
+};
 
 class ReactImgix extends Component {
   static propTypes = {
@@ -48,33 +83,6 @@ class ReactImgix extends Component {
   componentDidMount = () => {
     const node = ReactDOM.findDOMNode(this);
     this.props.onMounted(node);
-  };
-
-  shouldComponentUpdate = nextProps => {
-    warning(
-      nextProps.onMounted == this.props.onMounted,
-      "props.onMounted() is changing between renders. This is probably not intended. Ensure that a class method is being passed to Imgix rather than a function that is created every render. If this is intended, ignore this warning."
-    );
-
-    const customizer = (oldProp, newProp, key) => {
-      if (key === "children") {
-        return shallowEqual(oldProp, newProp);
-      }
-      if (key === "imgixParams") {
-        return shallowEqual(oldProp, newProp, (a, b) => {
-          if (Array.isArray(a)) {
-            return shallowEqual(a, b);
-          }
-          return undefined;
-        });
-      }
-      if (key === "imgProps") {
-        return shallowEqual(oldProp, newProp);
-      }
-      return undefined; // handled by shallowEqual
-    };
-    const propsAreEqual = shallowEqual(props, nextProps, customizer);
-    return !propsAreEqual;
   };
 
   buildSrcs = () => {
@@ -324,6 +332,9 @@ const deprecateProps = WrappedComponent => {
   return WithDeprecatedProps;
 };
 
-const ReactImgixWrapped = deprecateProps(ReactImgix);
+const ReactImgixWrapped = compose(
+  deprecateProps,
+  ShouldComponentUpdateHOC
+)(ReactImgix);
 export default ReactImgixWrapped;
 export { ReactImgix as __ReactImgix };
