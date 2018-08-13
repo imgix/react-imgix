@@ -29,7 +29,6 @@ class ReactImgix extends Component {
   static propTypes = {
     children: PropTypes.any,
     className: PropTypes.string,
-    component: PropTypes.string,
     disableSrcSet: PropTypes.bool,
     onMounted: PropTypes.func,
     sizes: PropTypes.string,
@@ -139,14 +138,7 @@ class ReactImgix extends Component {
   };
 
   render() {
-    const {
-      children,
-      component,
-      disableSrcSet,
-      type,
-      width,
-      height
-    } = this.props;
+    const { children, disableSrcSet, type, width, height } = this.props;
 
     // Pre-render checks
     if (NODE_ENV !== "production") {
@@ -163,7 +155,7 @@ class ReactImgix extends Component {
       }
     }
 
-    let _component = component;
+    let _component = undefined;
     const imgProps = this.props.imgProps || {};
 
     let _children = children;
@@ -187,9 +179,7 @@ class ReactImgix extends Component {
         );
         break;
       case "img":
-        if (!component) {
-          _component = "img";
-        }
+        _component = "img";
 
         if (!disableSrcSet) {
           childProps.srcSet = srcSet;
@@ -197,9 +187,7 @@ class ReactImgix extends Component {
         childProps.src = src;
         break;
       case "source":
-        if (!component) {
-          _component = "source";
-        }
+        _component = "source";
 
         // strip out the "alt" tag from childProps since it's not allowed
         delete childProps.alt;
@@ -219,9 +207,7 @@ class ReactImgix extends Component {
         //      since objects dont respond correctly to ===
         break;
       case "picture":
-        if (!component) {
-          _component = "picture";
-        }
+        _component = "picture";
 
         // strip out the "alt" tag from childProps since it's not allowed
         delete childProps.alt;
