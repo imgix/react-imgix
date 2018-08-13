@@ -188,7 +188,33 @@ import Imgix, { Picture, Source } from 'react-imgix'
 </Picture>
 ```
 
-TODO: Add prop fall-through/default thing support i.e. props on Picture get passed down
+In order to reduce the duplication in props, JSX supports object spread for props:
+
+```js
+import Imgix, { Picture, Source } from 'react-imgix'
+
+const commonProps = {
+	src: 'https://...',
+	imgixParams: {
+		fit: 'crop',
+		crop: 'faces'
+	}
+}
+
+<Picture>
+	<Source
+		{...commonProps}
+    width={400}
+    imgProps={{ media: "(min-width: 768px)" }}
+  />
+  <Source
+    {...commonProps}
+    width={200}
+    imgProps={{ media: "(min-width: 320px)" }}
+  />
+  <Imgix src={src} width={100} />
+</Picture>
+```
 
 #### Background mode
 
