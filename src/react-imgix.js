@@ -25,6 +25,24 @@ const defaultImgixParams = {
 
 const noop = () => {};
 
+const COMMON_PROP_TYPES = {
+  className: PropTypes.string,
+  // TODO: onMounted for picture
+  onMounted: PropTypes.func,
+  imgProps: PropTypes.object
+};
+
+const SHARED_IMGIX_AND_SOURCE_PROP_TYPES = {
+  ...COMMON_PROP_TYPES,
+  disableSrcSet: PropTypes.bool,
+  disableLibraryParam: PropTypes.bool,
+  imgixParams: PropTypes.object,
+  sizes: PropTypes.string,
+  width: PropTypes.number,
+  height: PropTypes.number,
+  src: PropTypes.string.isRequired
+};
+
 const ShouldComponentUpdateHOC = WrappedComponent => {
   class ShouldComponentUpdateHOC extends Component {
     shouldComponentUpdate = nextProps => {
@@ -128,21 +146,9 @@ function imgixParams(props) {
   };
 }
 
-const COMMON_PROP_TYPES = {
-  className: PropTypes.string,
-  disableSrcSet: PropTypes.bool,
-  onMounted: PropTypes.func,
-  sizes: PropTypes.string,
-  width: PropTypes.number,
-  height: PropTypes.number,
-  disableLibraryParam: PropTypes.bool,
-  imgixParams: PropTypes.object
-};
-
 class ReactImgix extends Component {
   static propTypes = {
-    ...COMMON_PROP_TYPES,
-    src: PropTypes.string.isRequired
+    ...SHARED_IMGIX_AND_SOURCE_PROP_TYPES
   };
   static defaultProps = {
     disableSrcSet: false,
@@ -345,8 +351,7 @@ const Picture = compose(ShouldComponentUpdateHOC)(PictureImpl);
 
 class SourceImpl extends Component {
   static propTypes = {
-    ...COMMON_PROP_TYPES,
-    src: PropTypes.string.isRequired
+    ...SHARED_IMGIX_AND_SOURCE_PROP_TYPES
     // TODO: add media?
   };
   render() {

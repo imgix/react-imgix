@@ -222,11 +222,15 @@ This feature has been removed from react-imgix when `sizes` and `srcset` was imp
 
 ### Props
 
-#### src :: string, required
+#### Shared Props (Imgix, Source)
+
+These props are shared among Imgix and Source Components
+
+##### src :: string, required
 
 Usually in the form: `https://[your_domain].imgix.net/[image]`. Don't include any parameters.
 
-#### imgixParams :: object
+##### imgixParams :: object
 
 Imgix params to add to the image `src`.
 
@@ -236,37 +240,51 @@ _For example_:
 <Imgix imgixParams={{ mask: "ellipse" }} />
 ```
 
-#### sizes :: string
+##### sizes :: string
 
 Specified the developer's expected size of the image element when rendered on the page. Similar to width. E.g. `100vw`, `calc(50vw - 50px)`, `500px`. Highly recommended when not passing `width` or `height`. [Eric Portis' "Srcset and sizes"](https://ericportis.com/posts/2014/srcset-sizes/) article goes into depth on how to use the `sizes` attribute.
 
-#### className :: string
+##### className :: string
 
 `className` applied to top level component. To set `className` on the image itself see `imgProps`.
 
-#### height :: number
+##### height :: number
 
 Force images to be a certain height.
 
-#### width :: number
+##### width :: number
 
 Force images to be a certain width.
 
-#### disableSrcSet :: bool, default = false
+##### disableSrcSet :: bool, default = false
 
 Disable generation of variable width src sets to enable responsiveness.
 
-#### disableLibraryParam :: bool
+##### disableLibraryParam :: bool
 
 By default this component adds a parameter to the generated url to help imgix with analytics and support for this library. This can be disabled by setting this prop to `true`.
 
-#### imgProps :: object
+##### imgProps :: object
 
 Any other attributes to add to the html node (example: `alt`, `data-*`, `className`).
 
-#### onMounted :: func
+##### onMounted :: func
 
 Called on `componentDidMount` with the mounted DOM node as an argument.
+
+#### Picture Props
+
+##### className :: string
+
+`className` applied to top level component. To set `className` on the image itself see `imgProps`.
+
+##### onMounted :: func
+
+Called on `componentDidMount` with the mounted DOM node as an argument.
+
+##### imgProps :: object
+
+Any other attributes to add to the html node (example: `alt`, `data-*`, `className`).
 
 ## Upgrade Guides
 
