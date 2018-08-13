@@ -6,7 +6,7 @@ import PropTypes from "prop-types";
 
 import targetWidths from "./targetWidths";
 import constructUrl from "./constructUrl";
-import { deprecatePropsHOC, ShouldComponentUpdateHOC } from "./hocs";
+import { deprecatePropsHOC, ShouldComponentUpdateHOC } from "./HOCs";
 
 import { warning, shallowEqual, compose } from "./common";
 
