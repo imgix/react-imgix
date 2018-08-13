@@ -5,10 +5,16 @@ import { shallow as enzymeShallow, mount } from "enzyme";
 import PropTypes from "prop-types";
 import { shallowUntilTarget } from "../helpers";
 
-import Imgix, { __ReactImgix, Picture, Source } from "react-imgix";
+import Imgix, {
+  __ReactImgixImpl,
+  Picture,
+  Source,
+  __SourceImpl,
+  __PictureImpl
+} from "react-imgix";
 
-function shallow(element, shallowOptions) {
-  return shallowUntilTarget(element, __ReactImgix, {
+function shallow(element, target = __ReactImgixImpl, shallowOptions) {
+  return shallowUntilTarget(element, target, {
     shallowOptions: shallowOptions || {
       disableLifecycleMethods: true
     }
@@ -78,6 +84,7 @@ describe("When in default mode", () => {
 describe("When in image mode", () => {});
 
 describe("When in <source> mode", () => {
+  const shallowSource = element => shallow(element, __SourceImpl);
   const sizes =
     "(max-width: 30em) 100vw, (max-width: 50em) 50vw, calc(33vw - 100px)";
   const imgProps = {
@@ -117,8 +124,11 @@ describe("When in <source> mode", () => {
   };
 
   describe("by default", () => {
-    const renderImage = () =>
-      shallow(<Source src={src} imgProps={imgProps} sizes={sizes} />);
+    const renderImage = () => {
+      return shallowSource(
+        <Source src={src} imgProps={imgProps} sizes={sizes} />
+      );
+    };
 
     shouldBehaveLikeSource(renderImage);
     it("props.srcSet should be set to a valid src", () => {
@@ -139,7 +149,7 @@ describe("When in <source> mode", () => {
 
   describe("with disableSrcSet prop", () => {
     const renderImage = () =>
-      shallow(
+      shallowSource(
         <Source src={src} disableSrcSet imgProps={imgProps} sizes={sizes} />
       );
 
@@ -151,6 +161,7 @@ describe("When in <source> mode", () => {
 });
 
 describe("When in picture mode", () => {
+  const shallowPicture = element => shallow(element, __PictureImpl);
   let children, lastChild;
   const parentAlt = "parent alt";
   const childAlt = "child alt";
@@ -169,15 +180,19 @@ describe("When in picture mode", () => {
     });
 
     it("an <img> or a <Imgix> should be the last child", () => {
+      // If the number of HOCs for ReactImgix is changed, there may need to be a change in the number of .first().shallow() calls
       const lastChildElement = lastChild
         .first()
-        .shallow() // hack from https://github.com/airbnb/enzyme/issues/539#issuecomment-239497107 until a better solution is implemented
-        .getElement();
-      if (lastChildElement.type.hasOwnProperty("name")) {
-        expect(lastChildElement.type.name).toBe("ReactImgix");
-        expect(lastChildElement.props.type).toBe("img");
+        .shallow()
+        .first()
+        .shallow(); // hack from https://github.com/airbnb/enzyme/issues/539#issuecomment-239497107 until a better solution is implemented
+      if (lastChildElement.type().hasOwnProperty("name")) {
+        expect(lastChildElement.name()).toBe(__ReactImgixImpl.displayName);
+        expect(
+          lastChildElement.shallow({ disableLifecycleMethods: true }).type()
+        ).toBe("img");
       } else {
-        expect(lastChildElement.type).toBe("img");
+        expect(lastChildElement.type()).toBe("img");
       }
     });
   };
@@ -186,7 +201,9 @@ describe("When in picture mode", () => {
     const oldConsole = global.console;
     global.console = { warn: jest.fn() };
 
-    shallow(<Picture src={src} aggressiveLoad width={100} height={100} />);
+    shallowPicture(
+      <Picture src={src} aggressiveLoad width={100} height={100} />
+    );
 
     expect(console.warn).toHaveBeenCalledWith(
       expect.stringContaining("No fallback image found")
@@ -197,7 +214,7 @@ describe("When in picture mode", () => {
 
   describe("with a <Imgix> passed as a child", () => {
     beforeEach(() => {
-      sut = shallow(
+      sut = shallowPicture(
         <Picture
           src={src}
           agressiveLoad
@@ -234,7 +251,7 @@ describe("When in picture mode", () => {
 
   describe("with an <img> passed as a child", () => {
     beforeEach(() => {
-      sut = shallow(
+      sut = shallowPicture(
         <Picture
           src={src}
           imgixParams={{ crop: "faces" }}
@@ -438,6 +455,7 @@ describe("When using the component", () => {
         sizes="100vw"
         onMounted={onMountedSpy}
       />,
+      __ReactImgixImpl,
       {}
     );
 
