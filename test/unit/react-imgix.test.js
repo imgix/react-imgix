@@ -107,7 +107,7 @@ describe("When in <source> mode", () => {
   const shallowSource = element => shallow(element, __SourceImpl);
   const sizes =
     "(max-width: 30em) 100vw, (max-width: 50em) 50vw, calc(33vw - 100px)";
-  const imgProps = {
+  const htmlAttributes = {
     media: "(min-width: 1200px)",
     type: "image/webp",
     alt: "alt text"
@@ -124,11 +124,11 @@ describe("When in <source> mode", () => {
     it("props.sizes should be defined and equal to the image's props", () =>
       expect(renderImage().props().sizes).toEqual(sizes));
 
-    Object.keys(imgProps)
+    Object.keys(htmlAttributes)
       .filter(k => k !== "alt")
       .forEach(k => {
         it(`props.${k} should be defined and equal to the image's props`, () => {
-          expect(renderImage().props()[k]).toBe(imgProps[k]);
+          expect(renderImage().props()[k]).toBe(htmlAttributes[k]);
         });
       });
     it(`props.alt should not be defined`, () => {
@@ -146,7 +146,7 @@ describe("When in <source> mode", () => {
   describe("by default", () => {
     const renderImage = () => {
       return shallowSource(
-        <Source src={src} imgProps={imgProps} sizes={sizes} />
+        <Source src={src} htmlAttributes={htmlAttributes} sizes={sizes} />
       );
     };
 
@@ -170,7 +170,7 @@ describe("When in <source> mode", () => {
   describe("with disableSrcSet prop", () => {
     const renderImage = () =>
       shallowSource(
-        <Source src={src} disableSrcSet imgProps={imgProps} sizes={sizes} />
+        <Source src={src} disableSrcSet htmlAttributes={htmlAttributes} sizes={sizes} />
       );
 
     shouldBehaveLikeSource(renderImage);
@@ -258,9 +258,9 @@ describe("When in picture mode", () => {
           src={src}
           agressiveLoad
           imgixParams={{ crop: "faces" }}
-          imgProps={{ alt: parentAlt }}
+          htmlAttributes={{ alt: parentAlt }}
         >
-          <Imgix src={src} imgProps={{ alt: childAlt }} />
+          <Imgix src={src} htmlAttributes={{ alt: childAlt }} />
         </Picture>
       );
       children = sut.children();
@@ -281,7 +281,7 @@ describe("When in picture mode", () => {
         imgixParams: {
           crop: "faces"
         },
-        imgProps: {
+        htmlAttributes: {
           alt: childAlt
         }
       });
@@ -294,7 +294,7 @@ describe("When in picture mode", () => {
         <Picture
           src={src}
           imgixParams={{ crop: "faces" }}
-          imgProps={{ alt: parentAlt }}
+          htmlAttributes={{ alt: parentAlt }}
         >
           <img src={src} alt={childAlt} />
         </Picture>
@@ -472,33 +472,33 @@ describe("When using the component", () => {
     expect(sut.props().width).toEqual(width);
   });
 
-  it("an alt attribute should be set given imgProps.alt", async () => {
-    const imgProps = {
+  it("an alt attribute should be set given htmlAttributes.alt", async () => {
+    const htmlAttributes = {
       alt: "Example alt attribute"
     };
     sut = shallow(
       <Imgix
         src={"https://mysource.imgix.net/demo.png"}
         sizes="100vw"
-        imgProps={imgProps}
+        htmlAttributes={htmlAttributes}
       />
     );
-    expect(sut.props().alt).toEqual(imgProps.alt);
+    expect(sut.props().alt).toEqual(htmlAttributes.alt);
   });
 
-  it("any attributes passed via imgProps should be added to the rendered element", () => {
-    const imgProps = {
+  it("any attributes passed via htmlAttributes should be added to the rendered element", () => {
+    const htmlAttributes = {
       "data-src": "https://mysource.imgix.net/demo.png"
     };
     sut = shallow(
       <Imgix
         src={"https://mysource.imgix.net/demo.png"}
         sizes="100vw"
-        imgProps={imgProps}
+        htmlAttributes={htmlAttributes}
       />
     );
 
-    expect(sut.props()["data-src"]).toEqual(imgProps["data-src"]);
+    expect(sut.props()["data-src"]).toEqual(htmlAttributes["data-src"]);
   });
 
   it("an ixlib parameter should be included by default in the computed src and srcSet", () => {

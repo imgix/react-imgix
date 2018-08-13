@@ -177,12 +177,12 @@ import Imgix, { Picture, Source } from 'react-imgix'
   <Source
     src={src}
     width={400}
-    imgProps={{ media: "(min-width: 768px)" }}
+    htmlAttributes={{ media: "(min-width: 768px)" }}
   />
   <Source
     src={src}
     width={200}
-    imgProps={{ media: "(min-width: 320px)" }}
+    htmlAttributes={{ media: "(min-width: 320px)" }}
   />
   <Imgix src={src} width={100} />
 </Picture>
@@ -205,12 +205,12 @@ const commonProps = {
 	<Source
 		{...commonProps}
     width={400}
-    imgProps={{ media: "(min-width: 768px)" }}
+    htmlAttributes={{ media: "(min-width: 768px)" }}
   />
   <Source
     {...commonProps}
     width={200}
-    imgProps={{ media: "(min-width: 320px)" }}
+    htmlAttributes={{ media: "(min-width: 320px)" }}
   />
   <Imgix src={src} width={100} />
 </Picture>
@@ -246,7 +246,7 @@ Specified the developer's expected size of the image element when rendered on th
 
 ##### className :: string
 
-`className` applied to top level component. To set `className` on the image itself see `imgProps`.
+`className` applied to top level component. To set `className` on the image itself see `htmlAttributes`.
 
 ##### height :: number
 
@@ -264,7 +264,7 @@ Disable generation of variable width src sets to enable responsiveness.
 
 By default this component adds a parameter to the generated url to help imgix with analytics and support for this library. This can be disabled by setting this prop to `true`.
 
-##### imgProps :: object
+##### htmlAttributes :: object
 
 Any other attributes to add to the html node (example: `alt`, `data-*`, `className`).
 
@@ -276,13 +276,13 @@ Called on `componentDidMount` with the mounted DOM node as an argument.
 
 ##### className :: string
 
-`className` applied to top level component. To set `className` on the image itself see `imgProps`.
+`className` applied to top level component. To set `className` on the image itself see `htmlAttributes`.
 
 ##### onMounted :: func
 
 Called on `componentDidMount` with the mounted DOM node as an argument.
 
-##### imgProps :: object
+##### htmlAttributes :: object
 
 Any other attributes to add to the html node (example: `alt`, `data-*`, `className`).
 

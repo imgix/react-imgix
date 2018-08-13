@@ -29,7 +29,7 @@ const COMMON_PROP_TYPES = {
   className: PropTypes.string,
   // TODO: onMounted for picture
   onMounted: PropTypes.func,
-  imgProps: PropTypes.object
+  htmlAttributes: PropTypes.object
 };
 
 const SHARED_IMGIX_AND_SOURCE_PROP_TYPES = {
@@ -64,8 +64,7 @@ const ShouldComponentUpdateHOC = WrappedComponent => {
             return undefined;
           });
         }
-        // TODO: change imgProps to htmlAttributes
-        if (key === "imgProps") {
+        if (key === "htmlAttributes") {
           return shallowEqual(oldProp, newProp);
         }
         return undefined; // handled by shallowEqual
@@ -177,7 +176,7 @@ class ReactImgix extends Component {
       }
     }
 
-    const imgProps = this.props.imgProps || {};
+    const htmlAttributes = this.props.htmlAttributes || {};
 
     const { src, srcSet } = buildSrc({
       ...this.props,
@@ -186,12 +185,12 @@ class ReactImgix extends Component {
     });
 
     let childProps = {
-      ...this.props.imgProps,
+      ...this.props.htmlAttributes,
       sizes: this.props.sizes,
       className: this.props.className,
       width: width <= 1 ? null : width,
       height: height <= 1 ? null : height,
-      alt: imgProps.alt,
+      alt: htmlAttributes.alt,
       src
     };
     if (!disableSrcSet) {
@@ -374,7 +373,7 @@ class SourceImpl extends Component {
   render() {
     const { children, disableSrcSet, type, width, height } = this.props;
 
-    const imgProps = this.props.imgProps || {};
+    const htmlAttributes = this.props.htmlAttributes || {};
 
     const { src, srcSet } = buildSrc({
       ...this.props,
@@ -383,7 +382,7 @@ class SourceImpl extends Component {
     });
 
     let childProps = {
-      ...this.props.imgProps,
+      ...this.props.htmlAttributes,
       sizes: this.props.sizes,
       className: this.props.className,
       width: width <= 1 ? null : width,
@@ -399,7 +398,7 @@ class SourceImpl extends Component {
     } else {
       childProps.srcSet = `${src}, ${srcSet}`;
     }
-    // for now we'll take media from imgProps which isn't ideal because
+    // for now we'll take media from htmlAttributes which isn't ideal because
     //   a) this isn't an <img>
     //   b) passing objects as props means that react will always rerender
     //      since objects dont respond correctly to ===
