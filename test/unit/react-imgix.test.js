@@ -5,7 +5,7 @@ import { shallow as enzymeShallow, mount } from "enzyme";
 import PropTypes from "prop-types";
 import { shallowUntilTarget } from "../helpers";
 
-import Imgix, { __ReactImgix } from "react-imgix";
+import Imgix, { __ReactImgix, Picture, Source } from "react-imgix";
 
 function shallow(element, shallowOptions) {
   return shallowUntilTarget(element, __ReactImgix, {
@@ -43,13 +43,13 @@ async function renderImageAndBreakInStages({
 }
 
 let oldConsole, log;
-beforeAll(() => {
+beforeEach(() => {
   oldConsole = global.console;
   delete console.log;
   console.error = console.log;
   log = console.log.bind(console);
 });
-afterAll(() => {
+afterEach(() => {
   global.console = oldConsole;
 });
 
@@ -118,9 +118,7 @@ describe("When in <source> mode", () => {
 
   describe("by default", () => {
     const renderImage = () =>
-      shallow(
-        <Imgix src={src} type="source" imgProps={imgProps} sizes={sizes} />
-      );
+      shallow(<Source src={src} imgProps={imgProps} sizes={sizes} />);
 
     shouldBehaveLikeSource(renderImage);
     it("props.srcSet should be set to a valid src", () => {
@@ -142,13 +140,7 @@ describe("When in <source> mode", () => {
   describe("with disableSrcSet prop", () => {
     const renderImage = () =>
       shallow(
-        <Imgix
-          src={src}
-          type="source"
-          disableSrcSet
-          imgProps={imgProps}
-          sizes={sizes}
-        />
+        <Source src={src} disableSrcSet imgProps={imgProps} sizes={sizes} />
       );
 
     shouldBehaveLikeSource(renderImage);
@@ -176,7 +168,7 @@ describe("When in picture mode", () => {
       expect(sut.props().alt).toBe(undefined);
     });
 
-    it("an <img> or a <ReactImgix type=img> should be the last child", () => {
+    it("an <img> or a <Imgix> should be the last child", () => {
       const lastChildElement = lastChild
         .first()
         .shallow() // hack from https://github.com/airbnb/enzyme/issues/539#issuecomment-239497107 until a better solution is implemented
@@ -194,9 +186,7 @@ describe("When in picture mode", () => {
     const oldConsole = global.console;
     global.console = { warn: jest.fn() };
 
-    shallow(
-      <Imgix src={src} type="picture" aggressiveLoad width={100} height={100} />
-    );
+    shallow(<Picture src={src} aggressiveLoad width={100} height={100} />);
 
     expect(console.warn).toHaveBeenCalledWith(
       expect.stringContaining("No fallback image found")
@@ -205,18 +195,17 @@ describe("When in picture mode", () => {
     global.console = oldConsole;
   });
 
-  describe("with a <ReactImgix type=img> passed as a child", () => {
+  describe("with a <Imgix> passed as a child", () => {
     beforeEach(() => {
       sut = shallow(
-        <Imgix
+        <Picture
           src={src}
-          type="picture"
           agressiveLoad
           imgixParams={{ crop: "faces" }}
           imgProps={{ alt: parentAlt }}
         >
-          <Imgix src={src} type="img" imgProps={{ alt: childAlt }} />
-        </Imgix>
+          <Imgix src={src} imgProps={{ alt: childAlt }} />
+        </Picture>
       );
       children = sut.children();
       lastChild = children.last();
@@ -227,7 +216,6 @@ describe("When in picture mode", () => {
       expect(children).toHaveLength(1);
     });
     it.skip("props should not be passed down to children", () => {
-      // TODO: Pass down imgixParams
       expect(
         lastChild
           .first()
@@ -247,14 +235,13 @@ describe("When in picture mode", () => {
   describe("with an <img> passed as a child", () => {
     beforeEach(() => {
       sut = shallow(
-        <Imgix
+        <Picture
           src={src}
-          type="picture"
           imgixParams={{ crop: "faces" }}
           imgProps={{ alt: parentAlt }}
         >
           <img src={src} alt={childAlt} />
-        </Imgix>
+        </Picture>
       );
       children = sut.children();
       lastChild = children.last();
