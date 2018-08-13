@@ -10,7 +10,7 @@
 [![Code Climate](https://codeclimate.com/github/imgix/react-imgix/badges/gpa.svg)](https://codeclimate.com/github/imgix/react-imgix)
 [![styled with prettier](https://img.shields.io/badge/styled_with-prettier-ff69b4.svg)](https://github.com/prettier/prettier)
 
-A [React](https://facebook.github.io/react/) component that renders images using the [imgix](https://www.imgix.com/) API. It uses the smallest images possible, and does cool stuff, like [cropping to faces](https://www.imgix.com/docs/reference/size#param-crop) by default.
+A [React](https://facebook.github.io/react/) component that renders images using [imgix](https://www.imgix.com/). It uses the smallest images possible, and renders well on the server.
 
 - [Overview / Resources](#overview-resources)
 - [Installation](#installation)
@@ -88,6 +88,8 @@ import Imgix from "react-imgix";
   height={200}
 />;
 ```
+
+NB: Since this library sets [`fit`](https://docs.imgix.com/apis/url/size/fit) to `crop` by default, when just a width or height is set, the image will resize and maintain aspect ratio. When both are set, the image will be cropped to that size, maintaining pixel aspect ratio (i.e. edges are clipped in order to not stretch the photo). If this isn't desired, set `fit` to be another value (e.g. `clip`)
 
 [![Edit xp0348lv0z](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/xp0348lv0z?view=preview)
 
@@ -196,13 +198,19 @@ This feature has been removed from react-imgix when `sizes` and `srcset` was imp
 
 Usually in the form: `https://[your_domain].imgix.net/[image]`. Don't include any parameters.
 
+#### imgixParams :: object
+
+Imgix params to add to the image `src`.
+
+_For example_:
+
+```js
+<Imgix imgixParams={{ mask: "ellipse" }} />
+```
+
 #### sizes :: string
 
 Specified the developer's expected size of the image element when rendered on the page. Similar to width. E.g. `100vw`, `calc(50vw - 50px)`, `500px`. Highly recommended when not passing `width` or `height`. [Eric Portis' "Srcset and sizes"](https://ericportis.com/posts/2014/srcset-sizes/) article goes into depth on how to use the `sizes` attribute.
-
-#### auto :: array, default = ['format']
-
-Array of values to pass to imgix's auto param.
 
 #### type :: string, default = 'img'
 
@@ -211,26 +219,6 @@ What kind of component to render, one of `img`, picture`,`source`.
 #### className :: string
 
 `className` applied to top level component. To set `className` on the image itself see `imgProps`.
-
-#### entropy :: bool, default = false
-
-Whether or not to crop using points of interest. See imgix API for more details.
-
-#### faces :: bool, default = true
-
-Whether to crop to faces.
-
-#### crop :: string
-
-Sets specific crop, overriding faces and entropy flags. Useful for specifying fallbacks for faces like `faces,top,right`.
-
-#### fit :: string
-
-See imgix's API, defaults to `crop`.
-
-#### onMounted :: func
-
-Called on `componentDidMount` with the mounted DOM node as an argument.
 
 #### height :: number
 
@@ -248,19 +236,13 @@ Disable generation of variable width src sets to enable responsiveness.
 
 By default this component adds a parameter to the generated url to help imgix with analytics and support for this library. This can be disabled by setting this prop to `true`.
 
-#### customParams :: object
-
-Any other imgix params to add to the image `src`.
-
-_For example_:
-
-```js
-<Imgix customParams={{ mask: "ellipse" }} />
-```
-
 #### imgProps :: object
 
 Any other attributes to add to the html node (example: `alt`, `data-*`, `className`).
+
+#### onMounted :: func
+
+Called on `componentDidMount` with the mounted DOM node as an argument.
 
 ## Upgrade Guides
 
