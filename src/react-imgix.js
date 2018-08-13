@@ -26,7 +26,7 @@ const defaultImgixParams = {
 const noop = () => {};
 
 const ShouldComponentUpdateHOC = WrappedComponent => {
-  return class ShouldComponentUpdateHOC extends Component {
+  class ShouldComponentUpdateHOC extends Component {
     shouldComponentUpdate = nextProps => {
       const props = this.props;
       warning(
@@ -57,27 +57,95 @@ const ShouldComponentUpdateHOC = WrappedComponent => {
     render() {
       return <WrappedComponent {...this.props} />;
     }
+  }
+  ShouldComponentUpdateHOC.displayName = `ShouldComponentUpdateHOC(${
+    WrappedComponent.displayName
+  })`;
+  return ShouldComponentUpdateHOC;
+};
+
+function buildSrc({
+  src: rawSrc, // saucy!
+  width,
+  height,
+  disableLibraryParam,
+  disableSrcSet,
+  type,
+  imgixParams
+}) {
+  const fixedSize = width != null || height != null;
+
+  const srcOptions = {
+    ...imgixParams,
+    ...(disableLibraryParam ? {} : { ixlib: `react-${PACKAGE_VERSION}` }),
+    ...(fixedSize && height ? { height } : {}),
+    ...(fixedSize && width ? { width } : {})
   };
+
+  const src = constructUrl(rawSrc, srcOptions);
+
+  let srcSet;
+
+  if (disableSrcSet) {
+    srcSet = src;
+  } else {
+    if (fixedSize || type === "source") {
+      const dpr2 = constructUrl(rawSrc, { ...srcOptions, dpr: 2 });
+      const dpr3 = constructUrl(rawSrc, { ...srcOptions, dpr: 3 });
+      srcSet = `${dpr2} 2x, ${dpr3} 3x`;
+    } else {
+      const buildSrcSetPair = targetWidth => {
+        const url = constructUrl(rawSrc, {
+          ...srcOptions,
+          width: targetWidth
+        });
+        return `${url} ${targetWidth}w`;
+      };
+      const addFallbackSrc = srcSet => srcSet.concat(src);
+      srcSet = addFallbackSrc(targetWidths.map(buildSrcSetPair)).join(", ");
+    }
+  }
+
+  return {
+    src,
+    srcSet
+  };
+}
+function imgixParams(props) {
+  const params = {
+    ...defaultImgixParams,
+    ...props.imgixParams
+  };
+
+  let fit = false;
+  if (params.crop != null) fit = "crop";
+  if (params.fit) fit = params.fit;
+
+  return {
+    ...params,
+    fit
+  };
+}
+
+const COMMON_PROP_TYPES = {
+  className: PropTypes.string,
+  disableSrcSet: PropTypes.bool,
+  onMounted: PropTypes.func,
+  sizes: PropTypes.string,
+  width: PropTypes.number,
+  height: PropTypes.number,
+  disableLibraryParam: PropTypes.bool,
+  imgixParams: PropTypes.object
 };
 
 class ReactImgix extends Component {
   static propTypes = {
-    children: PropTypes.any,
-    className: PropTypes.string,
-    disableSrcSet: PropTypes.bool,
-    onMounted: PropTypes.func,
-    sizes: PropTypes.string,
-    src: PropTypes.string.isRequired,
-    type: PropTypes.oneOf(validTypes),
-    width: PropTypes.number,
-    height: PropTypes.number,
-    disableLibraryParam: PropTypes.bool,
-    imgixParams: PropTypes.object
+    ...COMMON_PROP_TYPES,
+    src: PropTypes.string.isRequired
   };
   static defaultProps = {
     disableSrcSet: false,
-    onMounted: noop,
-    type: "img"
+    onMounted: noop
   };
 
   componentDidMount = () => {
@@ -85,75 +153,14 @@ class ReactImgix extends Component {
     this.props.onMounted(node);
   };
 
-  buildSrcs = () => {
-    const props = this.props;
-    const { width, height, disableLibraryParam, disableSrcSet, type } = props;
-    const imgixParams = this.imgixParams();
-
-    const fixedSize = width != null || height != null;
-
-    const srcOptions = {
-      ...imgixParams,
-      ...(disableLibraryParam ? {} : { ixlib: `react-${PACKAGE_VERSION}` }),
-      ...(fixedSize && height ? { height } : {}),
-      ...(fixedSize && width ? { width } : {})
-    };
-
-    const src = constructUrl(this.props.src, srcOptions);
-
-    let srcSet;
-
-    if (disableSrcSet) {
-      srcSet = src;
-    } else {
-      if (fixedSize || type === "source") {
-        const dpr2 = constructUrl(this.props.src, { ...srcOptions, dpr: 2 });
-        const dpr3 = constructUrl(this.props.src, { ...srcOptions, dpr: 3 });
-        srcSet = `${dpr2} 2x, ${dpr3} 3x`;
-      } else {
-        const buildSrcSetPair = targetWidth => {
-          const url = constructUrl(this.props.src, {
-            ...srcOptions,
-            width: targetWidth
-          });
-          return `${url} ${targetWidth}w`;
-        };
-        const addFallbackSrc = srcSet => srcSet.concat(src);
-        srcSet = addFallbackSrc(targetWidths.map(buildSrcSetPair)).join(", ");
-      }
-    }
-
-    return {
-      src,
-      srcSet
-    };
-  };
-
-  imgixParams = () => {
-    const params = {
-      ...defaultImgixParams,
-      ...this.props.imgixParams
-    };
-
-    let fit = false;
-    if (params.crop != null) fit = "crop";
-    if (params.fit) fit = params.fit;
-
-    return {
-      ...params,
-      fit
-    };
-  };
-
   render() {
-    const { children, disableSrcSet, type, width, height } = this.props;
+    const { disableSrcSet, type, width, height } = this.props;
 
     // Pre-render checks
     if (NODE_ENV !== "production") {
       if (
-        type === "img" &&
-        width == null &&
-        height == null &&
+        this.props.width == null &&
+        this.props.height == null &&
         this.props.sizes == null &&
         !this.props._inPicture
       ) {
@@ -263,6 +270,7 @@ class ReactImgix extends Component {
     return React.createElement(_component, childProps, _children);
   }
 }
+ReactImgix.displayName = "ReactImgix";
 
 const DEPRECATED_PROPS = ["auto", "crop", "fit"];
 const deprecateProps = WrappedComponent => {
@@ -327,7 +335,9 @@ const deprecateProps = WrappedComponent => {
   WithDeprecatedProps.defaultProps = {
     imgixParams: {}
   };
-  WithDeprecatedProps.displayName = "ReactImgix";
+  WithDeprecatedProps.displayName = `WithDeprecatedProps(${
+    WrappedComponent.displayName
+  })`;
 
   return WithDeprecatedProps;
 };
