@@ -170,12 +170,13 @@ class ReactImgix extends Component {
       }
     }
 
-    let _component = undefined;
     const imgProps = this.props.imgProps || {};
 
-    let _children = children;
-
-    const { src, srcSet } = this.buildSrcs();
+    const { src, srcSet } = buildSrc({
+      ...this.props,
+      type: "img",
+      imgixParams: imgixParams(this.props)
+    });
 
     let childProps = {
       ...this.props.imgProps,
@@ -183,91 +184,32 @@ class ReactImgix extends Component {
       className: this.props.className,
       width: width <= 1 ? null : width,
       height: height <= 1 ? null : height,
-      alt: imgProps.alt
+      alt: imgProps.alt,
+      src
     };
-
-    switch (type) {
-      case "bg":
-        // TODO: Remove in v9
-        throw new Error(
-          `type='bg' has been removed in this version of react-imgix. If you would like this re-implemented please give this issues a thumbs up: https://github.com/imgix/react-imgix/issues/160`
-        );
-        break;
-      case "img":
-        _component = "img";
-
-        if (!disableSrcSet) {
-          childProps.srcSet = srcSet;
-        }
-        childProps.src = src;
-        break;
-      case "source":
-        _component = "source";
-
-        // strip out the "alt" tag from childProps since it's not allowed
-        delete childProps.alt;
-        delete childProps.src;
-
-        // inside of a <picture> element a <source> element ignores its src
-        // attribute in favor of srcSet so we set that with either an actual
-        // srcSet or a single src
-        if (disableSrcSet) {
-          childProps.srcSet = src;
-        } else {
-          childProps.srcSet = `${src}, ${srcSet}`;
-        }
-        // for now we'll take media from imgProps which isn't ideal because
-        //   a) this isn't an <img>
-        //   b) passing objects as props means that react will always rerender
-        //      since objects dont respond correctly to ===
-        break;
-      case "picture":
-        _component = "picture";
-
-        // strip out the "alt" tag from childProps since it's not allowed
-        delete childProps.alt;
-
-        //
-        // we need to make sure an img is the last child so we look for one
-        //    in children
-        //    a. if we find one, move it to the last entry if it's not already there
-        //    b. if we don't find one, warn the user as they probably want to pass one.
-
-        // make sure all of our children have key set, otherwise we get react warnings
-        _children =
-          React.Children.map(children, (child, idx) =>
-            React.cloneElement(child, {
-              key: buildKey(idx),
-              _inPicture: true
-            })
-          ) || [];
-
-        // look for an <img> or <ReactImgix type='img'> - at the bare minimum we
-        // have to have a single <img> element or else ie will not work.
-        let imgIdx = _children.findIndex(
-          c =>
-            c.type === "img" ||
-            ((c.type === ReactImgix || c.type === ReactImgixWrapped) &&
-              c.props.type === "img")
-        );
-
-        if (imgIdx === -1) {
-          console.warn(
-            "No fallback image found in the children of a <picture> component. A fallback image should be passed to ensure the image renders correctly at all dimensions."
-          );
-        } else if (imgIdx !== _children.length - 1) {
-          // found one, need to move it to the end
-          _children.splice(
-            _children.length - 1,
-            0,
-            _children.splice(imgIdx, 1)[0]
-          );
-        }
-        break;
-      default:
-        break;
+    if (!disableSrcSet) {
+      childProps.srcSet = srcSet;
     }
-    return React.createElement(_component, childProps, _children);
+
+    if (type === "bg") {
+      // TODO: Remove in v9
+      throw new Error(
+        `type='bg' has been removed in this version of react-imgix. If you would like this re-implemented please give this issues a thumbs up: https://github.com/imgix/react-imgix/issues/160`
+      );
+    }
+
+    if (type === "source") {
+      // TODO: Remove in v9
+      throw new Error(
+        `type='picture' has been changed to <Picture />. Please see the upgrade guide at: https://github.com/imgix/react-imgix#7x-to-80`
+      );
+    }
+    if (type === "picture") {
+      throw new Error(
+        `type='picture' has been changed to <Picture />. Please see the upgrade guide at: https://github.com/imgix/react-imgix#7x-to-80`
+      );
+    }
+    return <img {...childProps} />;
   }
 }
 ReactImgix.displayName = "ReactImgix";
@@ -347,4 +289,108 @@ const ReactImgixWrapped = compose(
   ShouldComponentUpdateHOC
 )(ReactImgix);
 export default ReactImgixWrapped;
-export { ReactImgix as __ReactImgix };
+export { ReactImgix as __ReactImgixImpl }; // for testing
+
+class PictureImpl extends Component {
+  static propTypes = {
+    ...COMMON_PROP_TYPES,
+    children: PropTypes.any
+  };
+  render() {
+    const { children } = this.props;
+    // TODO: remove?
+    // strip out the "alt" tag from childProps since it's not allowed
+    // delete childProps.alt;
+
+    //
+    // we need to make sure an img is the last child so we look for one
+    //    in children
+    //    a. if we find one, move it to the last entry if it's not already there
+    //    b. if we don't find one, warn the user as they probably want to pass one.
+
+    // make sure all of our children have key set, otherwise we get react warnings
+    let _children =
+      React.Children.map(children, (child, idx) =>
+        React.cloneElement(child, {
+          key: buildKey(idx),
+          _inPicture: true
+        })
+      ) || [];
+
+    // look for an <img> or <ReactImgix type='img'> - at the bare minimum we
+    // have to have a single <img> element or else ie will not work.
+    let imgIdx = _children.findIndex(
+      c =>
+        c.type === "img" ||
+        c.type === ReactImgix ||
+        c.type === ReactImgixWrapped
+    );
+
+    if (imgIdx === -1) {
+      console.warn(
+        "No fallback image found in the children of a <picture> component. A fallback image should be passed to ensure the image renders correctly at all dimensions."
+      );
+    } else if (imgIdx !== _children.length - 1) {
+      // found one, need to move it to the end
+      _children.splice(_children.length - 1, 0, _children.splice(imgIdx, 1)[0]);
+    }
+
+    return <picture children={_children} />;
+  }
+}
+PictureImpl.displayName = "ReactImgixPicture";
+
+const Picture = compose(ShouldComponentUpdateHOC)(PictureImpl);
+
+class SourceImpl extends Component {
+  static propTypes = {
+    ...COMMON_PROP_TYPES,
+    src: PropTypes.string.isRequired
+    // TODO: add media?
+  };
+  render() {
+    const { children, disableSrcSet, type, width, height } = this.props;
+
+    const imgProps = this.props.imgProps || {};
+
+    const { src, srcSet } = buildSrc({
+      ...this.props,
+      type: "source",
+      imgixParams: imgixParams(this.props)
+    });
+
+    let childProps = {
+      ...this.props.imgProps,
+      sizes: this.props.sizes,
+      className: this.props.className,
+      width: width <= 1 ? null : width,
+      height: height <= 1 ? null : height
+    };
+    delete childProps.alt;
+
+    // inside of a <picture> element a <source> element ignores its src
+    // attribute in favor of srcSet so we set that with either an actual
+    // srcSet or a single src
+    if (disableSrcSet) {
+      childProps.srcSet = src;
+    } else {
+      childProps.srcSet = `${src}, ${srcSet}`;
+    }
+    // for now we'll take media from imgProps which isn't ideal because
+    //   a) this isn't an <img>
+    //   b) passing objects as props means that react will always rerender
+    //      since objects dont respond correctly to ===
+
+    return <source {...childProps} />;
+  }
+}
+SourceImpl.displayName = "ReactImgixSource";
+
+const Source = compose(ShouldComponentUpdateHOC)(SourceImpl);
+
+export {
+  Picture,
+  Source,
+  SourceImpl as __SourceImpl, // for testing
+  PictureImpl as __PictureImpl // for testing
+};
