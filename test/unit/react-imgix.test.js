@@ -622,6 +622,11 @@ describe("deprecations", () => {
       });
     });
     it("the faces param should alter the crop query parameter correctly", () => {
+      // Silence warnings
+      const oldConsole = global.console;
+      global.console = { error: jest.fn(), log: log };
+      sut = shallow(<Imgix src={src} sizes="100vw" entropy />);
+
       sut = shallow(
         <Imgix
           src={src}
@@ -631,12 +636,17 @@ describe("deprecations", () => {
         />
       );
       expectSrcsToContain(sut, "crop=faces");
+      global.console = oldConsole;
     });
     it("the entropy param should alter the crop and fit query parameters correctly", () => {
+      // Silence warnings
+      const oldConsole = global.console;
+      global.console = { error: jest.fn(), log: log };
       sut = shallow(<Imgix src={src} sizes="100vw" entropy />);
 
       expectSrcsToContain(sut, "crop=entropy");
       expectSrcsToContain(sut, "fit=crop");
+      global.console = oldConsole;
     });
   });
 });
