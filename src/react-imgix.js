@@ -303,6 +303,14 @@ class PictureImpl extends Component {
     ...COMMON_PROP_TYPES,
     children: PropTypes.any
   };
+  static defaultProps = {
+    onMounted: noop
+  };
+
+  componentDidMount = () => {
+    const node = ReactDOM.findDOMNode(this);
+    this.props.onMounted(node);
+  };
   render() {
     const { children } = this.props;
     // TODO: remove?
@@ -353,6 +361,15 @@ class SourceImpl extends Component {
   static propTypes = {
     ...SHARED_IMGIX_AND_SOURCE_PROP_TYPES
     // TODO: add media?
+  };
+  static defaultProps = {
+    disableSrcSet: false,
+    onMounted: noop
+  };
+
+  componentDidMount = () => {
+    const node = ReactDOM.findDOMNode(this);
+    this.props.onMounted(node);
   };
   render() {
     const { children, disableSrcSet, type, width, height } = this.props;
