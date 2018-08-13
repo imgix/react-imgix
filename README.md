@@ -198,13 +198,19 @@ This feature has been removed from react-imgix when `sizes` and `srcset` was imp
 
 Usually in the form: `https://[your_domain].imgix.net/[image]`. Don't include any parameters.
 
+#### imgixParams :: object
+
+Imgix params to add to the image `src`.
+
+_For example_:
+
+```js
+<Imgix imgixParams={{ mask: "ellipse" }} />
+```
+
 #### sizes :: string
 
 Specified the developer's expected size of the image element when rendered on the page. Similar to width. E.g. `100vw`, `calc(50vw - 50px)`, `500px`. Highly recommended when not passing `width` or `height`. [Eric Portis' "Srcset and sizes"](https://ericportis.com/posts/2014/srcset-sizes/) article goes into depth on how to use the `sizes` attribute.
-
-#### auto :: array, default = ['format']
-
-Array of values to pass to imgix's auto param.
 
 #### type :: string, default = 'img'
 
@@ -213,26 +219,6 @@ What kind of component to render, one of `img`, picture`,`source`.
 #### className :: string
 
 `className` applied to top level component. To set `className` on the image itself see `imgProps`.
-
-#### entropy :: bool, default = false
-
-Whether or not to crop using points of interest. See imgix API for more details.
-
-#### faces :: bool, default = true
-
-Whether to crop to faces.
-
-#### crop :: string
-
-Sets specific crop, overriding faces and entropy flags. Useful for specifying fallbacks for faces like `faces,top,right`.
-
-#### fit :: string
-
-See imgix's API, defaults to `crop`.
-
-#### onMounted :: func
-
-Called on `componentDidMount` with the mounted DOM node as an argument.
 
 #### height :: number
 
@@ -250,19 +236,13 @@ Disable generation of variable width src sets to enable responsiveness.
 
 By default this component adds a parameter to the generated url to help imgix with analytics and support for this library. This can be disabled by setting this prop to `true`.
 
-#### customParams :: object
-
-Any other imgix params to add to the image `src`.
-
-_For example_:
-
-```js
-<Imgix customParams={{ mask: "ellipse" }} />
-```
-
 #### imgProps :: object
 
 Any other attributes to add to the html node (example: `alt`, `data-*`, `className`).
+
+#### onMounted :: func
+
+Called on `componentDidMount` with the mounted DOM node as an argument.
 
 ## Upgrade Guides
 
