@@ -170,7 +170,12 @@ describe("When in <source> mode", () => {
   describe("with disableSrcSet prop", () => {
     const renderImage = () =>
       shallowSource(
-        <Source src={src} disableSrcSet htmlAttributes={htmlAttributes} sizes={sizes} />
+        <Source
+          src={src}
+          disableSrcSet
+          htmlAttributes={htmlAttributes}
+          sizes={sizes}
+        />
       );
 
     shouldBehaveLikeSource(renderImage);
