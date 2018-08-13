@@ -295,6 +295,22 @@ The largest change in this major version bump is the move to width-based `srcSet
 To upgrade to version 8, the following changes should be made.
 
 - A `sizes` prop should be added to all usages of Imgix. If `sizes` is new to you (or even if it's not), Eric's [seminal article on `srcset` and `sizes`](https://ericportis.com/posts/2014/srcset-sizes/) is highly recommended.
+- Change all usages of `type='picture'` to `<Picture>` and `type='source'` to `<Source>`
+
+      // this...
+      <Imgix type='picture'>
+      	<Imgix type='source' src={src}>
+      	<Imgix type='source' src={src}>
+      </Imgix>
+
+      // becomes...
+      <Picture>
+      	<Source src={src}>
+      	<Source src={src}>
+      </Picture>
+
+  See [Picture support](#picture-support) for more information.
+
 - Remove all usage of `type='bg'` as it is no longer supported. It was decided that it was too hard to implement this feature consistently. If you would still like to use this feature, please give this issue a thumbs up: [https://github.com/imgix/react-imgix/issues/160].(https://github.com/imgix/react-imgix/issues/160) If we get enough requests for this, we will re-implement it.
 - Remove props `aggressiveLoad`, `component`, `fluid`, `precision` as they are no longer used.
 - Change all usages of `defaultHeight` and `defaultWidth` to `width` and `height` props.
