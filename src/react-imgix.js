@@ -6,14 +6,13 @@ import PropTypes from "prop-types";
 
 import targetWidths from "./targetWidths";
 import constructUrl from "./constructUrl";
+import { deprecatePropsHOC, ShouldComponentUpdateHOC } from "./hocs";
 
 import { warning, shallowEqual, compose } from "./common";
 
 const PACKAGE_VERSION = require("../package.json").version;
 const NODE_ENV = process.env.NODE_ENV;
 
-const isStringNotEmpty = str =>
-  str && typeof str === "string" && str.length > 0;
 const buildKey = idx => `react-imgix-${idx}`;
 
 const validTypes = ["img", "picture", "source"];
@@ -27,7 +26,6 @@ const noop = () => {};
 
 const COMMON_PROP_TYPES = {
   className: PropTypes.string,
-  // TODO: onMounted for picture
   onMounted: PropTypes.func,
   htmlAttributes: PropTypes.object
 };
@@ -43,47 +41,11 @@ const SHARED_IMGIX_AND_SOURCE_PROP_TYPES = {
   src: PropTypes.string.isRequired
 };
 
-const ShouldComponentUpdateHOC = WrappedComponent => {
-  class ShouldComponentUpdateHOC extends Component {
-    shouldComponentUpdate = nextProps => {
-      const props = this.props;
-      warning(
-        nextProps.onMounted == this.props.onMounted,
-        "props.onMounted() is changing between renders. This is probably not intended. Ensure that a class method is being passed to Imgix rather than a function that is created every render. If this is intended, ignore this warning."
-      );
-
-      const customizer = (oldProp, newProp, key) => {
-        if (key === "children") {
-          return shallowEqual(oldProp, newProp);
-        }
-        if (key === "imgixParams") {
-          return shallowEqual(oldProp, newProp, (a, b) => {
-            if (Array.isArray(a)) {
-              return shallowEqual(a, b);
-            }
-            return undefined;
-          });
-        }
-        if (key === "htmlAttributes") {
-          return shallowEqual(oldProp, newProp);
-        }
-        return undefined; // handled by shallowEqual
-      };
-      const propsAreEqual = shallowEqual(props, nextProps, customizer);
-      return !propsAreEqual;
-    };
-    render() {
-      return <WrappedComponent {...this.props} />;
-    }
-  }
-  ShouldComponentUpdateHOC.displayName = `ShouldComponentUpdateHOC(${
-    WrappedComponent.displayName
-  })`;
-  return ShouldComponentUpdateHOC;
-};
-
+/**
+ * Build a imgix source url with parameters from a raw url
+ */
 function buildSrc({
-  src: rawSrc, // saucy!
+  src: rawSrc,
   width,
   height,
   disableLibraryParam,
@@ -129,6 +91,10 @@ function buildSrc({
     srcSet
   };
 }
+
+/**
+ * Combines default imgix params with custom imgix params to make a imgix params config object
+ */
 function imgixParams(props) {
   const params = {
     ...defaultImgixParams,
@@ -145,6 +111,9 @@ function imgixParams(props) {
   };
 }
 
+/**
+ * React component used to render <img> elements with Imgix
+ */
 class ReactImgix extends Component {
   static propTypes = {
     ...SHARED_IMGIX_AND_SOURCE_PROP_TYPES
@@ -220,83 +189,14 @@ class ReactImgix extends Component {
 }
 ReactImgix.displayName = "ReactImgix";
 
-const DEPRECATED_PROPS = ["auto", "crop", "fit"];
-const deprecateProps = WrappedComponent => {
-  const WithDeprecatedProps = props => {
-    const imgixParams = {
-      ...(props.customParams || {}),
-      ...props.imgixParams
-    };
-    const propsWithOutDeprecated = {
-      ...props,
-      imgixParams
-    };
-    DEPRECATED_PROPS.forEach(deprecatedProp => {
-      warning(
-        !(deprecatedProp in props),
-        `The prop '${deprecatedProp}' has been deprecated and will be removed in v9. Please update the usage to <Imgix imgixParams={{${deprecatedProp}: value}} />`
-      );
-
-      if (deprecatedProp in props) {
-        delete propsWithOutDeprecated[deprecatedProp];
-        imgixParams[deprecatedProp] = props[deprecatedProp];
-      }
-    });
-    warning(
-      !("customParams" in props),
-      `The prop 'customParams' has been replaced with 'imgixParams' and will be removed in v9. Please update usage to <Imgix imgixParams={customParams} />`
-    );
-    delete propsWithOutDeprecated.customParams;
-
-    if (props.faces) {
-      warning(
-        false,
-        `The prop 'faces' has been deprecated and will be removed in v9. Please update the usage to <Imgix imgixParams={{crop: 'faces'}} />`
-      );
-      delete propsWithOutDeprecated.faces;
-      if (!imgixParams.crop) {
-        imgixParams.crop = "faces";
-      }
-    }
-    if (props.entropy) {
-      warning(
-        false,
-        `The prop 'entropy' has been deprecated and will be removed in v9. Please update the usage to <Imgix imgixParams={{crop: 'entropy'}} />`
-      );
-      delete propsWithOutDeprecated.entropy;
-      if (!imgixParams.crop) {
-        imgixParams.crop = "entropy";
-      }
-    }
-
-    return <WrappedComponent {...propsWithOutDeprecated} />;
-  };
-  WithDeprecatedProps.propTypes = {
-    ...ReactImgix.propTypes,
-    auto: PropTypes.array,
-    customParams: PropTypes.object,
-    crop: PropTypes.string,
-    entropy: PropTypes.bool,
-    faces: PropTypes.bool,
-    fit: PropTypes.string
-  };
-  WithDeprecatedProps.defaultProps = {
-    imgixParams: {}
-  };
-  WithDeprecatedProps.displayName = `WithDeprecatedProps(${
-    WrappedComponent.displayName
-  })`;
-
-  return WithDeprecatedProps;
-};
-
 const ReactImgixWrapped = compose(
-  deprecateProps,
+  deprecatePropsHOC,
   ShouldComponentUpdateHOC
 )(ReactImgix);
-export default ReactImgixWrapped;
-export { ReactImgix as __ReactImgixImpl }; // for testing
 
+/**
+ * React component used to render <picture> elements with Imgix
+ */
 class PictureImpl extends Component {
   static propTypes = {
     ...COMMON_PROP_TYPES,
@@ -356,6 +256,9 @@ PictureImpl.displayName = "ReactImgixPicture";
 
 const Picture = compose(ShouldComponentUpdateHOC)(PictureImpl);
 
+/**
+ * React component used to render <source> elements with Imgix
+ */
 class SourceImpl extends Component {
   static propTypes = {
     ...SHARED_IMGIX_AND_SOURCE_PROP_TYPES
@@ -410,7 +313,9 @@ SourceImpl.displayName = "ReactImgixSource";
 
 const Source = compose(ShouldComponentUpdateHOC)(SourceImpl);
 
+export default ReactImgixWrapped;
 export {
+  ReactImgix as __ReactImgixImpl, // for testing
   Picture,
   Source,
   SourceImpl as __SourceImpl, // for testing
