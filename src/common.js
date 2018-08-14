@@ -2,7 +2,7 @@ export { default as CONSTANTS } from "./constants";
 export { default as warning } from "warning";
 export { default as shallowEqual } from "shallowequal";
 
-// Taken from https://github.com/reduxjs/redux/blob/master/src/compose.js
+// Taken from https://github.com/reduxjs/redux/blob/v4.0.0/src/compose.js
 export function compose(...funcs) {
   if (funcs.length === 0) {
     return arg => arg;
