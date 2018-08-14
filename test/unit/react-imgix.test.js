@@ -250,7 +250,7 @@ describe("When in picture mode", () => {
     );
 
     expect(console.warn).toHaveBeenCalledWith(
-      expect.stringContaining("No fallback image found")
+      expect.stringContaining("No fallback <img /> or <Imgix /> found")
     );
 
     global.console = oldConsole;

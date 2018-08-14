@@ -236,7 +236,7 @@ class PictureImpl extends Component {
 
     if (imgIdx === -1) {
       console.warn(
-        "No fallback <img /> found in the children of a <picture> component. A fallback image should be passed to ensure the image renders correctly at all dimensions."
+        "No fallback <img /> or <Imgix /> found in the children of a <picture> component. A fallback image should be passed to ensure the image renders correctly at all dimensions."
       );
     } else if (imgIdx !== _children.length - 1) {
       // found one, need to move it to the end
