@@ -159,7 +159,6 @@ class ReactImgix extends Component {
       className: this.props.className,
       width: width <= 1 ? null : width,
       height: height <= 1 ? null : height,
-      alt: htmlAttributes.alt,
       src
     };
     if (!disableSrcSet) {
