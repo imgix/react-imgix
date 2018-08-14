@@ -226,7 +226,7 @@ class PictureImpl extends Component {
       ) || [];
 
     // look for an <img> or <ReactImgix type='img'> - at the bare minimum we
-    // have to have a single <img> element or else ie will not work.
+    // have to have a single <img> element or else it will not work.
     let imgIdx = _children.findIndex(
       c =>
         c.type === "img" ||
