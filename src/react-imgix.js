@@ -240,7 +240,7 @@ class PictureImpl extends Component {
       );
     } else if (imgIdx !== _children.length - 1) {
       // found one, need to move it to the end
-      _children.splice(_children.length - 1, 0, _children.splice(imgIdx, 1)[0]);
+      _children.push(_children.splice(imgIdx, 1)[0]);
     }
 
     return <picture children={_children} />;
@@ -266,7 +266,7 @@ class SourceImpl extends Component {
     this.props.onMounted(node);
   };
   render() {
-    const { children, disableSrcSet, type, width, height } = this.props;
+    const { disableSrcSet, width, height } = this.props;
 
     const htmlAttributes = this.props.htmlAttributes || {};
 
