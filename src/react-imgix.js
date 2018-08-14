@@ -188,11 +188,6 @@ class ReactImgix extends Component {
 }
 ReactImgix.displayName = "ReactImgix";
 
-const ReactImgixWrapped = compose(
-  deprecatePropsHOC,
-  ShouldComponentUpdateHOC
-)(ReactImgix);
-
 /**
  * React component used to render <picture> elements with Imgix
  */
@@ -253,8 +248,6 @@ class PictureImpl extends Component {
 }
 PictureImpl.displayName = "ReactImgixPicture";
 
-const Picture = compose(ShouldComponentUpdateHOC)(PictureImpl);
-
 /**
  * React component used to render <source> elements with Imgix
  */
@@ -310,6 +303,11 @@ class SourceImpl extends Component {
 }
 SourceImpl.displayName = "ReactImgixSource";
 
+const ReactImgixWrapped = compose(
+  deprecatePropsHOC,
+  ShouldComponentUpdateHOC
+)(ReactImgix);
+const Picture = compose(ShouldComponentUpdateHOC)(PictureImpl);
 const Source = compose(ShouldComponentUpdateHOC)(SourceImpl);
 
 export default ReactImgixWrapped;
