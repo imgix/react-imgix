@@ -206,15 +206,6 @@ class PictureImpl extends Component {
   };
   render() {
     const { children } = this.props;
-    // TODO: remove?
-    // strip out the "alt" tag from childProps since it's not allowed
-    // delete childProps.alt;
-
-    //
-    // we need to make sure an img is the last child so we look for one
-    //    in children
-    //    a. if we find one, move it to the last entry if it's not already there
-    //    b. if we don't find one, warn the user as they probably want to pass one.
 
     // make sure all of our children have key set, otherwise we get react warnings
     let _children =
@@ -225,8 +216,13 @@ class PictureImpl extends Component {
         })
       ) || [];
 
-    // look for an <img> or <ReactImgix type='img'> - at the bare minimum we
-    // have to have a single <img> element or else it will not work.
+    /*
+		We need to make sure an <img /> or <Imgix /> is the last child so we look for one in children
+		  a. if we find one, move it to the last entry if it's not already there
+		  b. if we don't find one, warn the user as they probably want to pass one.
+		*/
+
+    // look for an <img> or <ReactImgix type='img'> - at the bare minimum we have to have a single <img> element or else it will not work.
     let imgIdx = _children.findIndex(
       c =>
         c.type === "img" ||
