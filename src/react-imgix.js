@@ -279,7 +279,6 @@ class SourceImpl extends Component {
       width: width <= 1 ? null : width,
       height: height <= 1 ? null : height
     };
-    delete childProps.alt;
 
     // inside of a <picture> element a <source> element ignores its src
     // attribute in favor of srcSet so we set that with either an actual
