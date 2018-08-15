@@ -228,7 +228,7 @@ This works for Source and Picture elements as well.
 
 #### Background mode
 
-This feature has been removed from react-imgix when `sizes` and `srcset` was implemented. It was decided that it was too hard to implement this feature consistently. If you would still like to use this feature, please give this issue a thumbs up: [https://github.com/imgix/react-imgix/issues/160].(https://github.com/imgix/react-imgix/issues/160) If we get enough requests for this, we will re-implement it.
+This feature has been removed from react-imgix when `sizes` and `srcset` was implemented. It was decided that it was too hard to implement this feature consistently. If you would still like to use this feature, please give this issue a thumbs up: [https://github.com/imgix/react-imgix/issues/160](https://github.com/imgix/react-imgix/issues/160) If we get enough requests for this, we will re-implement it.
 
 ### Props
 
@@ -302,7 +302,7 @@ Any other attributes to add to the html node (example: `alt`, `data-*`, `classNa
 
 This is a very large update to this library with a lot of breaking changes. We apologise for any issues this may cause, and we have tried to reduce the number of breaking changes. We have also worked to batch up all these changes into one release to reduce its impacts. We do not plan on making breaking changes for a while after this, and will be focussed on adding features.
 
-The largest change in this major version bump is the move to width-based `srcSet` and `sizes` for responsiveness. This has a host of benefits, including better server rendering, better responsiveness, less potential for bugs, perfomance improvements
+The largest change in this major version bump is the move to width-based `srcSet` and `sizes` for responsiveness. This has a host of benefits, including better server rendering, better responsiveness, less potential for bugs, and perfomance improvements. This does mean that the old fitting-to-container-size behaviour has been removed. If this is necessary, an example of how this can be achieved can be found [here](./examples/fit-to-size-of-container.md)
 
 To upgrade to version 8, the following changes should be made.
 
@@ -323,7 +323,7 @@ To upgrade to version 8, the following changes should be made.
 
   See [Picture support](#picture-support) for more information.
 
-- Remove all usage of `type='bg'` as it is no longer supported. It was decided that it was too hard to implement this feature consistently. If you would still like to use this feature, please give this issue a thumbs up: [https://github.com/imgix/react-imgix/issues/160].(https://github.com/imgix/react-imgix/issues/160) If we get enough requests for this, we will re-implement it.
+- Remove all usage of `type='bg'` as it is no longer supported. It was decided that it was too hard to implement this feature consistently. If you would still like to use this feature, please give this issue a thumbs up: [https://github.com/imgix/react-imgix/issues/160](https://github.com/imgix/react-imgix/issues/160) If we get enough requests for this, we will re-implement it.
 - Remove props `aggressiveLoad`, `component`, `fluid`, `precision` as they are no longer used.
 - Change all usages of `defaultHeight` and `defaultWidth` to `width` and `height` props.
 - Rename `generateSrcSet` to `disableSrcSet` and invert the value passed down as the prop's value. i.e. `generateSrcSet={false}` becomes `disableSrcSet={true}` or simply `disableSrcSet`
@@ -340,4 +340,4 @@ This browser support is made possible by the great support from [BrowserStack](h
 
 ## Meta
 
-React-imgix was originally created by [Frederick Fogerty](http://twitter.com/fredfogerty). It's licensed under the ISC license (see the [license file](https://github.com/imgix/react-imgix/blob/master/LICENSE) for more info). Any contribution is absolutely welcome, but please review the [contribution guidelines](https://github.com/imgix/react-imgix/blob/master/CONTRIBUTING.md) before getting started.
+React-imgix was originally created by [Frederick Fogerty](http://twitter.com/fredfogerty). It's licensed under the ISC license (see the [license file](./LICENSE) for more info). Any contribution is absolutely welcome, but please review the [contribution guidelines](./CONTRIBUTING.md) before getting started.
