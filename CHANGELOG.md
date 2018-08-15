@@ -2,6 +2,39 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="8.0.0"></a>
+# [8.0.0](https://github.com/imgix/react-imgix/compare/v7.2.0...v8.0.0) (2018-08-15)
+
+This is a very large update to this library with a lot of breaking changes. We apologise for any issues this may cause, and we have tried to reduce the number of breaking changes. We have also worked to batch up all these changes into one release to reduce its impacts. We do not plan on making breaking changes for a while after this, and will be focussed on adding features.
+
+The largest change in this major version bump is the move to width-based `srcSet` and `sizes` for responsiveness. This has a host of benefits, including better server rendering, better responsiveness, less potential for bugs, and perfomance improvements. This does mean that the old fitting-to-container-size behaviour has been removed. If this is necessary, an example of how this can be achieved can be found [here](./examples/fit-to-size-of-container.md)
+
+Please see the [Upgrade Guide](https://github.com/imgix/react-imgix#7x-to-80) for more details on what to change.
+
+### Bug Fixes
+
+* warn the user when no <img> passed as a child to <picture> fixes [#90](https://github.com/imgix/react-imgix/issues/90) ([#151](https://github.com/imgix/react-imgix/issues/151)) ([aab9358](https://github.com/imgix/react-imgix/commit/aab9358))
+
+
+### Features
+
+* implement responsiveness with srcSet and sizes ([#159](https://github.com/imgix/react-imgix/issues/159)) ([fa68df6](https://github.com/imgix/react-imgix/commit/fa68df6)), closes [#158](https://github.com/imgix/react-imgix/issues/158)
+* reduce props API surface area ([#162](https://github.com/imgix/react-imgix/issues/162)) ([9fb0cb9](https://github.com/imgix/react-imgix/commit/9fb0cb9))
+* refactor picture and source behaviour into different components ([#163](https://github.com/imgix/react-imgix/issues/163)) ([64d9b8a](https://github.com/imgix/react-imgix/commit/64d9b8a))
+
+
+### BREAKING CHANGES
+
+* picture and source types have been changed to components.
+* faces is no longer set by default.
+* srcSet behaviour has changed to use sizes + srcSets
+* type=bg has been removed
+* the following props have been removed: aggressiveLoad, component, fluid, precision, defaultHeight, defaultWidth
+* generateSrcSet has been changed to disableSrcSet
+* A fallback image will no longer be created when using react-imgix in picture mode
+
+
+
 <a name="7.2.0"></a>
 # [7.2.0](https://github.com/imgix/react-imgix/compare/v7.1.1...v7.2.0) (2018-06-30)
 
