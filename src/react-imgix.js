@@ -4,302 +4,312 @@ import ReactDOM from "react-dom";
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 
-import processImage from "./support.js";
+import targetWidths from "./targetWidths";
+import constructUrl from "./constructUrl";
+import { deprecatePropsHOC, ShouldComponentUpdateHOC } from "./HOCs";
 
-// Best way to include an img with an empty src https://stackoverflow.com/a/5775621/515634 and https://stackoverflow.com/a/19126281/515634
-// Using '//:0' doesn't work in IE 11, but using a data-uri works.
-const EMPTY_IMAGE_SRC =
-  "data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=";
+import { warning, shallowEqual, compose } from "./common";
 
 const PACKAGE_VERSION = require("../package.json").version;
+const NODE_ENV = process.env.NODE_ENV;
 
-const roundToNearest = (size, precision) =>
-  precision * Math.ceil(size / precision);
-
-const isStringNotEmpty = str =>
-  str && typeof str === "string" && str.length > 0;
 const buildKey = idx => `react-imgix-${idx}`;
 
-const validTypes = ["bg", "img", "picture", "source"];
+const validTypes = ["img", "picture", "source"];
 
-const defaultMap = {
-  width: "defaultWidth",
-  height: "defaultHeight"
+const defaultImgixParams = {
+  auto: ["format"],
+  fit: "crop"
 };
 
-const findSizeForDimension = (dim, props = {}, state = {}) => {
-  if (props[dim]) {
-    return props[dim];
-  } else if (props.fluid && state[dim]) {
-    return roundToNearest(state[dim], props.precision);
-  } else if (props[defaultMap[dim]]) {
-    return props[defaultMap[dim]];
+const noop = () => {};
+
+const COMMON_PROP_TYPES = {
+  className: PropTypes.string,
+  onMounted: PropTypes.func,
+  htmlAttributes: PropTypes.object
+};
+
+const SHARED_IMGIX_AND_SOURCE_PROP_TYPES = {
+  ...COMMON_PROP_TYPES,
+  disableSrcSet: PropTypes.bool,
+  disableLibraryParam: PropTypes.bool,
+  imgixParams: PropTypes.object,
+  sizes: PropTypes.string,
+  width: PropTypes.number,
+  height: PropTypes.number,
+  src: PropTypes.string.isRequired
+};
+
+/**
+ * Build a imgix source url with parameters from a raw url
+ */
+function buildSrc({
+  src: rawSrc,
+  width,
+  height,
+  disableLibraryParam,
+  disableSrcSet,
+  type,
+  imgixParams
+}) {
+  const fixedSize = width != null || height != null;
+
+  const srcOptions = {
+    ...imgixParams,
+    ...(disableLibraryParam ? {} : { ixlib: `react-${PACKAGE_VERSION}` }),
+    ...(fixedSize && height ? { height } : {}),
+    ...(fixedSize && width ? { width } : {})
+  };
+
+  const src = constructUrl(rawSrc, srcOptions);
+
+  let srcSet;
+
+  if (disableSrcSet) {
+    srcSet = src;
   } else {
-    return 1;
+    if (fixedSize || type === "source") {
+      const dpr2 = constructUrl(rawSrc, { ...srcOptions, dpr: 2 });
+      const dpr3 = constructUrl(rawSrc, { ...srcOptions, dpr: 3 });
+      srcSet = `${dpr2} 2x, ${dpr3} 3x`;
+    } else {
+      const buildSrcSetPair = targetWidth => {
+        const url = constructUrl(rawSrc, {
+          ...srcOptions,
+          width: targetWidth
+        });
+        return `${url} ${targetWidth}w`;
+      };
+      const addFallbackSrc = srcSet => srcSet.concat(src);
+      srcSet = addFallbackSrc(targetWidths.map(buildSrcSetPair)).join(", ");
+    }
   }
-};
 
-export default class ReactImgix extends Component {
+  return {
+    src,
+    srcSet
+  };
+}
+
+/**
+ * Combines default imgix params with custom imgix params to make a imgix params config object
+ */
+function imgixParams(props) {
+  const params = {
+    ...defaultImgixParams,
+    ...props.imgixParams
+  };
+
+  let fit = false;
+  if (params.crop != null) fit = "crop";
+  if (params.fit) fit = params.fit;
+
+  return {
+    ...params,
+    fit
+  };
+}
+
+/**
+ * React component used to render <img> elements with Imgix
+ */
+class ReactImgix extends Component {
   static propTypes = {
-    aggressiveLoad: PropTypes.bool,
-    auto: PropTypes.array,
-    children: PropTypes.any,
-    className: PropTypes.string,
-    component: PropTypes.string,
-    crop: PropTypes.string,
-    customParams: PropTypes.object,
-    entropy: PropTypes.bool,
-    faces: PropTypes.bool,
-    fit: PropTypes.string,
-    fluid: PropTypes.bool,
-    generateSrcSet: PropTypes.bool,
-    onMounted: PropTypes.func,
-    src: PropTypes.string.isRequired,
-    type: PropTypes.oneOf(validTypes),
-    width: PropTypes.number,
-    height: PropTypes.number,
-    defaultHeight: PropTypes.number,
-    defaultWidth: PropTypes.number,
-    disableLibraryParam: PropTypes.bool
+    ...SHARED_IMGIX_AND_SOURCE_PROP_TYPES
   };
   static defaultProps = {
-    aggressiveLoad: false,
-    auto: ["format"],
-    entropy: false,
-    faces: true,
-    fit: "crop",
-    fluid: true,
-    generateSrcSet: true,
-    onMounted: () => {},
-    precision: 100,
-    type: "img"
-  };
-  state = {
-    width: null,
-    height: null,
-    mounted: false
-  };
-
-  forceLayout = () => {
-    const node = ReactDOM.findDOMNode(this);
-    this.setState({
-      width: node.scrollWidth,
-      height: node.scrollHeight,
-      mounted: true
-    });
-    this.props.onMounted(node);
+    disableSrcSet: false,
+    onMounted: noop
   };
 
   componentDidMount = () => {
-    this.forceLayout();
+    const node = ReactDOM.findDOMNode(this);
+    this.props.onMounted(node);
   };
 
-  _findSizeForDimension = dim =>
-    findSizeForDimension(dim, this.props, this.state);
-
   render() {
-    const {
-      aggressiveLoad,
-      auto,
-      bg,
-      children,
-      component,
-      customParams,
-      crop,
-      entropy,
-      faces,
-      fit,
-      generateSrcSet,
-      src,
-      type,
-      ...other
-    } = this.props;
-    let _src = EMPTY_IMAGE_SRC;
-    let srcSet = null;
-    let _component = component;
+    const { disableSrcSet, type, width, height } = this.props;
 
-    let width = this._findSizeForDimension("width");
-    let height = this._findSizeForDimension("height");
-
-    let _crop = false;
-    if (faces) _crop = "faces";
-    if (entropy) _crop = "entropy";
-    if (crop) _crop = crop;
-
-    let _fit = false;
-    if (entropy) _fit = "crop";
-    if (fit) _fit = fit;
-
-    let _children = children;
-
-    if (this.state.mounted || aggressiveLoad) {
-      const srcOptions = {
-        auto: auto,
-        ...customParams,
-        crop: _crop,
-        fit: _fit,
-        width,
-        height,
-        ...(this.props.disableLibraryParam
-          ? {}
-          : { ixlib: `react-${PACKAGE_VERSION}` })
-      };
-
-      _src = processImage(src, srcOptions);
-      const dpr2 = processImage(src, { ...srcOptions, dpr: 2 });
-      const dpr3 = processImage(src, { ...srcOptions, dpr: 3 });
-      srcSet = `${dpr2} 2x, ${dpr3} 3x`;
+    // Pre-render checks
+    if (NODE_ENV !== "production") {
+      if (
+        this.props.width == null &&
+        this.props.height == null &&
+        this.props.sizes == null &&
+        !this.props._inPicture
+      ) {
+        console.warn(
+          "If width and height are not set, a sizes attribute should be passed."
+        );
+      }
     }
 
-    let _alt = (this.props.imgProps || {}).alt;
+    const htmlAttributes = this.props.htmlAttributes || {};
+
+    const { src, srcSet } = buildSrc({
+      ...this.props,
+      type: "img",
+      imgixParams: imgixParams(this.props)
+    });
 
     let childProps = {
-      ...this.props.imgProps,
+      ...this.props.htmlAttributes,
+      sizes: this.props.sizes,
       className: this.props.className,
-      width: other.width <= 1 ? null : other.width,
-      height: other.height <= 1 ? null : other.height,
-      alt: this.state.mounted || aggressiveLoad ? _alt : undefined
+      width: width <= 1 ? null : width,
+      height: height <= 1 ? null : height,
+      src
     };
-
-    switch (type) {
-      case "bg":
-        if (!component) {
-          _component = "div";
-        }
-        childProps.style = {
-          backgroundSize: "cover",
-          backgroundImage: isStringNotEmpty(_src) ? `url('${_src}')` : null,
-          ...childProps.style
-        };
-        break;
-      case "img":
-        if (!component) {
-          _component = "img";
-        }
-
-        if (generateSrcSet) {
-          childProps.srcSet = srcSet;
-        }
-        childProps.src = _src;
-        break;
-      case "source":
-        if (!component) {
-          _component = "source";
-        }
-
-        // strip out the "alt" tag from childProps since it's not allowed
-        delete childProps.alt;
-
-        // inside of a <picture> element a <source> element ignores its src
-        // attribute in favor of srcSet so we set that with either an actual
-        // srcSet or a single src
-        if (generateSrcSet) {
-          childProps.srcSet = `${_src}, ${srcSet}`;
-        } else {
-          childProps.srcSet = _src;
-        }
-        // for now we'll take media from imgProps which isn't ideal because
-        //   a) this isn't an <img>
-        //   b) passing objects as props means that react will always rerender
-        //      since objects dont respond correctly to ===
-        break;
-      case "picture":
-        if (!component) {
-          _component = "picture";
-        }
-
-        // strip out the "alt" tag from childProps since it's not allowed
-        delete childProps.alt;
-
-        //
-        // we need to make sure an img is the last child so we look for one
-        //    in children
-        //    a. if we find one, move it to the last entry if it's not already there
-        //    b. if we don't find one, create one.
-
-        // make sure all of our children have key set, otherwise we get react warnings
-        _children =
-          React.Children.map(children, (child, idx) =>
-            React.cloneElement(child, { key: buildKey(idx) })
-          ) || [];
-
-        // look for an <img> or <ReactImgix type='img'> - at the bare minimum we
-        // have to have a single <img> element or else ie will not work.
-        let imgIdx = _children.findIndex(
-          c =>
-            c.type === "img" ||
-            (c.type === ReactImgix && c.props.type === "img")
-        );
-
-        if (imgIdx === -1) {
-          // didn't find one or empty array - either way make a new component to
-          // put at the end. we pass in almost all of our props as defaults to
-          // our children, exceptions are:
-          //
-          //    bg - only <source> and <img> elements are allowable as children of
-          //         <picture> so we strip this option
-          //    children - we don't want to get recursive here
-          //    component - same reason as bg
-          //    type - specifically we're adding an img type so we hard-code this,
-          //           also letting type=picture through would infinitely loop
-
-          let imgProps = {
-            aggressiveLoad,
-            auto,
-            customParams,
-            crop,
-            entropy,
-            faces,
-            fit,
-            generateSrcSet,
-            src,
-            type: "img",
-            ...other,
-            // make sure to set a unique key too
-            key: buildKey(_children.length + 1)
-          };
-
-          // we also remove className and styles if they exist - those passed in
-          // to our top-level component are set there, if you want them set on
-          // the child <img> element you can use `imgProps`.
-          delete imgProps.className;
-          delete imgProps.styles;
-
-          // ..except if you have passed in imgProps you need those to not disappear,
-          // so we'll remove the imgProps attribute from our imgProps object (ugh!)
-          // and apply them now:
-          imgProps.imgProps = { ...this.props.imgProps };
-          ["className", "styles"].forEach(k => {
-            if (imgProps.imgProps[k]) {
-              imgProps[k] = imgProps.imgProps[k];
-              delete imgProps.imgProps[k];
-            }
-          });
-
-          // have to strip out props set to undefined or empty objects since they
-          // will override any defaultProps in the child
-          Object.keys(imgProps).forEach(k => {
-            if (
-              imgProps[k] === undefined ||
-              (Object.keys(imgProps[k]).length === 0 &&
-                imgProps[k].constructor === Object)
-            )
-              delete imgProps[k];
-          });
-
-          _children.push(<ReactImgix {...imgProps} />);
-        } else if (imgIdx !== _children.length - 1) {
-          // found one, need to move it to the end
-          _children.splice(
-            _children.length - 1,
-            0,
-            _children.splice(imgIdx, 1)[0]
-          );
-        }
-        break;
-      default:
-        break;
+    if (!disableSrcSet) {
+      childProps.srcSet = srcSet;
     }
-    return React.createElement(_component, childProps, _children);
+
+    if (type === "bg") {
+      // TODO: Remove in v9
+      throw new Error(
+        `type='bg' has been removed in this version of react-imgix. If you would like this re-implemented please give this issues a thumbs up: https://github.com/imgix/react-imgix/issues/160`
+      );
+    }
+
+    if (type === "source") {
+      // TODO: Remove in v9
+      throw new Error(
+        `type='picture' has been changed to <Picture />. Please see the upgrade guide at: https://github.com/imgix/react-imgix#7x-to-80`
+      );
+    }
+    if (type === "picture") {
+      throw new Error(
+        `type='picture' has been changed to <Picture />. Please see the upgrade guide at: https://github.com/imgix/react-imgix#7x-to-80`
+      );
+    }
+    return <img {...childProps} />;
   }
 }
+ReactImgix.displayName = "ReactImgix";
+
+/**
+ * React component used to render <picture> elements with Imgix
+ */
+class PictureImpl extends Component {
+  static propTypes = {
+    ...COMMON_PROP_TYPES,
+    children: PropTypes.any
+  };
+  static defaultProps = {
+    onMounted: noop
+  };
+
+  componentDidMount = () => {
+    const node = ReactDOM.findDOMNode(this);
+    this.props.onMounted(node);
+  };
+  render() {
+    const { children } = this.props;
+
+    // make sure all of our children have key set, otherwise we get react warnings
+    let _children =
+      React.Children.map(children, (child, idx) =>
+        React.cloneElement(child, {
+          key: buildKey(idx),
+          _inPicture: true
+        })
+      ) || [];
+
+    /*
+		We need to make sure an <img /> or <Imgix /> is the last child so we look for one in children
+		  a. if we find one, move it to the last entry if it's not already there
+		  b. if we don't find one, warn the user as they probably want to pass one.
+		*/
+
+    // look for an <img> or <ReactImgix type='img'> - at the bare minimum we have to have a single <img> element or else it will not work.
+    let imgIdx = _children.findIndex(
+      c =>
+        c.type === "img" ||
+        c.type === ReactImgix ||
+        c.type === ReactImgixWrapped
+    );
+
+    if (imgIdx === -1) {
+      console.warn(
+        "No fallback <img /> or <Imgix /> found in the children of a <picture> component. A fallback image should be passed to ensure the image renders correctly at all dimensions."
+      );
+    } else if (imgIdx !== _children.length - 1) {
+      // found one, need to move it to the end
+      _children.push(_children.splice(imgIdx, 1)[0]);
+    }
+
+    return <picture children={_children} />;
+  }
+}
+PictureImpl.displayName = "ReactImgixPicture";
+
+/**
+ * React component used to render <source> elements with Imgix
+ */
+class SourceImpl extends Component {
+  static propTypes = {
+    ...SHARED_IMGIX_AND_SOURCE_PROP_TYPES
+    // TODO: add media?
+  };
+  static defaultProps = {
+    disableSrcSet: false,
+    onMounted: noop
+  };
+
+  componentDidMount = () => {
+    const node = ReactDOM.findDOMNode(this);
+    this.props.onMounted(node);
+  };
+  render() {
+    const { disableSrcSet, width, height } = this.props;
+
+    const htmlAttributes = this.props.htmlAttributes || {};
+
+    const { src, srcSet } = buildSrc({
+      ...this.props,
+      type: "source",
+      imgixParams: imgixParams(this.props)
+    });
+
+    let childProps = {
+      ...this.props.htmlAttributes,
+      sizes: this.props.sizes,
+      className: this.props.className,
+      width: width <= 1 ? null : width,
+      height: height <= 1 ? null : height
+    };
+
+    // inside of a <picture> element a <source> element ignores its src
+    // attribute in favor of srcSet so we set that with either an actual
+    // srcSet or a single src
+    if (disableSrcSet) {
+      childProps.srcSet = src;
+    } else {
+      childProps.srcSet = `${src}, ${srcSet}`;
+    }
+    // for now we'll take media from htmlAttributes which isn't ideal because
+    //   a) this isn't an <img>
+    //   b) passing objects as props means that react will always rerender
+    //      since objects dont respond correctly to ===
+
+    return <source {...childProps} />;
+  }
+}
+SourceImpl.displayName = "ReactImgixSource";
+
+const ReactImgixWrapped = compose(
+  deprecatePropsHOC,
+  ShouldComponentUpdateHOC
+)(ReactImgix);
+const Picture = compose(ShouldComponentUpdateHOC)(PictureImpl);
+const Source = compose(ShouldComponentUpdateHOC)(SourceImpl);
+
+export default ReactImgixWrapped;
+export {
+  ReactImgix as __ReactImgixImpl, // for testing
+  Picture,
+  Source,
+  SourceImpl as __SourceImpl, // for testing
+  PictureImpl as __PictureImpl // for testing
+};

@@ -29,7 +29,7 @@
     "build": "npm run clean && npm run build:commonjs && npm run build:es",
     "build:commonjs": "cross-env BABEL_ENV=commonjs babel src --out-dir lib --source-maps",
     "build:es": "cross-env BABEL_ENV=es babel src --out-dir es --source-maps",
-    "build:watch": "cross-env BABEL_ENV=commonjs babel src --out-dir lib --watch",
+    "build:watch": "cross-env BABEL_ENV=es babel src --out-dir es --watch",
     "clean": "rimraf lib es",
     "prepublish": "npm run build",
     "pretty": "prettier --write \"src/**/*.js\"",
@@ -37,9 +37,9 @@
     "test:headless": "karma start config/karma/karmaConfigHeadless.js --singleRun",
     "test:headless:watch": "karma start config/karma/karmaConfigHeadless.js",
     "test:browser": "karma start config/karma/karmaConfigLocal.js --singleRun",
-		"test:browser:watch": "karma start config/karma/karmaConfigLocal.js",
-		"test:browser:ci": "karma start config/karma/karmaConfigHeadlessCI.js --singleRun",
-		"test:browser:browserstack": "karma start config/karma/karmaConfigBrowserStack.js --singleRun",
+    "test:browser:watch": "karma start config/karma/karmaConfigLocal.js",
+    "test:browser:ci": "karma start config/karma/karmaConfigHeadlessCI.js --singleRun",
+    "test:browser:browserstack": "karma start config/karma/karmaConfigBrowserStack.js --singleRun",
     "test:browser:all": "npm run test:browser:ci && npm run test:browser:browserstack",
     "test:watch": "jest --watch",
     "test": "jest && npm run test:browser:all"
@@ -51,7 +51,9 @@
   },
   "dependencies": {
     "js-base64": "^2.3.2",
-    "jsuri": "^1.3.1"
+    "jsuri": "^1.3.1",
+    "shallowequal": "^1.1.0",
+    "warning": "^4.0.1"
   },
   "devDependencies": {
     "babel-cli": "^6.24.1",
@@ -65,11 +67,12 @@
     "babel-preset-react": "^6.24.1",
     "babel-preset-stage-0": "^6.24.1",
     "browserslist": "^3.2.8",
+    "common-tags": "^1.8.0",
     "cross-env": "^5.1.1",
     "enzyme": "^3.3.0",
     "enzyme-adapter-react-16": "^1.1.1",
-    "expect": "^21.2.1",
-    "jest": "^22.0.0",
+    "expect": "^23.4.0",
+    "jest": "^23.4.1",
     "jest-extended": "^0.7.2",
     "karma": "^2.0.4",
     "karma-browserstack-launcher": "^1.3.0",

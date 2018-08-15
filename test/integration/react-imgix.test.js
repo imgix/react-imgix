@@ -23,8 +23,8 @@ const renderAndWaitForImageLoad = async element => {
     let renderedEl;
     const elementWithOnMounted = React.cloneElement(element, {
       onMounted: () => {},
-      imgProps: {
-        ...(element.props.imgProps || {}),
+      htmlAttributes: {
+        ...(element.props.htmlAttributes || {}),
         onLoad: () => {
           setImmediate(() => resolve(renderedEl));
         }
@@ -35,7 +35,8 @@ const renderAndWaitForImageLoad = async element => {
 };
 
 describe("When in default mode", () => {
-  const renderImage = () => renderIntoContainer(<Imgix src={src} />);
+  const renderImage = () =>
+    renderIntoContainer(<Imgix src={src} sizes="100px" />);
 
   it("an <img> should be rendered", () => {
     expect(renderImage().find("img")).toHaveLength(1);
@@ -52,37 +53,21 @@ describe("When in default mode", () => {
     const renderedImage = await renderAndWaitForImageLoad(
       <Imgix
         src={`${src}`}
-        imgProps={{
+        sizes="532px"
+        htmlAttributes={{
           alt: "This is alt text"
         }}
-        precision={1}
       />
     );
 
     let { width, height } = renderedImage.getDOMNode().getBoundingClientRect();
 
-    expect({ width, height }).toMatchObject({
+    expect({
+      width: Math.round(width),
+      height: Math.round(height)
+    }).toMatchObject({
       width: 532,
       height: 800
     });
-  });
-  it("should render image with dimensions of the size of the element", async () => {
-    const sut = renderIntoContainer(
-      <div>
-        <style>
-          {`
-					img {
-						width: 266px;
-						height: 400px;
-					}
-					`}
-        </style>
-        <Imgix src={src} precision={1} />
-      </div>
-    );
-
-    let renderedSrc = sut.find("img").props().src;
-    expect(renderedSrc).toContain(`w=266`);
-    expect(renderedSrc).toContain(`h=400`);
   });
 });

@@ -10,13 +10,30 @@
 [![Code Climate](https://codeclimate.com/github/imgix/react-imgix/badges/gpa.svg)](https://codeclimate.com/github/imgix/react-imgix)
 [![styled with prettier](https://img.shields.io/badge/styled_with-prettier-ff69b4.svg)](https://github.com/prettier/prettier)
 
-A [React](https://facebook.github.io/react/) component that renders images using the [imgix](https://www.imgix.com/) API. It uses the smallest images possible, and does cool stuff, like [cropping to faces](https://www.imgix.com/docs/reference/size#param-crop) by default.
+A [React](https://facebook.github.io/react/) component that renders images using [imgix](https://www.imgix.com/). It uses the smallest images possible, and renders well on the server.
 
+- [Overview / Resources](#overview-resources)
 - [Installation](#installation)
-- [Usage](#usage)
+- [Examples](#examples)
+  - [Basic Use Case](#basic-use-case)
+  - [Server-side rendering](#server-side-rendering)
+  - [Flexible image rendering](#fixed-image-rendering-ie-non-flexible)
+  - [Fixed image rendering](#fixed-image-rendering)
+  - [Picture support](#picture-support)
+  - [Background mode](#background-mode)
 - [Props](#props)
 - [Browser Support](#browser-support)
+- [Upgrade Guides](#upgrade-guides)
 - [Meta](#meta)
+
+## Overview / Resources
+
+**Before you get started with react-imgix**, it's _highly recommended_ that you read Eric Portis' [seminal article on `srcset` and `sizes`](https://ericportis.com/posts/2014/srcset-sizes/). This article explains the history of responsive images in responsive design, why they're necessary, and how all these technologies work together to save bandwidth and provide a better experience for users. The primary goal of react-imgix is to make these tools easier for developers to implement, so having an understanding of how they work will significantly improve your react-imgix experience.
+
+Below are some other articles that help explain responsive imagery, and how it can work alongside imgix:
+
+- [Using imgix with `<picture>`](https://docs.imgix.com/tutorials/using-imgix-picture-element). Discusses the differences between art direction and resolution switching, and provides examples of how to accomplish art direction with imgix.
+- [Responsive Images with `srcset` and imgix](https://docs.imgix.com/tutorials/responsive-images-srcset-imgix). A look into how imgix can work with `srcset` and `sizes` to serve the right image.
 
 ## Installation
 
@@ -43,36 +60,58 @@ For simply using as you would use an `<img>`, react-imgix can be used as follows
 ```js
 import Imgix from "react-imgix";
 
-<Imgix src="https://assets.imgix.net/examples/pione.jpg" />;
+<Imgix src="https://assets.imgix.net/examples/pione.jpg" sizes="100vw" />;
 ```
+
+[![Edit xp0348lv0z](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/xp0348lv0z?view=preview)
+
+**Please note:** `100vw` is an appropriate `sizes` value for a full-bleed image. If your image is not full-bleed, you should use a different value for `sizes`. [Eric Portis' "Srcset and sizes"](https://ericportis.com/posts/2014/srcset-sizes/) article goes into depth on how to use the `sizes` attribute.
+
+This will generate HTML similar to the following:
+
+```html
+<img
+	src="https://assets.imgix.net/examples/pione.jpg?auto=format&amp;crop=faces&amp;fit=crop&amp;ixlib=react-7.2.0"
+	sizes="100vw"
+	srcset="https://assets.imgix.net/examples/pione.jpg?auto=format&amp;crop=faces&amp;fit=crop&amp;ixlib=react-7.2.0&amp;w=100 100w, https://assets.imgix.net/examples/pione.jpg?auto=format&amp;crop=faces&amp;fit=crop&amp;ixlib=react-7.2.0&amp;w=200 200w,..."
+>
+```
+
+Since imgix can generate as many derivative resolutions as needed, react-imgix calculates them programmatically, using the dimensions you specify. All of this information has been placed into the srcset and sizes attributes.
+
+**Width and height known:** If the width and height are known beforehand, it is recommended that they are set explicitly:
+
+```js
+import Imgix from "react-imgix";
+
+<Imgix
+  src="https://assets.imgix.net/examples/pione.jpg"
+  width={100} // This sets what resolution the component should load from the CDN and the size of the resulting image
+  height={200}
+/>;
+```
+
+NB: Since this library sets [`fit`](https://docs.imgix.com/apis/url/size/fit) to `crop` by default, when just a width or height is set, the image will resize and maintain aspect ratio. When both are set, the image will be cropped to that size, maintaining pixel aspect ratio (i.e. edges are clipped in order to not stretch the photo). If this isn't desired, set `fit` to be another value (e.g. `clip`)
 
 [![Edit xp0348lv0z](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/xp0348lv0z?view=preview)
 
 #### Server-side rendering
 
-For server rendering, `aggressiveLoad` should be used. This component renders nothing on the first render as it tries to work out what the size of the container it will be rendering in, and only loads an image at the resolution required. For server rendering this will mean no image will be rendered.
-
-To keep some of this dynamic behaviour, this configuration is recommended. This will render an image on the server at the default dimensions specified, but will then check what size the element is once on the client, and load a second image.
+React-imgix also works well on the server. Since react-imgix uses `srcset` and `sizes`, it allows the browser to render the correctly sized image immediately after the page has loaded.
 
 ```js
 import Imgix from "react-imgix";
 
-<Imgix
-  src="https://assets.imgix.net/examples/pione.jpg"
-  aggressiveLoad
-  defaultWidth={100} // This sets what resolution the component should load from the CDN
-  defaultHeight={200}
-/>;
+<Imgix src="https://assets.imgix.net/examples/pione.jpg" sizes="100vw" />;
 ```
 
-Alternatively, if this dynamic behaviour is not desired, of if the width and height are known beforehand, the following is recommended.
+If the width and height are known beforehand, it is recommended that they are set explicitly:
 
 ```js
 import Imgix from "react-imgix";
 
 <Imgix
   src="https://assets.imgix.net/examples/pione.jpg"
-  aggressiveLoad
   width={100} // This sets what resolution the component should load from the CDN and the size of the resulting image
   height={200}
 />;
@@ -80,11 +119,9 @@ import Imgix from "react-imgix";
 
 #### Flexible image rendering
 
-This component acts dynamically by default. The component will try and work out what the size of the image element is before loading an image from the CDN. Once it knows the dimensions of the element, it will only load an image at an appropriate size for that element, rather than loading the full-size image.
+This component acts dynamically by default. The component will leverage `srcset` and `sizes` to render the right size image for its container. This is an example of this responsive behaviour.
 
-react-imgix implements this by rendering nothing on the first render pass, and then trying to work out what the size of the container it will be rendering in. Then, it will render a second time with a resized src.
-
-Nothing has to be configured for this to work, but to work well some styling should be used to set the size of the component rendered. Without correct styling the image might render at full-size.
+`sizes` should be set properly for this to work well, and some styling should be used to set the size of the component rendered. Without `sizes` and correct styling the image might render at full-size.
 
 `./styles.css`
 
@@ -94,8 +131,8 @@ Nothing has to be configured for this to work, but to work well some styling sho
 }
 
 .App > img {
-  margin: 0 auto;
-  width: 200px;
+  margin: 10px auto;
+  width: 10vw;
   height: 200px;
 }
 ```
@@ -106,7 +143,10 @@ Nothing has to be configured for this to work, but to work well some styling sho
 import "./styles.css";
 
 <div className="App">
-  <Imgix src="https://assets.imgix.net/examples/pione.jpg" />
+  <Imgix
+    src="https://assets.imgix.net/examples/pione.jpg"
+    sizes="calc(10% - 10px)"
+  />
 </div>;
 ```
 
@@ -126,151 +166,175 @@ import Imgix from "react-imgix";
 />;
 ```
 
+[![Edit 4z1rzq04q7](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/4z1rzq04q7?view=preview)
+
 #### Picture support
 
 Using the [<picture> element](https://docs.imgix.com/tutorials/using-imgix-picture-element) you can create responsive images:
 
 ```js
-<Imgix src={src} type="picture">
-  <Imgix
+import Imgix, { Picture, Source } from 'react-imgix'
+
+<Picture>
+  <Source
     src={src}
     width={400}
-    type="source"
-    imgProps={{ media: "(min-width: 768px)" }}
+    htmlAttributes={{ media: "(min-width: 768px)" }}
   />
-  <Imgix
+  <Source
     src={src}
     width={200}
-    type="source"
-    imgProps={{ media: "(min-width: 320px)" }}
+    htmlAttributes={{ media: "(min-width: 320px)" }}
   />
-  <Imgix src={src} width={100} type="img" />
-</Imgix>
+  <Imgix src={src} width={100} />
+</Picture>
 ```
+
+In order to reduce the duplication in props, JSX supports object spread for props:
+
+```js
+import Imgix, { Picture, Source } from 'react-imgix'
+
+const commonProps = {
+	src: 'https://...',
+	imgixParams: {
+		fit: 'crop',
+		crop: 'faces'
+	}
+}
+
+<Picture>
+	<Source
+		{...commonProps}
+    width={400}
+    htmlAttributes={{ media: "(min-width: 768px)" }}
+  />
+  <Source
+    {...commonProps}
+    width={200}
+    htmlAttributes={{ media: "(min-width: 320px)" }}
+  />
+  <Imgix src={src} width={100} />
+</Picture>
+```
+
+#### Attaching ref to `<img />`, etc.
+
+A `ref` passed to react-imgix using `<Imgix ref={handleRef}>` will attach the ref to the Imgix instance, rather than the DOM element. It is possible to attach a ref to the DOM element that is rendered using `htmlAttributes`:
+
+```js
+<Imgix htmlAttributes={{ ref: handleRef }}>
+```
+
+This works for Source and Picture elements as well.
 
 #### Background mode
 
-When it's desired for the image to render as the background for an element such as div, `type=bg` can be used. The image will be set using `background-image: url()`.
-
-```js
-<Imgix src="https://assets.imgix.net/examples/pione.jpg" type="bg">
-  <span>Blog Title</span>
-</Imgix>
-```
-
-[![Edit zq80p61r4l](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/zq80p61r4l?view=preview)
-
-_Note_: if you use type='bg' the css property background-size is set to 'cover' by default. To override this behaviour you can change the background size by overriding it with a string such as `'contain'`, or to `null` for controlling the style with CSS.
-
-```js
-<Imgix
-  src={src}
-  type="bg"
-  imgProps={{ style: { backgroundSize: "contain" } }}
-/>
-```
-
-A custom component can be used when in bg mode by setting the `component` prop.
-
-```js
-<Imgix src={src} type="bg" component="header" />
-```
+This feature has been removed from react-imgix when `sizes` and `srcset` was implemented. It was decided that it was too hard to implement this feature consistently. If you would still like to use this feature, please give this issue a thumbs up: [https://github.com/imgix/react-imgix/issues/160](https://github.com/imgix/react-imgix/issues/160) If we get enough requests for this, we will re-implement it.
 
 ### Props
 
-#### src :: string, required
+#### Shared Props (Imgix, Source)
+
+These props are shared among Imgix and Source Components
+
+##### src :: string, required
 
 Usually in the form: `https://[your_domain].imgix.net/[image]`. Don't include any parameters.
 
-#### aggressiveLoad :: bool, default = false
+##### imgixParams :: object
 
-Whether to wait until the component has mounted to render the image, useful for auto-sizing and server-side rendering, defaults to false
-
-#### auto :: array, default = ['format']
-
-Array of values to pass to imgix's auto param
-
-#### type :: string, default = 'img'
-
-What kind of component to render, one of `img`, `bg`, `picture`, `source`.
-
-#### component :: string, default = 'div'
-
-Wrapper component to use when rendering a `bg`, defaults to `div`
-
-#### className :: string
-
-`className` applied to top level component. To set `className` on the image itself see `imgProps`.
-
-#### entropy :: bool, default = false
-
-Whether or not to crop using points of interest. See imgix API for more details.
-
-#### faces :: bool, default = true
-
-Whether to crop to faces
-
-#### crop :: string
-
-Sets specific crop, overriding faces and entropy flags. Useful for specifying fallbacks for faces like `faces,top,right`
-
-#### fit :: string
-
-See imgix's API, defaults to `crop`
-
-#### fluid :: bool, default = true
-
-Whether to fit the image requested to the size of the component rendered.
-
-#### onMounted :: func
-
-Called on `componentDidMount` with the mounted DOM node as an argument
-
-#### precision :: number
-
-Round to nearest x for image width and height, useful for caching, defaults to `100`
-
-#### height :: number
-
-Force images to be a certain height, overrides `precision`
-
-#### width :: number
-
-Force images to be a certain width, overrides `precision`
-
-#### defaultHeight :: number
-
-Fallback height for images, useful for SSR or static site generation
-
-#### defaultWidth :: number
-
-Fallback width for images, useful for SSR or static site generation
-
-#### generateSrcSet :: bool
-
-Generate `2x` and `3x` src sets when using an `<img>` tag. Defaults to `true`
-
-#### disableLibraryParam :: bool
-
-By default this component adds a parameter to the generated url to help imgix with analytics and support for this library. This can be disabled by setting this prop to `true`.
-
-#### customParams :: object
-
-Any other imgix params to add to the image `src`
+Imgix params to add to the image `src`.
 
 _For example_:
 
 ```js
-<Imgix customParams={{ mask: "ellipse" }} />
+<Imgix imgixParams={{ mask: "ellipse" }} />
 ```
 
-#### imgProps :: object
+##### sizes :: string
 
-Any other attributes to add to the html node (example: `alt`, `data-*`, `className`)
+Specified the developer's expected size of the image element when rendered on the page. Similar to width. E.g. `100vw`, `calc(50vw - 50px)`, `500px`. Highly recommended when not passing `width` or `height`. [Eric Portis' "Srcset and sizes"](https://ericportis.com/posts/2014/srcset-sizes/) article goes into depth on how to use the `sizes` attribute.
+
+##### className :: string
+
+`className` applied to top level component. To set `className` on the image itself see `htmlAttributes`.
+
+##### height :: number
+
+Force images to be a certain height.
+
+##### width :: number
+
+Force images to be a certain width.
+
+##### disableSrcSet :: bool, default = false
+
+Disable generation of variable width src sets to enable responsiveness.
+
+##### disableLibraryParam :: bool
+
+By default this component adds a parameter to the generated url to help imgix with analytics and support for this library. This can be disabled by setting this prop to `true`.
+
+##### htmlAttributes :: object
+
+Any other attributes to add to the html node (example: `alt`, `data-*`, `className`).
+
+##### onMounted :: func
+
+Called on `componentDidMount` with the mounted DOM node as an argument.
+
+#### Picture Props
+
+##### className :: string
+
+`className` applied to top level component. To set `className` on the image itself see `htmlAttributes`.
+
+##### onMounted :: func
+
+Called on `componentDidMount` with the mounted DOM node as an argument.
+
+##### htmlAttributes :: object
+
+Any other attributes to add to the html node (example: `alt`, `data-*`, `className`).
+
+## Upgrade Guides
+
+### 7.x to 8.0
+
+This is a very large update to this library with a lot of breaking changes. We apologise for any issues this may cause, and we have tried to reduce the number of breaking changes. We have also worked to batch up all these changes into one release to reduce its impacts. We do not plan on making breaking changes for a while after this, and will be focussed on adding features.
+
+The largest change in this major version bump is the move to width-based `srcSet` and `sizes` for responsiveness. This has a host of benefits, including better server rendering, better responsiveness, less potential for bugs, and perfomance improvements. This does mean that the old fitting-to-container-size behaviour has been removed. If this is necessary, an example of how this can be achieved can be found [here](./examples/fit-to-size-of-container.md)
+
+To upgrade to version 8, the following changes should be made.
+
+- A `sizes` prop should be added to all usages of Imgix. If `sizes` is new to you (or even if it's not), Eric's [seminal article on `srcset` and `sizes`](https://ericportis.com/posts/2014/srcset-sizes/) is highly recommended.
+- Change all usages of `type='picture'` to `<Picture>` and `type='source'` to `<Source>`
+
+      // this...
+      <Imgix type='picture'>
+      	<Imgix type='source' src={src}>
+      	<Imgix type='source' src={src}>
+      </Imgix>
+
+      // becomes...
+      <Picture>
+      	<Source src={src}>
+      	<Source src={src}>
+      </Picture>
+
+  See [Picture support](#picture-support) for more information.
+
+- Remove all usage of `type='bg'` as it is no longer supported. It was decided that it was too hard to implement this feature consistently. If you would still like to use this feature, please give this issue a thumbs up: [https://github.com/imgix/react-imgix/issues/160](https://github.com/imgix/react-imgix/issues/160) If we get enough requests for this, we will re-implement it.
+- Remove props `aggressiveLoad`, `component`, `fluid`, `precision` as they are no longer used.
+- Change all usages of `defaultHeight` and `defaultWidth` to `width` and `height` props.
+- Rename `generateSrcSet` to `disableSrcSet` and invert the value passed down as the prop's value. i.e. `generateSrcSet={false}` becomes `disableSrcSet={true}` or simply `disableSrcSet`
+- If support is needed for a [browser which does not support the new usage of srcSet](https://caniuse.com/#feat=srcset) (such as IE 11), we recommended adding a polyfill, such as the great [Picturefill](https://github.com/scottjehl/picturefill).
 
 ## Browser Support
 
-We support the latest version of Google Chrome (which [automatically updates](https://support.google.com/chrome/answer/95414) whenever it detects that a new version of the browser is available). We also support the current and previous major releases of desktop Firefox, Internet Explorer, and Safari on a rolling basis. Mobile support is tested on the most recent minor version of the current and previous major release for the default browser on iOS and Android (e.g., iOS 9.2 and 8.4). Each time a new version is released, we begin supporting that version and stop supporting the third most recent version.
+- By default, browsers that don't support [`srcset`](http://caniuse.com/#feat=srcset), [`sizes`](http://caniuse.com/#feat=srcset), or [`picture`](http://caniuse.com/#feat=picture) will gracefully fall back to the default `img` `src` when appropriate. If you want to provide a fully-responsive experience for these browsers, react-imgix works great alongside [Picturefill](https://github.com/scottjehl/picturefill)!
+- We support the latest version of Google Chrome (which [automatically updates](https://support.google.com/chrome/answer/95414) whenever it detects that a new version of the browser is available). We also support the current and previous major releases of desktop Firefox, Internet Explorer, and Safari on a rolling basis. Mobile support is tested on the most recent minor version of the current and previous major release for the default browser on iOS and Android (e.g., iOS 9.2 and 8.4). Each time a new version is released, we begin supporting that version and stop supporting the third most recent version.
 
 This browser support is made possible by the great support from [BrowserStack](https://www.browserstack.com/).
 
@@ -278,4 +342,4 @@ This browser support is made possible by the great support from [BrowserStack](h
 
 ## Meta
 
-React-imgix was originally created by [Frederick Fogerty](http://twitter.com/fredfogerty). It's licensed under the ISC license (see the [license file](https://github.com/imgix/react-imgix/blob/master/LICENSE) for more info). Any contribution is absolutely welcome, but please review the [contribution guidelines](https://github.com/imgix/react-imgix/blob/master/CONTRIBUTING.md) before getting started.
+React-imgix was originally created by [Frederick Fogerty](http://twitter.com/fredfogerty). It's licensed under the ISC license (see the [license file](./LICENSE) for more info). Any contribution is absolutely welcome, but please review the [contribution guidelines](./CONTRIBUTING.md) before getting started.
