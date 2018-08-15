@@ -109,8 +109,7 @@ describe("When in <source> mode", () => {
     "(max-width: 30em) 100vw, (max-width: 50em) 50vw, calc(33vw - 100px)";
   const htmlAttributes = {
     media: "(min-width: 1200px)",
-    type: "image/webp",
-    alt: "alt text"
+    type: "image/webp"
   };
   const shouldBehaveLikeSource = function(renderImage) {
     it("a <source> component should be rendered", () => {
@@ -131,10 +130,6 @@ describe("When in <source> mode", () => {
           expect(renderImage().props()[k]).toBe(htmlAttributes[k]);
         });
       });
-    it(`props.alt should not be defined`, () => {
-      expect(renderImage().props().alt).toBe(undefined);
-    });
-
     it("an ixlib param should be added to the src", () => {
       renderImage()
         .props()
