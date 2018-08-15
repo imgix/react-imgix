@@ -5,10 +5,16 @@ import { shallow as enzymeShallow, mount } from "enzyme";
 import PropTypes from "prop-types";
 import { shallowUntilTarget } from "../helpers";
 
-import Imgix, { __ReactImgix } from "react-imgix";
+import Imgix, {
+  __ReactImgixImpl,
+  Picture,
+  Source,
+  __SourceImpl,
+  __PictureImpl
+} from "react-imgix";
 
-function shallow(element, shallowOptions) {
-  return shallowUntilTarget(element, __ReactImgix, {
+function shallow(element, target = __ReactImgixImpl, shallowOptions) {
+  return shallowUntilTarget(element, target, {
     shallowOptions: shallowOptions || {
       disableLifecycleMethods: true
     }
@@ -43,13 +49,13 @@ async function renderImageAndBreakInStages({
 }
 
 let oldConsole, log;
-beforeAll(() => {
+beforeEach(() => {
   oldConsole = global.console;
   delete console.log;
   console.error = console.log;
   log = console.log.bind(console);
 });
-afterAll(() => {
+afterEach(() => {
   global.console = oldConsole;
 });
 
@@ -75,15 +81,35 @@ describe("When in default mode", () => {
   });
 });
 
-describe("When in image mode", () => {});
+describe("When in image mode", () => {
+  it("a callback passed through the onMounted prop should be called", () => {
+    const mockImage = <img />;
+    sinon.stub(ReactDOM, "findDOMNode").callsFake(() => mockImage);
+
+    const onMountedSpy = sinon.spy();
+    sut = shallow(
+      <Imgix
+        src={"https://mysource.imgix.net/demo.png"}
+        sizes="100vw"
+        onMounted={onMountedSpy}
+      />,
+      __ReactImgixImpl,
+      {}
+    );
+
+    sinon.assert.calledWith(onMountedSpy, mockImage);
+
+    ReactDOM.findDOMNode.restore();
+  });
+});
 
 describe("When in <source> mode", () => {
+  const shallowSource = element => shallow(element, __SourceImpl);
   const sizes =
     "(max-width: 30em) 100vw, (max-width: 50em) 50vw, calc(33vw - 100px)";
-  const imgProps = {
+  const htmlAttributes = {
     media: "(min-width: 1200px)",
-    type: "image/webp",
-    alt: "alt text"
+    type: "image/webp"
   };
   const shouldBehaveLikeSource = function(renderImage) {
     it("a <source> component should be rendered", () => {
@@ -97,17 +123,13 @@ describe("When in <source> mode", () => {
     it("props.sizes should be defined and equal to the image's props", () =>
       expect(renderImage().props().sizes).toEqual(sizes));
 
-    Object.keys(imgProps)
+    Object.keys(htmlAttributes)
       .filter(k => k !== "alt")
       .forEach(k => {
         it(`props.${k} should be defined and equal to the image's props`, () => {
-          expect(renderImage().props()[k]).toBe(imgProps[k]);
+          expect(renderImage().props()[k]).toBe(htmlAttributes[k]);
         });
       });
-    it(`props.alt should not be defined`, () => {
-      expect(renderImage().props().alt).toBe(undefined);
-    });
-
     it("an ixlib param should be added to the src", () => {
       renderImage()
         .props()
@@ -117,10 +139,11 @@ describe("When in <source> mode", () => {
   };
 
   describe("by default", () => {
-    const renderImage = () =>
-      shallow(
-        <Imgix src={src} type="source" imgProps={imgProps} sizes={sizes} />
+    const renderImage = () => {
+      return shallowSource(
+        <Source src={src} htmlAttributes={htmlAttributes} sizes={sizes} />
       );
+    };
 
     shouldBehaveLikeSource(renderImage);
     it("props.srcSet should be set to a valid src", () => {
@@ -141,12 +164,11 @@ describe("When in <source> mode", () => {
 
   describe("with disableSrcSet prop", () => {
     const renderImage = () =>
-      shallow(
-        <Imgix
+      shallowSource(
+        <Source
           src={src}
-          type="source"
           disableSrcSet
-          imgProps={imgProps}
+          htmlAttributes={htmlAttributes}
           sizes={sizes}
         />
       );
@@ -156,9 +178,29 @@ describe("When in <source> mode", () => {
       expect(renderImage().props().srcSet).toMatch(new RegExp(`^${src}`));
     });
   });
+  it("a callback passed through the onMounted prop should be called", () => {
+    const mockImage = <source />;
+    sinon.stub(ReactDOM, "findDOMNode").callsFake(() => mockImage);
+
+    const onMountedSpy = sinon.spy();
+    sut = shallow(
+      <Source
+        src={"https://mysource.imgix.net/demo.png"}
+        sizes="100vw"
+        onMounted={onMountedSpy}
+      />,
+      __SourceImpl,
+      {}
+    );
+
+    sinon.assert.calledWith(onMountedSpy, mockImage);
+
+    ReactDOM.findDOMNode.restore();
+  });
 });
 
 describe("When in picture mode", () => {
+  const shallowPicture = element => shallow(element, __PictureImpl);
   let children, lastChild;
   const parentAlt = "parent alt";
   const childAlt = "child alt";
@@ -176,16 +218,20 @@ describe("When in picture mode", () => {
       expect(sut.props().alt).toBe(undefined);
     });
 
-    it("an <img> or a <ReactImgix type=img> should be the last child", () => {
+    it("an <img> or a <Imgix> should be the last child", () => {
+      // If the number of HOCs for ReactImgix is changed, there may need to be a change in the number of .first().shallow() calls
       const lastChildElement = lastChild
         .first()
-        .shallow() // hack from https://github.com/airbnb/enzyme/issues/539#issuecomment-239497107 until a better solution is implemented
-        .getElement();
-      if (lastChildElement.type.hasOwnProperty("name")) {
-        expect(lastChildElement.type.name).toBe("ReactImgix");
-        expect(lastChildElement.props.type).toBe("img");
+        .shallow()
+        .first()
+        .shallow(); // hack from https://github.com/airbnb/enzyme/issues/539#issuecomment-239497107 until a better solution is implemented
+      if (lastChildElement.type().hasOwnProperty("name")) {
+        expect(lastChildElement.name()).toBe(__ReactImgixImpl.displayName);
+        expect(
+          lastChildElement.shallow({ disableLifecycleMethods: true }).type()
+        ).toBe("img");
       } else {
-        expect(lastChildElement.type).toBe("img");
+        expect(lastChildElement.type()).toBe("img");
       }
     });
   };
@@ -194,29 +240,28 @@ describe("When in picture mode", () => {
     const oldConsole = global.console;
     global.console = { warn: jest.fn() };
 
-    shallow(
-      <Imgix src={src} type="picture" aggressiveLoad width={100} height={100} />
+    shallowPicture(
+      <Picture src={src} aggressiveLoad width={100} height={100} />
     );
 
     expect(console.warn).toHaveBeenCalledWith(
-      expect.stringContaining("No fallback image found")
+      expect.stringContaining("No fallback <img /> or <Imgix /> found")
     );
 
     global.console = oldConsole;
   });
 
-  describe("with a <ReactImgix type=img> passed as a child", () => {
+  describe("with a <Imgix> passed as a child", () => {
     beforeEach(() => {
-      sut = shallow(
-        <Imgix
+      sut = shallowPicture(
+        <Picture
           src={src}
-          type="picture"
           agressiveLoad
           imgixParams={{ crop: "faces" }}
-          imgProps={{ alt: parentAlt }}
+          htmlAttributes={{ alt: parentAlt }}
         >
-          <Imgix src={src} type="img" imgProps={{ alt: childAlt }} />
-        </Imgix>
+          <Imgix src={src} htmlAttributes={{ alt: childAlt }} />
+        </Picture>
       );
       children = sut.children();
       lastChild = children.last();
@@ -227,7 +272,6 @@ describe("When in picture mode", () => {
       expect(children).toHaveLength(1);
     });
     it.skip("props should not be passed down to children", () => {
-      // TODO: Pass down imgixParams
       expect(
         lastChild
           .first()
@@ -237,7 +281,7 @@ describe("When in picture mode", () => {
         imgixParams: {
           crop: "faces"
         },
-        imgProps: {
+        htmlAttributes: {
           alt: childAlt
         }
       });
@@ -246,15 +290,14 @@ describe("When in picture mode", () => {
 
   describe("with an <img> passed as a child", () => {
     beforeEach(() => {
-      sut = shallow(
-        <Imgix
+      sut = shallowPicture(
+        <Picture
           src={src}
-          type="picture"
           imgixParams={{ crop: "faces" }}
-          imgProps={{ alt: parentAlt }}
+          htmlAttributes={{ alt: parentAlt }}
         >
           <img src={src} alt={childAlt} />
-        </Imgix>
+        </Picture>
       );
       children = sut.children();
       lastChild = children.last();
@@ -270,6 +313,24 @@ describe("When in picture mode", () => {
         alt: childAlt
       });
     });
+  });
+
+  it("a callback passed through the onMounted prop should be called", () => {
+    const mockImage = <source />;
+    sinon.stub(ReactDOM, "findDOMNode").callsFake(() => mockImage);
+
+    const onMountedSpy = sinon.spy();
+    sut = shallow(
+      <Picture onMounted={onMountedSpy}>
+        <img />
+      </Picture>,
+      __PictureImpl,
+      {}
+    );
+
+    sinon.assert.calledWith(onMountedSpy, mockImage);
+
+    ReactDOM.findDOMNode.restore();
   });
 });
 
@@ -411,52 +472,33 @@ describe("When using the component", () => {
     expect(sut.props().width).toEqual(width);
   });
 
-  it("an alt attribute should be set given imgProps.alt", async () => {
-    const imgProps = {
+  it("an alt attribute should be set given htmlAttributes.alt", async () => {
+    const htmlAttributes = {
       alt: "Example alt attribute"
     };
     sut = shallow(
       <Imgix
         src={"https://mysource.imgix.net/demo.png"}
         sizes="100vw"
-        imgProps={imgProps}
+        htmlAttributes={htmlAttributes}
       />
     );
-    expect(sut.props().alt).toEqual(imgProps.alt);
+    expect(sut.props().alt).toEqual(htmlAttributes.alt);
   });
 
-  it("any attributes passed via imgProps should be added to the rendered element", () => {
-    const imgProps = {
+  it("any attributes passed via htmlAttributes should be added to the rendered element", () => {
+    const htmlAttributes = {
       "data-src": "https://mysource.imgix.net/demo.png"
     };
     sut = shallow(
       <Imgix
         src={"https://mysource.imgix.net/demo.png"}
         sizes="100vw"
-        imgProps={imgProps}
+        htmlAttributes={htmlAttributes}
       />
     );
 
-    expect(sut.props()["data-src"]).toEqual(imgProps["data-src"]);
-  });
-
-  it("a callback passed through the onMounted prop should be called", () => {
-    const mockImage = <img />;
-    sinon.stub(ReactDOM, "findDOMNode").callsFake(() => mockImage);
-
-    const onMountedSpy = sinon.spy();
-    sut = shallow(
-      <Imgix
-        src={"https://mysource.imgix.net/demo.png"}
-        sizes="100vw"
-        onMounted={onMountedSpy}
-      />,
-      {}
-    );
-
-    sinon.assert.calledWith(onMountedSpy, mockImage);
-
-    ReactDOM.findDOMNode.restore();
+    expect(sut.props()["data-src"]).toEqual(htmlAttributes["data-src"]);
   });
 
   it("an ixlib parameter should be included by default in the computed src and srcSet", () => {

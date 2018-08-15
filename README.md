@@ -171,21 +171,49 @@ import Imgix from "react-imgix";
 Using the [<picture> element](https://docs.imgix.com/tutorials/using-imgix-picture-element) you can create responsive images:
 
 ```js
-<Imgix src={src} type="picture">
-  <Imgix
+import Imgix, { Picture, Source } from 'react-imgix'
+
+<Picture>
+  <Source
     src={src}
     width={400}
-    type="source"
-    imgProps={{ media: "(min-width: 768px)" }}
+    htmlAttributes={{ media: "(min-width: 768px)" }}
   />
-  <Imgix
+  <Source
     src={src}
     width={200}
-    type="source"
-    imgProps={{ media: "(min-width: 320px)" }}
+    htmlAttributes={{ media: "(min-width: 320px)" }}
   />
-  <Imgix src={src} width={100} type="img" />
-</Imgix>
+  <Imgix src={src} width={100} />
+</Picture>
+```
+
+In order to reduce the duplication in props, JSX supports object spread for props:
+
+```js
+import Imgix, { Picture, Source } from 'react-imgix'
+
+const commonProps = {
+	src: 'https://...',
+	imgixParams: {
+		fit: 'crop',
+		crop: 'faces'
+	}
+}
+
+<Picture>
+	<Source
+		{...commonProps}
+    width={400}
+    htmlAttributes={{ media: "(min-width: 768px)" }}
+  />
+  <Source
+    {...commonProps}
+    width={200}
+    htmlAttributes={{ media: "(min-width: 320px)" }}
+  />
+  <Imgix src={src} width={100} />
+</Picture>
 ```
 
 #### Background mode
@@ -194,11 +222,15 @@ This feature has been removed from react-imgix when `sizes` and `srcset` was imp
 
 ### Props
 
-#### src :: string, required
+#### Shared Props (Imgix, Source)
+
+These props are shared among Imgix and Source Components
+
+##### src :: string, required
 
 Usually in the form: `https://[your_domain].imgix.net/[image]`. Don't include any parameters.
 
-#### imgixParams :: object
+##### imgixParams :: object
 
 Imgix params to add to the image `src`.
 
@@ -208,51 +240,79 @@ _For example_:
 <Imgix imgixParams={{ mask: "ellipse" }} />
 ```
 
-#### sizes :: string
+##### sizes :: string
 
 Specified the developer's expected size of the image element when rendered on the page. Similar to width. E.g. `100vw`, `calc(50vw - 50px)`, `500px`. Highly recommended when not passing `width` or `height`. [Eric Portis' "Srcset and sizes"](https://ericportis.com/posts/2014/srcset-sizes/) article goes into depth on how to use the `sizes` attribute.
 
-#### type :: string, default = 'img'
+##### className :: string
 
-What kind of component to render, one of `img`, picture`,`source`.
+`className` applied to top level component. To set `className` on the image itself see `htmlAttributes`.
 
-#### className :: string
-
-`className` applied to top level component. To set `className` on the image itself see `imgProps`.
-
-#### height :: number
+##### height :: number
 
 Force images to be a certain height.
 
-#### width :: number
+##### width :: number
 
 Force images to be a certain width.
 
-#### disableSrcSet :: bool, default = false
+##### disableSrcSet :: bool, default = false
 
 Disable generation of variable width src sets to enable responsiveness.
 
-#### disableLibraryParam :: bool
+##### disableLibraryParam :: bool
 
 By default this component adds a parameter to the generated url to help imgix with analytics and support for this library. This can be disabled by setting this prop to `true`.
 
-#### imgProps :: object
+##### htmlAttributes :: object
 
 Any other attributes to add to the html node (example: `alt`, `data-*`, `className`).
 
-#### onMounted :: func
+##### onMounted :: func
 
 Called on `componentDidMount` with the mounted DOM node as an argument.
+
+#### Picture Props
+
+##### className :: string
+
+`className` applied to top level component. To set `className` on the image itself see `htmlAttributes`.
+
+##### onMounted :: func
+
+Called on `componentDidMount` with the mounted DOM node as an argument.
+
+##### htmlAttributes :: object
+
+Any other attributes to add to the html node (example: `alt`, `data-*`, `className`).
 
 ## Upgrade Guides
 
 ### 7.x to 8.0
+
+This is a very large update to this library with a lot of breaking changes. We apologise for any issues this may cause, and we have tried to reduce the number of breaking changes. We have also worked to batch up all these changes into one release to reduce its impacts. We do not plan on making breaking changes for a while after this, and will be focussed on adding features.
 
 The largest change in this major version bump is the move to width-based `srcSet` and `sizes` for responsiveness. This has a host of benefits, including better server rendering, better responsiveness, less potential for bugs, perfomance improvements
 
 To upgrade to version 8, the following changes should be made.
 
 - A `sizes` prop should be added to all usages of Imgix. If `sizes` is new to you (or even if it's not), Eric's [seminal article on `srcset` and `sizes`](https://ericportis.com/posts/2014/srcset-sizes/) is highly recommended.
+- Change all usages of `type='picture'` to `<Picture>` and `type='source'` to `<Source>`
+
+      // this...
+      <Imgix type='picture'>
+      	<Imgix type='source' src={src}>
+      	<Imgix type='source' src={src}>
+      </Imgix>
+
+      // becomes...
+      <Picture>
+      	<Source src={src}>
+      	<Source src={src}>
+      </Picture>
+
+  See [Picture support](#picture-support) for more information.
+
 - Remove all usage of `type='bg'` as it is no longer supported. It was decided that it was too hard to implement this feature consistently. If you would still like to use this feature, please give this issue a thumbs up: [https://github.com/imgix/react-imgix/issues/160].(https://github.com/imgix/react-imgix/issues/160) If we get enough requests for this, we will re-implement it.
 - Remove props `aggressiveLoad`, `component`, `fluid`, `precision` as they are no longer used.
 - Change all usages of `defaultHeight` and `defaultWidth` to `width` and `height` props.

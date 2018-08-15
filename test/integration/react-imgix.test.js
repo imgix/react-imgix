@@ -23,8 +23,8 @@ const renderAndWaitForImageLoad = async element => {
     let renderedEl;
     const elementWithOnMounted = React.cloneElement(element, {
       onMounted: () => {},
-      imgProps: {
-        ...(element.props.imgProps || {}),
+      htmlAttributes: {
+        ...(element.props.htmlAttributes || {}),
         onLoad: () => {
           setImmediate(() => resolve(renderedEl));
         }
@@ -54,7 +54,7 @@ describe("When in default mode", () => {
       <Imgix
         src={`${src}`}
         sizes="532px"
-        imgProps={{
+        htmlAttributes={{
           alt: "This is alt text"
         }}
       />
