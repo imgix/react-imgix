@@ -216,6 +216,16 @@ const commonProps = {
 </Picture>
 ```
 
+#### Attaching ref to `<img />`, etc.
+
+A `ref` passed to react-imgix using `<Imgix ref={handleRef}>` will attach the ref to the Imgix instance, rather than the DOM element. It is possible to attach a ref to the DOM element that is rendered using `htmlAttributes`:
+
+```js
+<Imgix htmlAttributes={{ ref: handleRef }}>
+```
+
+This works for Source and Picture elements as well.
+
 #### Background mode
 
 This feature has been removed from react-imgix when `sizes` and `srcset` was implemented. It was decided that it was too hard to implement this feature consistently. If you would still like to use this feature, please give this issue a thumbs up: [https://github.com/imgix/react-imgix/issues/160].(https://github.com/imgix/react-imgix/issues/160) If we get enough requests for this, we will re-implement it.
