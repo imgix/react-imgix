@@ -175,10 +175,11 @@ class ReactImgix extends Component {
     if (type === "source") {
       // TODO: Remove in v9
       throw new Error(
-        `type='picture' has been changed to <Picture />. Please see the upgrade guide at: https://github.com/imgix/react-imgix#7x-to-80`
+        `type='source' has been changed to <Source />. Please see the upgrade guide at: https://github.com/imgix/react-imgix#7x-to-80`
       );
     }
     if (type === "picture") {
+      // TODO: Remove in v9
       throw new Error(
         `type='picture' has been changed to <Picture />. Please see the upgrade guide at: https://github.com/imgix/react-imgix#7x-to-80`
       );
