@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="8.0.1"></a>
+## [8.0.1](https://github.com/imgix/react-imgix/compare/v8.0.0...v8.0.1) (2018-08-26)
+
+
+### Bug Fixes
+
+* update typo in warnings about old type prop ([b9fa1e5](https://github.com/imgix/react-imgix/commit/b9fa1e5))
+
+
+
 <a name="8.0.0"></a>
 # [8.0.0](https://github.com/imgix/react-imgix/compare/v7.2.0...v8.0.0) (2018-08-15)
 
