@@ -472,6 +472,38 @@ describe("When using the component", () => {
     expect(sut.props().width).toEqual(width);
   });
 
+  it("the aspectRatio prop should generate height query parameter", () => {
+    const aspectRatio = 1024 / 768;
+    sut = shallow(
+      <Imgix
+        src={src}
+        sizes="(max-width: 30em) 100vw, (max-width: 50em) 50vw"
+        aspectRatio={aspectRatio}
+      />
+    );
+
+    const srcSet = sut.props().srcSet;
+    const srcSets = srcSet.split(",").map(v => v.trim());
+    const srcSetUrls = srcSets.map(srcSet => srcSet.split(" ")[0]);
+    const parseParam = (str, param) => {
+      const matched = str.match("[?&]" + param + "=([^&]+)");
+      if (!matched) return null;
+      return parseInt(matched[1], 10);
+    };
+    srcSetUrls.forEach(srcSetUrl => {
+      const w = parseParam(srcSetUrl, "w");
+      const h = parseParam(srcSetUrl, "h");
+      if (w && h) {
+        expect(h).toEqual(Math.floor(w / aspectRatio));
+      }
+      if ((!w && h) || (w && !h)) {
+        fail(
+          "both width and height should be generated when aspectRatio is used"
+        );
+      }
+    });
+  });
+
   it("an alt attribute should be set given htmlAttributes.alt", async () => {
     const htmlAttributes = {
       alt: "Example alt attribute"
