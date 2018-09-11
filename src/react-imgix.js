@@ -32,6 +32,7 @@ const COMMON_PROP_TYPES = {
 
 const SHARED_IMGIX_AND_SOURCE_PROP_TYPES = {
   ...COMMON_PROP_TYPES,
+  aspectRatio: PropTypes.number,
   disableSrcSet: PropTypes.bool,
   disableLibraryParam: PropTypes.bool,
   imgixParams: PropTypes.object,
@@ -45,6 +46,7 @@ const SHARED_IMGIX_AND_SOURCE_PROP_TYPES = {
  * Build a imgix source url with parameters from a raw url
  */
 function buildSrc({
+  aspectRatio,
   src: rawSrc,
   width,
   height,
@@ -75,10 +77,14 @@ function buildSrc({
       srcSet = `${dpr2} 2x, ${dpr3} 3x`;
     } else {
       const buildSrcSetPair = targetWidth => {
-        const url = constructUrl(rawSrc, {
+        let urlParams = {
           ...srcOptions,
           width: targetWidth
-        });
+        };
+        if (!srcOptions.height && aspectRatio && aspectRatio > 0) {
+          urlParams.height = Math.floor(targetWidth / aspectRatio);
+        }
+        const url = constructUrl(rawSrc, urlParams);
         return `${url} ${targetWidth}w`;
       };
       const addFallbackSrc = srcSet => srcSet.concat(src);
