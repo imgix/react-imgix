@@ -93,7 +93,8 @@ describe("Lazysizes support", () => {
       <Imgix
         className="lazyload"
         src={src}
-        sizes="100vw"
+        width={100}
+        height={100}
         attributeConfig={{
           src: "data-src",
           srcSet: "data-srcset",
@@ -103,11 +104,12 @@ describe("Lazysizes support", () => {
     );
 
     const renderedImage = renderIntoContainer(component);
-    lazySizes.loader.unveil(renderedImage.getDOMNode());
+    const renderedImageElement = renderedImage.getDOMNode();
+    lazySizes.loader.unveil(renderedImageElement);
     await new Promise(resolve => setTimeout(resolve, 1)); // Timeout allows DOM to update
 
-    const actualSrc = renderedImage.getDOMNode().src;
-    const actualSrcSet = renderedImage.getDOMNode().srcset;
+    const actualSrc = renderedImageElement.getAttribute("src");
+    const actualSrcSet = renderedImageElement.getAttribute("srcset");
 
     expect(actualSrc).toContain(src);
     expect(actualSrcSet).toContain(src);
@@ -119,12 +121,13 @@ describe("Lazysizes support", () => {
     const script = await injectScript(
       "https://cdnjs.cloudflare.com/ajax/libs/lazysizes/4.1.2/lazysizes.min.js"
     );
-    const lqipSrc = `${src}?w=100&h=100`;
+    const lqipSrc = `${src}?w=10&h=10`;
     const component = (
       <Imgix
         className="lazyload"
         src={src}
-        sizes="100vw"
+        width={100}
+        height={100}
         attributeConfig={{
           src: "data-src",
           srcSet: "data-srcset",
@@ -137,15 +140,16 @@ describe("Lazysizes support", () => {
     );
 
     const renderedImage = renderIntoContainer(component);
+    const renderedImageElement = renderedImage.getDOMNode();
 
-    let actualSrc = renderedImage.getDOMNode().src;
+    let actualSrc = renderedImageElement.src;
     expect(actualSrc).toBe(lqipSrc);
 
-    lazySizes.loader.unveil(renderedImage.getDOMNode());
+    lazySizes.loader.unveil(renderedImageElement);
     await new Promise(resolve => setTimeout(resolve, 100)); // Timeout allows DOM to update
 
-    actualSrc = renderedImage.getDOMNode().src;
-    const actualSrcSet = renderedImage.getDOMNode().srcset;
+    actualSrc = renderedImageElement.getAttribute("src");
+    const actualSrcSet = renderedImageElement.getAttribute("srcset");
 
     expect(actualSrc).toContain(src);
     expect(actualSrcSet).toContain(src);
