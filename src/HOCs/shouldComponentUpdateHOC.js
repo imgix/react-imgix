@@ -26,6 +26,9 @@ const ShouldComponentUpdateHOC = WrappedComponent => {
         if (key === "htmlAttributes") {
           return shallowEqual(oldProp, newProp);
         }
+        if (key === "attributeConfig") {
+          return shallowEqual(oldProp, newProp);
+        }
         return undefined; // handled by shallowEqual
       };
       const propsAreEqual = shallowEqual(props, nextProps, customizer);
