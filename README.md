@@ -329,6 +329,20 @@ Any other attributes to add to the html node (example: `alt`, `data-*`, `classNa
 
 Called on `componentDidMount` with the mounted DOM node as an argument.
 
+##### attributeConfig :: object
+
+Allows the src, srcset, and sizes attributes to be remapped to different HTML attributes. For example:
+
+```js
+	attributeConfig={{
+		src: 'data-src',
+		srcSet: 'data-srcset'
+		sizes: 'data-sizes'
+	}}
+```
+
+This re-maps src to `data-src`, srcSet to `data-srcset`, etc.
+
 #### Picture Props
 
 ##### className :: string
