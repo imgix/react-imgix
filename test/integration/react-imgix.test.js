@@ -146,7 +146,7 @@ describe("Lazysizes support", () => {
     expect(actualSrc).toBe(lqipSrc);
 
     lazySizes.loader.unveil(renderedImageElement);
-    await new Promise(resolve => setTimeout(resolve, 100)); // Timeout allows DOM to update
+    await new Promise(resolve => setTimeout(resolve, 8000)); // Timeout allows DOM to update
 
     actualSrc = renderedImageElement.getAttribute("src");
     const actualSrcSet = renderedImageElement.getAttribute("srcset");
@@ -155,5 +155,5 @@ describe("Lazysizes support", () => {
     expect(actualSrcSet).toContain(src);
 
     document.head.removeChild(script);
-  });
+  }).timeout(10000);
 });
