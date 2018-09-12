@@ -71,3 +71,85 @@ describe("When in default mode", () => {
     });
   });
 });
+
+function injectScript(src) {
+  return new Promise((resolve, reject) => {
+    const script = document.createElement("script");
+    script.async = true;
+    script.src = src;
+    script.addEventListener("load", () => resolve(script));
+    script.addEventListener("error", () => reject("Error loading script."));
+    script.addEventListener("abort", () => reject("Script loading aborted."));
+    document.head.appendChild(script);
+  });
+}
+
+describe("Lazysizes support", () => {
+  it("lazy loading", async () => {
+    const script = await injectScript(
+      "https://cdnjs.cloudflare.com/ajax/libs/lazysizes/4.1.2/lazysizes.min.js"
+    );
+    const component = (
+      <Imgix
+        className="lazyload"
+        src={src}
+        sizes="100vw"
+        attributeConfig={{
+          src: "data-src",
+          srcSet: "data-srcset",
+          sizes: "data-sizes"
+        }}
+      />
+    );
+
+    const renderedImage = renderIntoContainer(component);
+    lazySizes.loader.unveil(renderedImage.getDOMNode());
+    await new Promise(resolve => setTimeout(resolve, 1)); // Timeout allows DOM to update
+
+    const actualSrc = renderedImage.getDOMNode().src;
+    const actualSrcSet = renderedImage.getDOMNode().srcset;
+
+    expect(actualSrc).toContain(src);
+    expect(actualSrcSet).toContain(src);
+
+    document.head.removeChild(script);
+  });
+
+  it("LQIP", async () => {
+    const script = await injectScript(
+      "https://cdnjs.cloudflare.com/ajax/libs/lazysizes/4.1.2/lazysizes.min.js"
+    );
+    const lqipSrc = `${src}?w=100&h=100`;
+    const component = (
+      <Imgix
+        className="lazyload"
+        src={src}
+        sizes="100vw"
+        attributeConfig={{
+          src: "data-src",
+          srcSet: "data-srcset",
+          sizes: "data-sizes"
+        }}
+        htmlAttributes={{
+          src: lqipSrc
+        }}
+      />
+    );
+
+    const renderedImage = renderIntoContainer(component);
+
+    let actualSrc = renderedImage.getDOMNode().src;
+    expect(actualSrc).toBe(lqipSrc);
+
+    lazySizes.loader.unveil(renderedImage.getDOMNode());
+    await new Promise(resolve => setTimeout(resolve, 100)); // Timeout allows DOM to update
+
+    actualSrc = renderedImage.getDOMNode().src;
+    const actualSrcSet = renderedImage.getDOMNode().srcset;
+
+    expect(actualSrc).toContain(src);
+    expect(actualSrcSet).toContain(src);
+
+    document.head.removeChild(script);
+  });
+});
