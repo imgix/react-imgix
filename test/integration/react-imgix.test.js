@@ -85,10 +85,17 @@ function injectScript(src) {
 }
 
 describe("Lazysizes support", () => {
-  it("lazy loading", async () => {
-    const script = await injectScript(
+  let script;
+  beforeEach(async () => {
+    script = await injectScript(
       "https://cdnjs.cloudflare.com/ajax/libs/lazysizes/4.1.2/lazysizes.min.js"
     );
+  });
+  afterEach(async () => {
+    document.head.removeChild(script);
+    script = null;
+  });
+  it("lazy loading", async () => {
     const component = (
       <Imgix
         className="lazyload"
@@ -113,14 +120,9 @@ describe("Lazysizes support", () => {
 
     expect(actualSrc).toContain(src);
     expect(actualSrcSet).toContain(src);
-
-    document.head.removeChild(script);
   });
 
   it("LQIP", async () => {
-    const script = await injectScript(
-      "https://cdnjs.cloudflare.com/ajax/libs/lazysizes/4.1.2/lazysizes.min.js"
-    );
     const lqipSrc = `${src}?w=10&h=10`;
     const component = (
       <Imgix
@@ -141,19 +143,24 @@ describe("Lazysizes support", () => {
 
     const renderedImage = renderIntoContainer(component);
     const renderedImageElement = renderedImage.getDOMNode();
+    await new Promise((resolve, reject) => {
+      const mutationObserver = new MutationObserver(function(mutations) {
+        actualSrc = renderedImageElement.getAttribute("src");
+        const actualSrcSet = renderedImageElement.getAttribute("srcset");
 
-    let actualSrc = renderedImageElement.src;
-    expect(actualSrc).toBe(lqipSrc);
+        expect(actualSrc).toContain(src);
+        expect(actualSrcSet).toContain(src);
+        resolve();
+      });
 
-    lazySizes.loader.unveil(renderedImageElement);
-    await new Promise(resolve => setTimeout(resolve, 8000)); // Timeout allows DOM to update
+      mutationObserver.observe(renderedImageElement, {
+        attributes: true
+      });
 
-    actualSrc = renderedImageElement.getAttribute("src");
-    const actualSrcSet = renderedImageElement.getAttribute("srcset");
+      let actualSrc = renderedImageElement.src;
+      expect(actualSrc).toBe(lqipSrc);
 
-    expect(actualSrc).toContain(src);
-    expect(actualSrcSet).toContain(src);
-
-    document.head.removeChild(script);
+      lazySizes.loader.unveil(renderedImageElement);
+    });
   }).timeout(10000);
 });
