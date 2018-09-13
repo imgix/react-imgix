@@ -20,6 +20,8 @@ function shallow(element, target = __ReactImgixImpl, shallowOptions) {
     }
   });
 }
+const shallowSource = element => shallow(element, __SourceImpl);
+const shallowPicture = element => shallow(element, __PictureImpl);
 
 const src = "http://domain.imgix.net/image.jpg";
 let sut, vdom, instance;
@@ -104,7 +106,6 @@ describe("When in image mode", () => {
 });
 
 describe("When in <source> mode", () => {
-  const shallowSource = element => shallow(element, __SourceImpl);
   const sizes =
     "(max-width: 30em) 100vw, (max-width: 50em) 50vw, calc(33vw - 100px)";
   const htmlAttributes = {
@@ -200,7 +201,6 @@ describe("When in <source> mode", () => {
 });
 
 describe("When in picture mode", () => {
-  const shallowPicture = element => shallow(element, __PictureImpl);
   let children, lastChild;
   const parentAlt = "parent alt";
   const childAlt = "child alt";
@@ -517,6 +517,47 @@ describe("When using the component", () => {
     );
 
     expectSrcsTo(sut, expect.not.stringContaining(`ixlib=`));
+  });
+});
+
+describe("Attribute config", () => {
+  describe("<Imgix />", () => {
+    const ATTRIBUTES = ["src", "srcSet", "sizes"];
+    ATTRIBUTES.forEach(ATTRIBUTE => {
+      it(`${ATTRIBUTE} can be configured to use data-${ATTRIBUTE}`, () => {
+        sut = shallow(
+          <Imgix
+            src="https://mysource.imgix.net/demo.png"
+            sizes="100vw"
+            attributeConfig={{
+              [ATTRIBUTE]: `data-${ATTRIBUTE}`
+            }}
+          />
+        );
+
+        expect(sut.props()[`data-${ATTRIBUTE}`]).not.toBeUndefined();
+        expect(sut.props()[ATTRIBUTE]).toBeUndefined();
+      });
+    });
+  });
+  describe("<Source />", () => {
+    const ATTRIBUTES = ["srcSet", "sizes"];
+    ATTRIBUTES.forEach(ATTRIBUTE => {
+      it(`${ATTRIBUTE} can be configured to use data-${ATTRIBUTE}`, () => {
+        sut = shallowSource(
+          <Source
+            src="https://mysource.imgix.net/demo.png"
+            sizes="100vw"
+            attributeConfig={{
+              [ATTRIBUTE]: `data-${ATTRIBUTE}`
+            }}
+          />
+        );
+
+        expect(sut.props()[`data-${ATTRIBUTE}`]).not.toBeUndefined();
+        expect(sut.props()[ATTRIBUTE]).toBeUndefined();
+      });
+    });
   });
 });
 describe("deprecations", () => {

@@ -22,6 +22,12 @@ const defaultImgixParams = {
   fit: "crop"
 };
 
+const defaultAttributeMap = {
+  src: "src",
+  srcSet: "srcSet",
+  sizes: "sizes"
+};
+
 const noop = () => {};
 
 const COMMON_PROP_TYPES = {
@@ -153,16 +159,20 @@ class ReactImgix extends Component {
       imgixParams: imgixParams(this.props)
     });
 
-    let childProps = {
+    const attributeConfig = {
+      ...defaultAttributeMap,
+      ...this.props.attributeConfig
+    };
+    const childProps = {
       ...this.props.htmlAttributes,
-      sizes: this.props.sizes,
+      [attributeConfig.sizes]: this.props.sizes,
       className: this.props.className,
       width: width <= 1 ? null : width,
       height: height <= 1 ? null : height,
-      src
+      [attributeConfig.src]: src
     };
     if (!disableSrcSet) {
-      childProps.srcSet = srcSet;
+      childProps[attributeConfig.srcSet] = srcSet;
     }
 
     if (type === "bg") {
@@ -273,9 +283,13 @@ class SourceImpl extends Component {
       imgixParams: imgixParams(this.props)
     });
 
-    let childProps = {
+    const attributeConfig = {
+      ...defaultAttributeMap,
+      ...this.props.attributeConfig
+    };
+    const childProps = {
       ...this.props.htmlAttributes,
-      sizes: this.props.sizes,
+      [attributeConfig.sizes]: this.props.sizes,
       className: this.props.className,
       width: width <= 1 ? null : width,
       height: height <= 1 ? null : height
@@ -285,9 +299,9 @@ class SourceImpl extends Component {
     // attribute in favor of srcSet so we set that with either an actual
     // srcSet or a single src
     if (disableSrcSet) {
-      childProps.srcSet = src;
+      childProps[attributeConfig.srcSet] = src;
     } else {
-      childProps.srcSet = `${src}, ${srcSet}`;
+      childProps[attributeConfig.srcSet] = `${src}, ${srcSet}`;
     }
     // for now we'll take media from htmlAttributes which isn't ideal because
     //   a) this isn't an <img>
