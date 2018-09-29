@@ -23,7 +23,7 @@ test("warnings can be disabled", () => {
     fail("No warnings to configure");
   }
   const warning = warnings[0];
-  // Set warning to true
+  // Set warning to false
   const oldValue = config.warnings[warning];
   config.warnings[warning] = false;
 
