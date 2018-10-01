@@ -4,5 +4,9 @@ addons:
   chrome: beta
   firefox: latest
 
+branches:
+  only:
+    - master
+
 node_js:
   - "9"
