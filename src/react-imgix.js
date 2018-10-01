@@ -8,7 +8,7 @@ import targetWidths from "./targetWidths";
 import constructUrl from "./constructUrl";
 import { deprecatePropsHOC, ShouldComponentUpdateHOC } from "./HOCs";
 
-import { warning, shallowEqual, compose } from "./common";
+import { warning, shallowEqual, compose, config } from "./common";
 
 const PACKAGE_VERSION = require("../package.json").version;
 const NODE_ENV = process.env.NODE_ENV;
@@ -138,7 +138,7 @@ class ReactImgix extends Component {
     const { disableSrcSet, type, width, height } = this.props;
 
     // Pre-render checks
-    if (NODE_ENV !== "production") {
+    if (NODE_ENV !== "production" && config.warnings.sizesAttribute) {
       if (
         this.props.width == null &&
         this.props.height == null &&
@@ -241,7 +241,7 @@ class PictureImpl extends Component {
         c.type === ReactImgixWrapped
     );
 
-    if (imgIdx === -1) {
+    if (imgIdx === -1 && config.warnings.fallbackImage) {
       console.warn(
         "No fallback <img /> or <Imgix /> found in the children of a <picture> component. A fallback image should be passed to ensure the image renders correctly at all dimensions."
       );

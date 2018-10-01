@@ -24,6 +24,8 @@ A [React](https://facebook.github.io/react/) component that renders images using
   - [Picture support](#picture-support)
   - [Background mode](#background-mode)
 - [Props](#props)
+- [Global Configuration](#global-configuration)
+  - [Warnings](#warnings)
 - [Browser Support](#browser-support)
 - [Upgrade Guides](#upgrade-guides)
 - [Meta](#meta)
@@ -263,6 +265,8 @@ const commonProps = {
 </Picture>
 ```
 
+A warning is displayed when no fallback image is passed. This warning can be disabled in special circumstances. To disable this warning, look in the [warnings section](#warnings).
+
 #### Attaching ref to `<img />`, etc.
 
 A `ref` passed to react-imgix using `<Imgix ref={handleRef}>` will attach the ref to the Imgix instance, rather than the DOM element. It is possible to attach a ref to the DOM element that is rendered using `htmlAttributes`:
@@ -356,6 +360,33 @@ Called on `componentDidMount` with the mounted DOM node as an argument.
 ##### htmlAttributes :: object
 
 Any other attributes to add to the html node (example: `alt`, `data-*`, `className`).
+
+### Global Configuration
+
+#### Warnings
+
+This library triggers some warnings under certain situations to try aid developers in upgrading or to fail-fast. These can sometimes be incorrect due to the difficulty in detecting error situations. This is annoying, and so there is a way to turn them off. This is not recommended for beginners, but if you are using custom components or other advanced features, it is likely you will have to turn them off.
+
+Warnings can be turned off with the public config API, `PublicConfigAPI`, which is exported at the top-level.
+
+```js
+// in init script/application startup
+import { PublicConfigAPI } from "react-imgix";
+
+PublicConfigAPI.disableWarning('<warningName>');
+
+//... rest of app startup
+React.render(...);
+```
+
+Warnings can also be enabled with `PublicConfigAPI.enableWarning('<warningName>')`
+
+The warnings available are:
+
+| `warningName`  | Description                                                                                                                                                                                                                     |
+| -------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| fallbackImage  | Triggered when there is no `<img>` or `<Imgix>` at the end of the children when using `<Picture>`. A fallback image is crucial to ensure the image renders correctly when the browser cannot match against the sources provided |
+| sizesAttribute | This library requires a `sizes` prop to be passed so that the images can render responsively. This should only turned off in very special circumstances.                                                                        |
 
 ## Upgrade Guides
 
