@@ -1,9 +1,10 @@
 {
   "extends": ["config:js-lib"],
-  "automerge": true,
-  "automergeType": "pr-comment",
-  "automergeComment": "@bors: r+",
+  "automerge": false,
   "patch": {
+    "automerge": true
+  },
+  "devDependencies": {
     "automerge": true
   }
 }
