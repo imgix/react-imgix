@@ -95,7 +95,7 @@
     "skin-deep": "1.2.0",
     "standard-version": "4.4.0",
     "webpack": "4.20.2",
-    "webpack-cli": "3.0.8",
+    "webpack-cli": "3.1.2",
     "webpack-dev-server": "3.1.9"
   },
   "jest": {
