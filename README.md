@@ -156,6 +156,21 @@ import "./styles.css";
 
 [![Edit xp0348lv0z](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/xp0348lv0z?view=preview)
 
+**Aspect Ratio:** A developer can pass a desired aspect ratio, which will be used when
+generating srcsets to generate the correct height, according to the aspect ratio.
+
+```js
+<div className="App">
+  <Imgix
+    src="https://assets.imgix.net/examples/pione.jpg"
+    sizes="calc(10% - 10px)"
+    imgixParams={{ ar: "16:9" }}
+  />
+</div>
+```
+
+The aspect ratio is specified in the format `width:height`. Either dimension can be an integer or a float. All of the following are valid: 16:9, 5:1, 1.92:1, 1:1.67.
+
 #### Fixed image rendering (i.e. non-flexible)
 
 If the fluid, dynamic nature explained above is not desired, the width and height can be set explicitly.
