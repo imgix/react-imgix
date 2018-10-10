@@ -38,7 +38,6 @@ const COMMON_PROP_TYPES = {
 
 const SHARED_IMGIX_AND_SOURCE_PROP_TYPES = {
   ...COMMON_PROP_TYPES,
-  aspectRatio: PropTypes.number,
   disableSrcSet: PropTypes.bool,
   disableLibraryParam: PropTypes.bool,
   imgixParams: PropTypes.object,
