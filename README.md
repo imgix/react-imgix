@@ -19,9 +19,13 @@ A [React](https://facebook.github.io/react/) component that renders images using
   - [Server-side rendering](#server-side-rendering)
   - [Flexible image rendering](#fixed-image-rendering-ie-non-flexible)
   - [Fixed image rendering](#fixed-image-rendering)
+  - [Lazy Loading](#lazy-loading)
+  - [Low Quality Image Placeholder Technique (LQIP)](#low-quality-image-placeholder-technique-lqip)
   - [Picture support](#picture-support)
   - [Background mode](#background-mode)
 - [Props](#props)
+- [Global Configuration](#global-configuration)
+  - [Warnings](#warnings)
 - [Browser Support](#browser-support)
 - [Upgrade Guides](#upgrade-guides)
 - [Meta](#meta)
@@ -168,6 +172,49 @@ import Imgix from "react-imgix";
 
 [![Edit 4z1rzq04q7](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/4z1rzq04q7?view=preview)
 
+#### Lazy Loading
+
+If you'd like to lazy load images, we recommend using [lazysizes](https://github.com/aFarkas/lazysizes). In order to use react-imgix with lazysizes, you can simply tell it to generate lazysizes-compatible attributes instead of the standard `src`, `srcset`, and `sizes` by changing some configuration settings:
+
+```jsx
+<Imgix
+	className="lazyload"
+	src="..."
+	sizes="..."
+	attributeConfig={{
+		src: 'data-src',
+		srcSet: 'data-srcset'
+		sizes: 'data-sizes'
+	}}
+/>
+```
+
+The same configuration is available for `<Source />` components
+
+**NB:** It is recommended to use the [attribute change plugin](https://github.com/aFarkas/lazysizes/tree/gh-pages/plugins/attrchange) in order to capture changes in the data-\* attributes. Without this, changing the props to this library will have no effect on the rendered image.
+
+#### Low Quality Image Placeholder Technique (LQIP)
+
+If you'd like to use LQIP images, like before, we recommend using [lazysizes](https://github.com/aFarkas/lazysizes). In order to use react-imgix with lazysizes, you can simply tell it to generate lazysizes-compatible attributes instead of the standard `src`, `srcset`, and `sizes` by changing some configuration settings, and placing the fallback image src in the htmlAttributes:
+
+```jsx
+<Imgix
+	className="lazyload"
+	src="..."
+	sizes="..."
+	attributeConfig={{
+		src: 'data-src',
+		srcSet: 'data-srcset'
+		sizes: 'data-sizes'
+	}}
+	htmlAttributes={{
+		src: '...' // low quality image here
+	}}
+/>
+```
+
+**NB:** If the props of the image are changed after the first load, the low quality image will replace the high quality image. In this case, the `src` attribute may have to be set by modifying the DOM directly, or the lazysizes API may have to be called manually after the props are changed. In any case, this behaviour is not supported by the library maintainers, so use at your own risk.
+
 #### Picture support
 
 Using the [<picture> element](https://docs.imgix.com/tutorials/using-imgix-picture-element) you can create responsive images:
@@ -217,6 +264,8 @@ const commonProps = {
   <Imgix src={src} width={100} />
 </Picture>
 ```
+
+A warning is displayed when no fallback image is passed. This warning can be disabled in special circumstances. To disable this warning, look in the [warnings section](#warnings).
 
 #### Attaching ref to `<img />`, etc.
 
@@ -284,6 +333,20 @@ Any other attributes to add to the html node (example: `alt`, `data-*`, `classNa
 
 Called on `componentDidMount` with the mounted DOM node as an argument.
 
+##### attributeConfig :: object
+
+Allows the src, srcset, and sizes attributes to be remapped to different HTML attributes. For example:
+
+```js
+	attributeConfig={{
+		src: 'data-src',
+		srcSet: 'data-srcset'
+		sizes: 'data-sizes'
+	}}
+```
+
+This re-maps src to `data-src`, srcSet to `data-srcset`, etc.
+
 #### Picture Props
 
 ##### className :: string
@@ -297,6 +360,33 @@ Called on `componentDidMount` with the mounted DOM node as an argument.
 ##### htmlAttributes :: object
 
 Any other attributes to add to the html node (example: `alt`, `data-*`, `className`).
+
+### Global Configuration
+
+#### Warnings
+
+This library triggers some warnings under certain situations to try aid developers in upgrading or to fail-fast. These can sometimes be incorrect due to the difficulty in detecting error situations. This is annoying, and so there is a way to turn them off. This is not recommended for beginners, but if you are using custom components or other advanced features, it is likely you will have to turn them off.
+
+Warnings can be turned off with the public config API, `PublicConfigAPI`, which is exported at the top-level.
+
+```js
+// in init script/application startup
+import { PublicConfigAPI } from "react-imgix";
+
+PublicConfigAPI.disableWarning('<warningName>');
+
+//... rest of app startup
+React.render(...);
+```
+
+Warnings can also be enabled with `PublicConfigAPI.enableWarning('<warningName>')`
+
+The warnings available are:
+
+| `warningName`  | Description                                                                                                                                                                                                                     |
+| -------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| fallbackImage  | Triggered when there is no `<img>` or `<Imgix>` at the end of the children when using `<Picture>`. A fallback image is crucial to ensure the image renders correctly when the browser cannot match against the sources provided |
+| sizesAttribute | This library requires a `sizes` prop to be passed so that the images can render responsively. This should only turned off in very special circumstances.                                                                        |
 
 ## Upgrade Guides
 

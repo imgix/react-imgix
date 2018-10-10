@@ -71,3 +71,96 @@ describe("When in default mode", () => {
     });
   });
 });
+
+function injectScript(src) {
+  return new Promise((resolve, reject) => {
+    const script = document.createElement("script");
+    script.async = true;
+    script.src = src;
+    script.addEventListener("load", () => resolve(script));
+    script.addEventListener("error", () => reject("Error loading script."));
+    script.addEventListener("abort", () => reject("Script loading aborted."));
+    document.head.appendChild(script);
+  });
+}
+
+describe("Lazysizes support", () => {
+  let script;
+  beforeEach(async () => {
+    script = await injectScript(
+      "https://cdnjs.cloudflare.com/ajax/libs/lazysizes/4.1.2/lazysizes.min.js"
+    );
+  });
+  afterEach(async () => {
+    document.head.removeChild(script);
+    script = null;
+  });
+  it("lazy loading", async () => {
+    const component = (
+      <Imgix
+        className="lazyload"
+        src={src}
+        width={100}
+        height={100}
+        attributeConfig={{
+          src: "data-src",
+          srcSet: "data-srcset",
+          sizes: "data-sizes"
+        }}
+      />
+    );
+
+    const renderedImage = renderIntoContainer(component);
+    const renderedImageElement = renderedImage.getDOMNode();
+    lazySizes.loader.unveil(renderedImageElement);
+    await new Promise(resolve => setTimeout(resolve, 1)); // Timeout allows DOM to update
+
+    const actualSrc = renderedImageElement.getAttribute("src");
+    const actualSrcSet = renderedImageElement.getAttribute("srcset");
+
+    expect(actualSrc).toContain(src);
+    expect(actualSrcSet).toContain(src);
+  });
+
+  it("LQIP", async () => {
+    const lqipSrc = `${src}?w=10&h=10`;
+    const component = (
+      <Imgix
+        className="lazyload"
+        src={src}
+        width={100}
+        height={100}
+        attributeConfig={{
+          src: "data-src",
+          srcSet: "data-srcset",
+          sizes: "data-sizes"
+        }}
+        htmlAttributes={{
+          src: lqipSrc
+        }}
+      />
+    );
+
+    const renderedImage = renderIntoContainer(component);
+    const renderedImageElement = renderedImage.getDOMNode();
+    await new Promise((resolve, reject) => {
+      const mutationObserver = new MutationObserver(function(mutations) {
+        actualSrc = renderedImageElement.getAttribute("src");
+        const actualSrcSet = renderedImageElement.getAttribute("srcset");
+
+        expect(actualSrc).toContain(src);
+        expect(actualSrcSet).toContain(src);
+        resolve();
+      });
+
+      mutationObserver.observe(renderedImageElement, {
+        attributes: true
+      });
+
+      let actualSrc = renderedImageElement.src;
+      expect(actualSrc).toBe(lqipSrc);
+
+      lazySizes.loader.unveil(renderedImageElement);
+    });
+  }).timeout(10000);
+});
