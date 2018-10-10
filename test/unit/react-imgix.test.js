@@ -472,35 +472,129 @@ describe("When using the component", () => {
     expect(sut.props().width).toEqual(width);
   });
 
-  it("the aspectRatio prop should generate height query parameter", () => {
-    const aspectRatio = 1024 / 768;
-    sut = shallow(
-      <Imgix
-        src={src}
-        sizes="(max-width: 30em) 100vw, (max-width: 50em) 50vw"
-        aspectRatio={aspectRatio}
-      />
-    );
+  describe("aspectRatio", () => {
+    describe("valid AR", () => {
+      const testValidAR = ({ ar, arDecimal }) => {
+        it(`a valid ar prop (${ar}) should generate height query parameter`, () => {
+          const parseParam = (url, param) => {
+            const matched = url.match("[?&]" + param + "=([^&]+)");
+            if (!matched) return undefined;
+            return parseInt(matched[1], 10);
+          };
+          const removeFallbackSrcSet = srcSets => srcSets.slice(0, -1);
 
-    const srcSet = sut.props().srcSet;
-    const srcSets = srcSet.split(",").map(v => v.trim());
-    const srcSetUrls = srcSets.map(srcSet => srcSet.split(" ")[0]);
-    const parseParam = (str, param) => {
-      const matched = str.match("[?&]" + param + "=([^&]+)");
-      if (!matched) return null;
-      return parseInt(matched[1], 10);
-    };
-    srcSetUrls.forEach(srcSetUrl => {
-      const w = parseParam(srcSetUrl, "w");
-      const h = parseParam(srcSetUrl, "h");
-      if (w && h) {
-        expect(h).toEqual(Math.floor(w / aspectRatio));
-      }
-      if ((!w && h) || (w && !h)) {
-        fail(
-          "both width and height should be generated when aspectRatio is used"
-        );
-      }
+          sut = shallow(
+            <Imgix
+              src={src}
+              sizes="(max-width: 30em) 100vw, (max-width: 50em) 50vw"
+              imgixParams={{ ar }}
+            />
+          );
+
+          const srcSet = sut.props().srcSet;
+          const srcSets = srcSet.split(",").map(v => v.trim());
+          const srcSetUrls = srcSets.map(srcSet => srcSet.split(" ")[0]);
+          removeFallbackSrcSet(srcSetUrls).forEach(srcSetUrl => {
+            const w = parseParam(srcSetUrl, "w");
+            const h = parseParam(srcSetUrl, "h");
+
+            expect(h).toEqual(Math.round(w / arDecimal));
+            expect(w).toBeTruthy();
+            expect(h).toBeTruthy();
+          });
+        });
+      };
+      [
+        ["1:1", "1"],
+        ["1.1:1", "1.1"],
+        ["1.12:1", "1.12"],
+        ["1.123:1", "1.123"],
+        ["1:1.1", "0.9090909090909091"],
+        ["1:1.12", "0.8928571428571428"],
+        ["1.1:1.1", "1"],
+        ["1.123:1.123", "1"]
+      ].forEach(([validAR, validArDecimal]) =>
+        testValidAR({
+          ar: validAR,
+          arDecimal: validArDecimal
+        })
+      );
+    });
+
+    describe("invalid AR", () => {
+      const testInvalidAR = ar => {
+        it(`height should not be set when an invalid aspectRatio (${ar}) is passed`, () => {
+          const parseParam = (url, param) => {
+            const matched = url.match("[?&]" + param + "=([^&]+)");
+            if (!matched) return undefined;
+            return parseInt(matched[1], 10);
+          };
+          const removeFallbackSrcSet = srcSets => srcSets.slice(0, -1);
+
+          sut = shallow(
+            <Imgix
+              src={src}
+              sizes="(max-width: 30em) 100vw, (max-width: 50em) 50vw"
+              imgixParams={{ ar }}
+            />
+          );
+
+          const srcSet = sut.props().srcSet;
+          const srcSets = srcSet.split(",").map(v => v.trim());
+          const srcSetUrls = srcSets.map(srcSet => srcSet.split(" ")[0]);
+          removeFallbackSrcSet(srcSetUrls).forEach(srcSetUrl => {
+            const w = parseParam(srcSetUrl, "w");
+            const h = parseParam(srcSetUrl, "h");
+
+            expect(w).toBeTruthy();
+            expect(h).toBeFalsy();
+          });
+        });
+      };
+
+      [
+        "4x3",
+        "4:",
+        ,
+        "blah:1:1",
+        "blah1:1",
+        "1x1",
+        "1:1blah",
+        "1:blah1"
+      ].forEach(invalidAR => testInvalidAR(invalidAR));
+    });
+
+    it("srcsets should not have a height set when aspectRatio is not set", () => {
+      sut = shallow(
+        <Imgix
+          src={src}
+          sizes="(max-width: 30em) 100vw, (max-width: 50em) 50vw"
+        />
+      );
+      const srcSet = sut.props().srcSet;
+      const srcSets = srcSet.split(",").map(v => v.trim());
+      const srcSetUrls = srcSets.map(srcSet => srcSet.split(" ")[0]);
+      const parseParam = (str, param) => {
+        const matched = str.match("[?&]" + param + "=([^&]+)");
+        if (!matched) return null;
+        return parseInt(matched[1], 10);
+      };
+      srcSetUrls.forEach(srcSetUrl => {
+        const h = parseParam(srcSetUrl, "h");
+        expect(h).toBeFalsy();
+      });
+    });
+
+    it("the generated src should not have ar included", () => {
+      sut = shallow(
+        <Imgix
+          src={src}
+          sizes="(max-width: 30em) 100vw, (max-width: 50em) 50vw"
+          imgixParams={{ ar: "2:1" }}
+        />
+      );
+
+      expectSrcsTo(sut, expect.not.stringContaining("ar="));
     });
   });
 
