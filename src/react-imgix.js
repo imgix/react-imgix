@@ -49,17 +49,34 @@ const SHARED_IMGIX_AND_SOURCE_PROP_TYPES = {
 };
 
 /**
+ * Parse an aspect ratio in the format w:h to a decimal.
+ */
+function parseAspectRatio(aspectRatio) {
+  if (typeof aspectRatio !== "string") {
+    return undefined;
+  }
+  const isValidFormat = str => !/^\d(\.\d+)?:\d(\.\d+)?$/.test(str);
+  if (isValidFormat(aspectRatio)) {
+    return undefined;
+  }
+
+  const [width, height] = aspectRatio.split(":");
+
+  return width / height;
+}
+
+/**
  * Build a imgix source url with parameters from a raw url
  */
 function buildSrc({
-  aspectRatio,
   src: rawSrc,
   width,
   height,
   disableLibraryParam,
   disableSrcSet,
   type,
-  imgixParams
+  imgixParams,
+  aspectRatio
 }) {
   const fixedSize = width != null || height != null;
 
@@ -87,8 +104,13 @@ function buildSrc({
           ...srcOptions,
           width: targetWidth
         };
-        if (!srcOptions.height && aspectRatio && aspectRatio > 0) {
-          urlParams.height = Math.floor(targetWidth / aspectRatio);
+        const aspectRatioDecimal = aspectRatio && parseAspectRatio(aspectRatio);
+        if (
+          !srcOptions.height &&
+          aspectRatioDecimal &&
+          aspectRatioDecimal > 0
+        ) {
+          urlParams.height = Math.round(targetWidth / aspectRatioDecimal);
         }
         const url = constructUrl(rawSrc, urlParams);
         return `${url} ${targetWidth}w`;
@@ -116,6 +138,10 @@ function imgixParams(props) {
   let fit = false;
   if (params.crop != null) fit = "crop";
   if (params.fit) fit = params.fit;
+
+  if (params.ar) {
+    delete params.ar;
+  }
 
   return {
     ...params,
@@ -162,7 +188,8 @@ class ReactImgix extends Component {
     const { src, srcSet } = buildSrc({
       ...this.props,
       type: "img",
-      imgixParams: imgixParams(this.props)
+      imgixParams: imgixParams(this.props),
+      aspectRatio: (this.props.imgixParams || {}).ar
     });
 
     const attributeConfig = {
@@ -267,7 +294,6 @@ PictureImpl.displayName = "ReactImgixPicture";
 class SourceImpl extends Component {
   static propTypes = {
     ...SHARED_IMGIX_AND_SOURCE_PROP_TYPES
-    // TODO: add media?
   };
   static defaultProps = {
     disableSrcSet: false,

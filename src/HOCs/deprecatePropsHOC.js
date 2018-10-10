@@ -56,7 +56,6 @@ const deprecatePropsHOC = WrappedComponent => {
   };
   WithDeprecatedProps.propTypes = {
     ...WrappedComponent.propTypes,
-    aspectRatio: PropTypes.number,
     auto: PropTypes.array,
     customParams: PropTypes.object,
     crop: PropTypes.string,
