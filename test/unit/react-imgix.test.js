@@ -524,6 +524,9 @@ describe("When using the component", () => {
     describe("invalid AR", () => {
       const testInvalidAR = ar => {
         it(`height should not be set when an invalid aspectRatio (${ar}) is passed`, () => {
+          const oldConsole = global.console;
+          global.console = { warn: jest.fn() };
+
           const parseParam = (url, param) => {
             const matched = url.match("[?&]" + param + "=([^&]+)");
             if (!matched) return undefined;
@@ -549,6 +552,8 @@ describe("When using the component", () => {
             expect(w).toBeTruthy();
             expect(h).toBeFalsy();
           });
+
+          global.console = oldConsole;
         });
       };
 

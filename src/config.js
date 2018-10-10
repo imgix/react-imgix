@@ -1,7 +1,8 @@
 const config = {
   warnings: {
     fallbackImage: true,
-    sizesAttribute: true
+    sizesAttribute: true,
+    invalidARFormat: true
   }
 };
 

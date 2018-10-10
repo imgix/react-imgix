@@ -49,15 +49,18 @@ const SHARED_IMGIX_AND_SOURCE_PROP_TYPES = {
 };
 
 /**
- * Parse an aspect ratio in the format w:h to a decimal.
+ * Parse an aspect ratio in the format w:h to a decimal. If false is returned, the aspect ratio is in the wrong format.
  */
 function parseAspectRatio(aspectRatio) {
+  if (typeof aspectRatio == null) {
+    return false;
+  }
   if (typeof aspectRatio !== "string") {
-    return undefined;
+    return false;
   }
   const isValidFormat = str => !/^\d(\.\d+)?:\d(\.\d+)?$/.test(str);
   if (isValidFormat(aspectRatio)) {
-    return undefined;
+    return false;
   }
 
   const [width, height] = aspectRatio.split(":");
@@ -99,12 +102,17 @@ function buildSrc({
       const dpr3 = constructUrl(rawSrc, { ...srcOptions, dpr: 3 });
       srcSet = `${dpr2} 2x, ${dpr3} 3x`;
     } else {
+      let showARWarning = false;
       const buildSrcSetPair = targetWidth => {
         let urlParams = {
           ...srcOptions,
           width: targetWidth
         };
         const aspectRatioDecimal = aspectRatio && parseAspectRatio(aspectRatio);
+        if (aspectRatio != null && aspectRatioDecimal === false) {
+          // false indicates invalid
+          showARWarning = true;
+        }
         if (
           !srcOptions.height &&
           aspectRatioDecimal &&
@@ -117,6 +125,12 @@ function buildSrc({
       };
       const addFallbackSrc = srcSet => srcSet.concat(src);
       srcSet = addFallbackSrc(targetWidths.map(buildSrcSetPair)).join(", ");
+
+      if (showARWarning && config.warnings.invalidARFormat) {
+        console.warn(
+          `[Imgix] The aspect ratio passed ("${aspectRatio}") is not in the correct format. The correct format is "W:H".`
+        );
+      }
     }
   }
 
