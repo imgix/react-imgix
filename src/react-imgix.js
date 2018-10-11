@@ -104,7 +104,7 @@ function buildSrc({
           ...srcOptions,
           width: targetWidth
         };
-        const aspectRatioDecimal = aspectRatio && parseAspectRatio(aspectRatio);
+        const aspectRatioDecimal = parseAspectRatio(aspectRatio);
         if (aspectRatio != null && aspectRatioDecimal === false) {
           // false indicates invalid
           showARWarning = true;
