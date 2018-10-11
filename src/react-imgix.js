@@ -48,6 +48,23 @@ const SHARED_IMGIX_AND_SOURCE_PROP_TYPES = {
 };
 
 /**
+ * Parse an aspect ratio in the format w:h to a decimal. If false is returned, the aspect ratio is in the wrong format.
+ */
+function parseAspectRatio(aspectRatio) {
+  if (typeof aspectRatio !== "string") {
+    return false;
+  }
+  const isValidFormat = str => /^\d+(\.\d+)?:\d+(\.\d+)?$/.test(str);
+  if (!isValidFormat(aspectRatio)) {
+    return false;
+  }
+
+  const [width, height] = aspectRatio.split(":");
+
+  return parseFloat(width) / parseFloat(height);
+}
+
+/**
  * Build a imgix source url with parameters from a raw url
  */
 function buildSrc({
@@ -57,7 +74,8 @@ function buildSrc({
   disableLibraryParam,
   disableSrcSet,
   type,
-  imgixParams
+  imgixParams,
+  aspectRatio
 }) {
   const fixedSize = width != null || height != null;
 
@@ -80,15 +98,35 @@ function buildSrc({
       const dpr3 = constructUrl(rawSrc, { ...srcOptions, dpr: 3 });
       srcSet = `${dpr2} 2x, ${dpr3} 3x`;
     } else {
+      let showARWarning = false;
       const buildSrcSetPair = targetWidth => {
-        const url = constructUrl(rawSrc, {
+        let urlParams = {
           ...srcOptions,
           width: targetWidth
-        });
+        };
+        const aspectRatioDecimal = parseAspectRatio(aspectRatio);
+        if (aspectRatio != null && aspectRatioDecimal === false) {
+          // false indicates invalid
+          showARWarning = true;
+        }
+        if (
+          !srcOptions.height &&
+          aspectRatioDecimal &&
+          aspectRatioDecimal > 0
+        ) {
+          urlParams.height = Math.ceil(targetWidth / aspectRatioDecimal);
+        }
+        const url = constructUrl(rawSrc, urlParams);
         return `${url} ${targetWidth}w`;
       };
       const addFallbackSrc = srcSet => srcSet.concat(src);
       srcSet = addFallbackSrc(targetWidths.map(buildSrcSetPair)).join(", ");
+
+      if (showARWarning && config.warnings.invalidARFormat) {
+        console.warn(
+          `[Imgix] The aspect ratio passed ("${aspectRatio}") is not in the correct format. The correct format is "W:H".`
+        );
+      }
     }
   }
 
@@ -110,6 +148,10 @@ function imgixParams(props) {
   let fit = false;
   if (params.crop != null) fit = "crop";
   if (params.fit) fit = params.fit;
+
+  if (params.ar) {
+    delete params.ar;
+  }
 
   return {
     ...params,
@@ -156,7 +198,8 @@ class ReactImgix extends Component {
     const { src, srcSet } = buildSrc({
       ...this.props,
       type: "img",
-      imgixParams: imgixParams(this.props)
+      imgixParams: imgixParams(this.props),
+      aspectRatio: (this.props.imgixParams || {}).ar
     });
 
     const attributeConfig = {
@@ -261,7 +304,6 @@ PictureImpl.displayName = "ReactImgixPicture";
 class SourceImpl extends Component {
   static propTypes = {
     ...SHARED_IMGIX_AND_SOURCE_PROP_TYPES
-    // TODO: add media?
   };
   static defaultProps = {
     disableSrcSet: false,

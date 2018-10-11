@@ -4,7 +4,8 @@
   "description": "React Component for displaying an image from Imgix",
   "author": "Frederick Fogerty <frederick.fogerty@gmail.com> (https://github.com/frederickfogerty)",
   "contributors": [
-    "Frederick Fogerty <frederick.fogerty@gmail.com> (https://github.com/frederickfogerty)"
+		"Frederick Fogerty <frederick.fogerty@gmail.com> (https://github.com/frederickfogerty)",
+		"Max Kolyanov (https://github.com/maxkolyanov)"
   ],
   "license": "ISC",
   "bugs": {
