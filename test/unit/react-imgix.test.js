@@ -498,7 +498,7 @@ describe("When using the component", () => {
             const w = parseParam(srcSetUrl, "w");
             const h = parseParam(srcSetUrl, "h");
 
-            expect(h).toEqual(Math.round(w / arDecimal));
+            expect(h).toEqual(Math.ceil(w / arDecimal));
             expect(w).toBeTruthy();
             expect(h).toBeTruthy();
           });

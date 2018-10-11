@@ -114,7 +114,7 @@ function buildSrc({
           aspectRatioDecimal &&
           aspectRatioDecimal > 0
         ) {
-          urlParams.height = Math.round(targetWidth / aspectRatioDecimal);
+          urlParams.height = Math.ceil(targetWidth / aspectRatioDecimal);
         }
         const url = constructUrl(rawSrc, urlParams);
         return `${url} ${targetWidth}w`;
