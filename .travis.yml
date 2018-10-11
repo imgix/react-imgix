@@ -7,6 +7,7 @@ addons:
 branches:
   only:
     - master
+    - /release.*/
 
 node_js:
   - "9"
