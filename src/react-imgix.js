@@ -57,8 +57,8 @@ function parseAspectRatio(aspectRatio) {
   if (typeof aspectRatio !== "string") {
     return false;
   }
-  const isValidFormat = str => !/^\d(\.\d+)?:\d(\.\d+)?$/.test(str);
-  if (isValidFormat(aspectRatio)) {
+  const isValidFormat = str => /^\d(\.\d+)?:\d(\.\d+)?$/.test(str);
+  if (!isValidFormat(aspectRatio)) {
     return false;
   }
 
