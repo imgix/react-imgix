@@ -51,9 +51,6 @@ const SHARED_IMGIX_AND_SOURCE_PROP_TYPES = {
  * Parse an aspect ratio in the format w:h to a decimal. If false is returned, the aspect ratio is in the wrong format.
  */
 function parseAspectRatio(aspectRatio) {
-  if (typeof aspectRatio == null) {
-    return false;
-  }
   if (typeof aspectRatio !== "string") {
     return false;
   }
