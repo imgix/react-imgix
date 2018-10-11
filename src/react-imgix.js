@@ -61,7 +61,7 @@ function parseAspectRatio(aspectRatio) {
 
   const [width, height] = aspectRatio.split(":");
 
-  return width / height;
+  return parseFloat(width) / parseFloat(height);
 }
 
 /**
