@@ -170,6 +170,9 @@ const ensureBrowserVersionExistsOnBrowserStack = (browser, version) => {
 const ensureOSXVersionIsCorrect = (browser, version) => {
   const versionNumber = Number.parseFloat(version);
   if (browser.toLowerCase() === "safari") {
+    if (12 <= versionNumber && versionNumber < 13) {
+      return "Mojave";
+    }
     if (11 <= versionNumber && versionNumber < 12) {
       return "High Sierra";
     }
