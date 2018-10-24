@@ -36,7 +36,7 @@ describe("helpers", () => {
     it("requires a valid component instance", () => {
       expect(() => {
         shallowUntilTarget({ notAComponent: true }, ExampleBase);
-      }).toThrow(/Invalid component element/);
+      }).toThrow(/ShallowWrapper can only wrap valid elements/);
     });
 
     it("requires a TargetComponent", () => {
