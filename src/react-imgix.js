@@ -96,7 +96,9 @@ function buildSrc({
     if (fixedSize || type === "source") {
       const dpr2 = constructUrl(rawSrc, { ...srcOptions, dpr: 2 });
       const dpr3 = constructUrl(rawSrc, { ...srcOptions, dpr: 3 });
-      srcSet = `${dpr2} 2x, ${dpr3} 3x`;
+      const dpr4 = constructUrl(rawSrc, { ...srcOptions, dpr: 4 });
+      const dpr5 = constructUrl(rawSrc, { ...srcOptions, dpr: 5 });
+      srcSet = `${dpr2} 2x, ${dpr3} 3x, ${dpr4} 4x, ${dpr5} 5x`;
     } else {
       let showARWarning = false;
       const buildSrcSetPair = targetWidth => {
