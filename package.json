@@ -84,7 +84,7 @@
     "karma-safari-launcher": "1.0.0",
     "karma-webpack": "3.0.5",
     "mocha": "5.2.0",
-    "prettier": "1.15.1",
+    "prettier": "1.15.2",
     "puppeteer": "1.10.0",
     "react": "16.6.1",
     "react-addons-test-utils": "15.6.2",
