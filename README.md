@@ -308,6 +308,8 @@ buildURL("http://yourdomain.imgix.net/image.png", { w: 450, h: 100 }); // => htt
 
 The base url may also contain query parameters. These will be overriden by any parameters passed in with the second parameter.
 
+The `ixlib` parameter may be disabled by: `buildURL(<url>, <params>, { disableLibraryParam: true })`
+
 ### Props
 
 #### Shared Props (Imgix, Source)
