@@ -28,7 +28,7 @@ test("ixlib addition can be disabled with disableLibraryParam", () => {
   expect(actualURL.searchParams.has("ixlib")).toBe(false);
 });
 
-test.only("parameters that already exist in the url are overriden", () => {
+test("parameters that already exist in the url are overriden", () => {
   const actual = buildURL("https://demo.imgix.net/abc.png?w=50&h=50", {
     w: 100,
     h: 100
