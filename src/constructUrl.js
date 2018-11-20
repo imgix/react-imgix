@@ -108,7 +108,7 @@ var DEFAULT_OPTIONS = Object.freeze({
 function constructUrlFromParams(src, params) {
   var optionKeys = Object.keys(params);
   var fullUrl = optionKeys.reduce(function(uri, key) {
-    return uri.addQueryParam(key, params[key]);
+    return uri.replaceQueryParam(key, params[key]);
   }, new Uri(src));
 
   return fullUrl.toString();
