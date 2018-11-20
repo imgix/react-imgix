@@ -3,3 +3,5 @@ import { PublicConfigAPI } from "./config";
 
 export default ReactImgix;
 export { Picture, Source, PublicConfigAPI };
+
+export { Background } from "./react-imgix-bg";

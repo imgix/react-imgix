@@ -1,4 +1,5 @@
 import Imgix from "react-imgix";
+import { Background } from "react-imgix-bg";
 
 import React from "react";
 import { mount, shallow } from "enzyme";
@@ -69,6 +70,35 @@ describe("When in default mode", () => {
       width: 532,
       height: 800
     });
+  });
+});
+
+describe("Background Mode", () => {
+  it.only("renders an image at the size of the containing element", async () => {
+    console.log("hey");
+    const sut = await new Promise((resolve, reject) => {
+      let renderedEl;
+      const el = (
+        <div>
+          <Background
+            src={`${src}`}
+            onMounted={() => {}}
+            htmlAttributes={{
+              onLoad: () => {
+                setImmediate(() => resolve(renderedEl));
+              }
+            }}
+          >
+            <div>Content</div>
+          </Background>
+        </div>
+      );
+      renderedEl = renderIntoContainer(el);
+    });
+
+    const img = sut.find("div");
+
+    console.log(img);
   });
 });
 
