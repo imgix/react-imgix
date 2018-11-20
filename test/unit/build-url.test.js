@@ -17,7 +17,7 @@ test("buildURL includes an ixlib parameter", () => {
   );
 });
 
-test("ixlib addition can be disable with disableLibraryParam", () => {
+test("ixlib addition can be disabled with disableLibraryParam", () => {
   const actual = buildURL(
     "https://demo.imgix.net/abc.png",
     { w: 450, h: 100 },
@@ -26,6 +26,17 @@ test("ixlib addition can be disable with disableLibraryParam", () => {
 
   const actualURL = new URL(actual);
   expect(actualURL.searchParams.has("ixlib")).toBe(false);
+});
+
+test.only("parameters that already exist in the url are overriden", () => {
+  const actual = buildURL("https://demo.imgix.net/abc.png?w=50&h=50", {
+    w: 100,
+    h: 100
+  });
+
+  const actualURL = new URL(actual);
+  expect(actualURL.searchParams.get("w")).toBe("100");
+  expect(actualURL.searchParams.get("h")).toBe("100");
 });
 
 const createIxLibParamMatcher = () => {
