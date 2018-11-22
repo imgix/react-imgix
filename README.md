@@ -23,6 +23,7 @@ A [React](https://facebook.github.io/react/) component that renders images using
   - [Low Quality Image Placeholder Technique (LQIP)](#low-quality-image-placeholder-technique-lqip)
   - [Picture support](#picture-support)
   - [Background mode](#background-mode)
+  - [Custom URLS](#custom-urls)
 - [Props](#props)
 - [Global Configuration](#global-configuration)
   - [Warnings](#warnings)
@@ -295,6 +296,20 @@ This works for Source and Picture elements as well.
 #### Background mode
 
 This feature has been removed from react-imgix when `sizes` and `srcset` was implemented. It was decided that it was too hard to implement this feature consistently. If you would still like to use this feature, please give this issue a thumbs up: [https://github.com/imgix/react-imgix/issues/160](https://github.com/imgix/react-imgix/issues/160) If we get enough requests for this, we will re-implement it.
+
+#### Custom URLS
+
+This library exposes a pure function, `buildURL`, for generating full imgix urls given a base url and some parameters.
+
+```js
+import { buildURL } from "react-imgix";
+
+buildURL("http://yourdomain.imgix.net/image.png", { w: 450, h: 100 }); // => http://yourdomain.imgix.net/image.png?auto=format&w=450&h=100&ixlib=react-x.x.x
+```
+
+The base url may also contain query parameters. These will be overriden by any parameters passed in with the second parameter.
+
+The `ixlib` parameter may be disabled by: `buildURL(<url>, <params>, { disableLibraryParam: true })`
 
 ### Props
 
