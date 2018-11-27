@@ -4,6 +4,7 @@ import ReactDOM from "react-dom";
 import { shallow as enzymeShallow, mount } from "enzyme";
 import PropTypes from "prop-types";
 import { shallowUntilTarget } from "../helpers";
+import targetWidths from "targetWidths";
 
 import Imgix, {
   __ReactImgixImpl,
@@ -71,15 +72,62 @@ describe("When in default mode", () => {
     const sut = shallow(<Imgix src={src} sizes="100vw" />);
     expect(sut.type()).toBe("img");
   });
-  it("the rendered element should have a srcSet set correctly", async () => {
-    const sut = shallow(<Imgix src={src} sizes="100vw" />);
-    const srcSet = sut.props().srcSet;
-    expect(srcSet).not.toBeUndefined();
-    expect(srcSet.split(", ")[0].split(" ")).toHaveLength(2);
-    const aSrcFromSrcSet = srcSet.split(", ")[0].split(" ")[0];
-    expect(aSrcFromSrcSet).toContain(src);
-    const aWidthFromSrcSet = srcSet.split(", ")[0].split(" ")[1];
-    expect(aWidthFromSrcSet).toMatch(/^\d+w$/);
+  describe("srcset", () => {
+    it("the rendered element should have a srcSet set correctly", async () => {
+      const sut = shallow(<Imgix src={src} sizes="100vw" />);
+      const srcset = sut.props().srcSet;
+      expect(srcset).not.toBeUndefined();
+      expect(srcset.split(", ")[0].split(" ")).toHaveLength(2);
+      const aSrcFromSrcSet = srcset.split(", ")[0].split(" ")[0];
+      expect(aSrcFromSrcSet).toContain(src);
+      const aWidthFromSrcSet = srcset.split(", ")[0].split(" ")[1];
+      expect(aWidthFromSrcSet).toMatch(/^\d+w$/);
+    });
+    it("returns the expected number of `url widthDescriptor` pairs", function() {
+      const sut = shallow(<Imgix src={src} sizes="100vw" />);
+      const srcset = sut.props().srcSet;
+
+      expect(srcset.split(",").length).toEqual(targetWidths.length);
+    });
+
+    it("should not exceed the bounds of [100, 8192]", () => {
+      const sut = shallow(<Imgix src={src} sizes="100vw" />);
+      const srcset = sut.props().srcSet;
+
+      const srcsetWidths = srcset
+        .split(", ")
+        .map(srcset => srcset.split(" ")[1])
+        .map(width => width.slice(0, -1))
+        .map(Number.parseFloat);
+
+      const min = Math.min(...srcsetWidths);
+      const max = Math.max(...srcsetWidths);
+
+      expect(min).not.toBeLessThan(100);
+      expect(min).not.toBeGreaterThan(8192);
+    });
+
+    // 18% used to allow +-1% for rounding
+    it("should not increase more than 18% every iteration", () => {
+      const INCREMENT_ALLOWED = 0.18;
+
+      const sut = shallow(<Imgix src={src} sizes="100vw" />);
+      const srcset = sut.props().srcSet;
+
+      const srcsetWidths = srcset
+        .split(", ")
+        .map(srcset => srcset.split(" ")[1])
+        .map(width => width.slice(0, -1))
+        .map(Number.parseFloat);
+
+      let prev = srcsetWidths[0];
+
+      for (let index = 1; index < srcsetWidths.length; index++) {
+        const element = srcsetWidths[index];
+        expect(element / prev).toBeLessThan(1 + INCREMENT_ALLOWED);
+        prev = element;
+      }
+    });
   });
 });
 

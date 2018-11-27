@@ -121,8 +121,7 @@ function buildSrc({
         const url = constructUrl(rawSrc, urlParams);
         return `${url} ${targetWidth}w`;
       };
-      const addFallbackSrc = srcSet => srcSet.concat(src);
-      srcSet = addFallbackSrc(targetWidths.map(buildSrcSetPair)).join(", ");
+      srcSet = targetWidths.map(buildSrcSetPair).join(", ");
 
       if (showARWarning && config.warnings.invalidARFormat) {
         console.warn(

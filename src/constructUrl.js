@@ -7,6 +7,7 @@ Minor syntax modifications have been made
 
 var Uri = require("jsuri");
 var Base64 = require("js-base64").Base64;
+const PACKAGE_VERSION = require("../package.json").version;
 
 // @see https://www.imgix.com/docs/reference
 var PARAM_EXPANSION = Object.freeze({
@@ -107,7 +108,7 @@ var DEFAULT_OPTIONS = Object.freeze({
 function constructUrlFromParams(src, params) {
   var optionKeys = Object.keys(params);
   var fullUrl = optionKeys.reduce(function(uri, key) {
-    return uri.addQueryParam(key, params[key]);
+    return uri.replaceQueryParam(key, params[key]);
   }, new Uri(src));
 
   return fullUrl.toString();
@@ -145,4 +146,15 @@ function constructUrl(src, longOptions) {
   return constructUrlFromParams(src, shortOptions);
 }
 
+function buildURLPublic(src, imgixParams = {}, options = {}) {
+  const { disableLibraryParam } = options;
+
+  return constructUrl(src, {
+    ...imgixParams,
+    ...(disableLibraryParam ? {} : { ixlib: `react-${PACKAGE_VERSION}` })
+  });
+}
+
 export default constructUrl;
+
+export { buildURLPublic };

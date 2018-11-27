@@ -10,4 +10,4 @@ branches:
     - /release.*/
 
 node_js:
-  - "9"
+  - "10"
