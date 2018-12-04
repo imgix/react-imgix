@@ -13,6 +13,7 @@ import Imgix, {
   __SourceImpl,
   __PictureImpl
 } from "react-imgix";
+import { Background, __BackgroundImpl } from "react-imgix-bg";
 
 function shallow(element, target = __ReactImgixImpl, shallowOptions) {
   return shallowUntilTarget(element, target, {
@@ -153,6 +154,7 @@ describe("When in image mode", () => {
   });
 });
 
+
 describe("When in <source> mode", () => {
   const sizes =
     "(max-width: 30em) 100vw, (max-width: 50em) 50vw, calc(33vw - 100px)";
@@ -290,9 +292,7 @@ describe("When in picture mode", () => {
     const oldConsole = global.console;
     global.console = { warn: jest.fn() };
 
-    shallowPicture(
-      <Picture src={src} aggressiveLoad width={100} height={100} />
-    );
+    shallowPicture(<Picture src={src} width={100} height={100} />);
 
     expect(console.warn).toHaveBeenCalledWith(
       expect.stringContaining("No fallback <img /> or <Imgix /> found")
