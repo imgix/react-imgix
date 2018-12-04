@@ -13,7 +13,6 @@ import Imgix, {
   __SourceImpl,
   __PictureImpl
 } from "react-imgix";
-import { Background, __BackgroundImpl } from "react-imgix-bg";
 
 function shallow(element, target = __ReactImgixImpl, shallowOptions) {
   return shallowUntilTarget(element, target, {
