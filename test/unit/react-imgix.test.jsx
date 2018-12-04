@@ -290,9 +290,7 @@ describe("When in picture mode", () => {
     const oldConsole = global.console;
     global.console = { warn: jest.fn() };
 
-    shallowPicture(
-      <Picture src={src} aggressiveLoad width={100} height={100} />
-    );
+    shallowPicture(<Picture src={src} width={100} height={100} />);
 
     expect(console.warn).toHaveBeenCalledWith(
       expect.stringContaining("No fallback <img /> or <Imgix /> found")
