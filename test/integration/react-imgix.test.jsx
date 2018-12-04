@@ -7,6 +7,9 @@ import React from "react";
 import { mount, shallow } from "enzyme";
 
 const src = "https://assets.imgix.net/examples/pione.jpg";
+
+const DELAY = 100;
+
 let containerDiv;
 let sut;
 beforeEach(() => {
@@ -111,7 +114,7 @@ describe("Background Mode", () => {
         </div>
       );
       const renderedEl = renderIntoContainer(el);
-      setTimeout(() => resolve(renderedEl), 1000);
+      setTimeout(() => resolve(renderedEl), DELAY);
     });
 
     const container = sut.find(".bg-img");
@@ -155,7 +158,7 @@ describe("Background Mode", () => {
         </div>
       );
       const renderedEl = renderIntoContainer(el);
-      setTimeout(() => resolve(renderedEl), 1000);
+      setTimeout(() => resolve(renderedEl), DELAY);
     });
 
     const container = sut.find(".bg-img").first();
@@ -182,7 +185,7 @@ describe("Background Mode", () => {
           />
         );
         const renderedEl = renderIntoContainer(el);
-        setTimeout(() => resolve(renderedEl), 1000);
+        setTimeout(() => resolve(renderedEl), DELAY);
       });
     });
     shouldBehaveLikeBg("");
@@ -198,7 +201,7 @@ describe("Background Mode", () => {
           />
         );
         const renderedEl = renderIntoContainer(el);
-        setTimeout(() => resolve(renderedEl), 1000);
+        setTimeout(() => resolve(renderedEl), DELAY);
       });
     });
     shouldBehaveLikeBg("contain");
@@ -212,8 +215,22 @@ describe("Background Mode", () => {
 
     expect(sut.getDOMNode().className).toBe("custom-class-name");
   });
-  it("can disable library param");
-  it("can override html properties");
+  it("can disable library param", async () => {
+    const sut = await new Promise((resolve, reject) => {
+      const el = <Background src={src} disableLibraryParam />;
+      const renderedEl = renderIntoContainer(el);
+      setTimeout(() => resolve(renderedEl), DELAY);
+    });
+
+    expect(sut.getDOMNode().style.backgroundImage).not.toContain("ixlib=");
+  });
+  it("can override html properties", () => {
+    const sut = renderIntoContainer(
+      <Background src={src} htmlAttributes={{ alt: "Alt tag" }} />
+    );
+
+    expect(sut.getDOMNode().getAttribute("alt")).toBe("Alt tag");
+  });
   it("onMounted?");
 
   it("dpr scaling?");
