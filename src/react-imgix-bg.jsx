@@ -40,7 +40,7 @@ const BackgroundImpl = props => {
   // console.log("isLoaded", isLoaded);
   if (!isLoaded) {
     return (
-      <div className={className} ref={measureRef}>
+      <div className={className} ref={measureRef} {...htmlAttributes}>
         {children}
       </div>
     );
