@@ -154,7 +154,6 @@ describe("When in image mode", () => {
   });
 });
 
-
 describe("When in <source> mode", () => {
   const sizes =
     "(max-width: 30em) 100vw, (max-width: 50em) 50vw, calc(33vw - 100px)";
