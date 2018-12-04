@@ -1,11 +1,14 @@
 import Imgix from "react-imgix";
+import * as ReactDOM from "react-dom";
 import { Background } from "react-imgix-bg";
+import targetWidths from "targetWidths";
 
 import React from "react";
 import { mount, shallow } from "enzyme";
 
 const src = "https://assets.imgix.net/examples/pione.jpg";
 let containerDiv;
+let sut;
 beforeEach(() => {
   containerDiv = global.document.createElement("div");
   global.document.body.appendChild(containerDiv);
@@ -14,6 +17,10 @@ beforeEach(() => {
 afterEach(() => {
   global.document.body.removeChild(containerDiv);
 });
+
+const fullRender = markup => {
+  return ReactDOM.render(markup, containerDiv);
+};
 
 const renderIntoContainer = element => {
   return mount(element, { attachTo: containerDiv });
@@ -74,32 +81,142 @@ describe("When in default mode", () => {
 });
 
 describe("Background Mode", () => {
-  it.only("renders an image at the size of the containing element", async () => {
-    console.log("hey");
+  const shouldBehaveLikeBg = function(size = "cover") {
+    it("the element should have backgroundImage and backgroundSize set", () => {
+      expect(sut.getDOMNode().style).toMatchObject({
+        backgroundImage: expect.stringContaining(src),
+        backgroundSize: size
+      });
+    });
+  };
+  it("renders a div", () => {
+    const sut = renderIntoContainer(<Background src={src} />);
+
+    expect(sut.getDOMNode().tagName).toBe("DIV");
+  });
+  it("sets the size of the background image to the size of the containing element", async () => {
+    const targetWidth = 200;
     const sut = await new Promise((resolve, reject) => {
-      let renderedEl;
       const el = (
         <div>
+          <style>{`.bg-img { width: ${targetWidth}px; height: 250px}`}</style>
           <Background
             src={`${src}`}
             onMounted={() => {}}
-            htmlAttributes={{
-              onLoad: () => {
-                setImmediate(() => resolve(renderedEl));
-              }
-            }}
+            htmlAttributes={{}}
+            className="bg-img"
           >
             <div>Content</div>
           </Background>
         </div>
       );
-      renderedEl = renderIntoContainer(el);
+      const renderedEl = renderIntoContainer(el);
+      setTimeout(() => resolve(renderedEl), 1000);
     });
 
-    const img = sut.find("div");
+    const container = sut.find(".bg-img");
 
-    console.log(img);
+    const bgImageSrc = container
+      .first()
+      .getDOMNode()
+      .style.backgroundImage.slice(5, -2);
+
+    const bgImageSrcURL = new URL(bgImageSrc);
+
+    const closestWidthFromTargetWidths = targetWidths.reduce(
+      (acc, value, i) => {
+        // <= ensures that the largest value is used
+        if (Math.abs(value - targetWidth) <= Math.abs(acc - targetWidth)) {
+          return value;
+        }
+        return acc;
+      },
+      Number.MAX_VALUE
+    );
+    console.log("closestWidthFromTargetWidths", closestWidthFromTargetWidths);
+
+    expect(bgImageSrcURL.searchParams.get("w")).toBe("200");
+    expect(bgImageSrcURL.searchParams.get("h")).toBe("250");
+    expect(bgImageSrcURL.searchParams.get("fit")).toBe("crop");
   });
+  it("useds width and height from props, when provided", async () => {
+    const sut = await new Promise((resolve, reject) => {
+      const el = (
+        <div>
+          <style>{`.bg-img { width: 200px; height: 250px}`}</style>
+          <Background
+            src={`${src}`}
+            width={300}
+            height={350}
+            className="bg-img"
+          >
+            <div>Content</div>
+          </Background>
+        </div>
+      );
+      const renderedEl = renderIntoContainer(el);
+      setTimeout(() => resolve(renderedEl), 1000);
+    });
+
+    const container = sut.find(".bg-img").first();
+
+    const bgImageSrc = container
+      .getDOMNode()
+      .style.backgroundImage.slice(5, -2);
+
+    const bgImageSrcURL = new URL(bgImageSrc);
+
+    expect(bgImageSrcURL.searchParams.get("w")).toBe("300");
+    expect(bgImageSrcURL.searchParams.get("h")).toBe("350");
+    expect(container.getDOMNode().style.width).toBe("300px");
+    expect(container.getDOMNode().style.height).toBe("350px");
+  });
+
+  describe("without the backgroundSize prop set", () => {
+    beforeEach(async () => {
+      sut = await new Promise((resolve, reject) => {
+        const el = (
+          <Background
+            src={src}
+            htmlAttributes={{ style: { backgroundSize: null } }}
+          />
+        );
+        const renderedEl = renderIntoContainer(el);
+        setTimeout(() => resolve(renderedEl), 1000);
+      });
+    });
+    shouldBehaveLikeBg("");
+  });
+
+  describe("with the backgroundSize prop set to 'contain'", () => {
+    beforeEach(async () => {
+      sut = await new Promise((resolve, reject) => {
+        const el = (
+          <Background
+            src={src}
+            htmlAttributes={{ style: { backgroundSize: "contain" } }}
+          />
+        );
+        const renderedEl = renderIntoContainer(el);
+        setTimeout(() => resolve(renderedEl), 1000);
+      });
+    });
+    shouldBehaveLikeBg("contain");
+  });
+
+  it("uses a width from targetWidths?");
+  it("respects className", () => {
+    const sut = renderIntoContainer(
+      <Background src={src} className="custom-class-name" />
+    );
+
+    expect(sut.getDOMNode().className).toBe("custom-class-name");
+  });
+  it("can disable library param");
+  it("can override html properties");
+  it("onMounted?");
+
+  it("dpr scaling?");
 });
 
 function injectScript(src) {
