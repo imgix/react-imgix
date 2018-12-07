@@ -217,8 +217,7 @@ describe("Background Mode", () => {
       const aspectRatio = targetWidth / targetHeight;
       const sut = await renderBGAndWaitUntilLoaded(
         <div>
-          <style
-          >{`.bg-img { width: ${targetWidth}px; height: ${targetHeight}px}`}</style>
+          <style>{`.bg-img { width: ${targetWidth}px; height: ${targetHeight}px}`}</style>
           <Background src={`${src}`} className="bg-img">
             <div>Content</div>
           </Background>
@@ -381,12 +380,21 @@ describe("Background Mode", () => {
 
     expect(sut.getDOMNode().style.backgroundImage).not.toContain("ixlib=");
   });
-  it("can override html properties", () => {
-    const sut = renderIntoContainer(
-      <Background src={src} htmlAttributes={{ alt: "Alt tag" }} />
-    );
+  describe("can override html properties", () => {
+    it("before loading", () => {
+      const sut = renderIntoContainer(
+        <Background src={src} htmlAttributes={{ alt: "Alt tag" }} />
+      );
 
-    expect(sut.getDOMNode().getAttribute("alt")).toBe("Alt tag");
+      expect(sut.getDOMNode().getAttribute("alt")).toBe("Alt tag");
+    });
+    it("after loaded", async () => {
+      const sut = await renderBGAndWaitUntilLoaded(
+        <Background src={src} htmlAttributes={{ alt: "Alt tag" }} />
+      );
+
+      expect(sut.getDOMNode().getAttribute("alt")).toBe("Alt tag");
+    });
   });
 
   it("scales the background image by the devices dpr", async () => {
