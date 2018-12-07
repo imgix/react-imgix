@@ -4,6 +4,8 @@ import constructUrl from "./constructUrl";
 import targetWidths from "./targetWidths";
 const PACKAGE_VERSION = require("../package.json").version;
 
+const noop = () => {};
+
 const findNearestWidth = actualWidth =>
   targetWidths.reduce((currentCandidate, candidateWidth) => {
     // <= ensures that the largest value is used
@@ -17,7 +19,6 @@ const findNearestWidth = actualWidth =>
   }, Number.MAX_VALUE);
 
 const BackgroundImpl = props => {
-  // TODO: Should width and height go in imgixParams, or as a top-level prop
   const {
     measureRef,
     measure,
@@ -27,71 +28,91 @@ const BackgroundImpl = props => {
     disableLibraryParam,
     src,
     children,
-    className,
-    width: forcedWidth,
-    height: forcedHeight
+    className = ""
   } = props;
-  // const { w: forcedWidth, h: forcedHeight } = imgixParams;
-  const isLoaded = contentRect.bounds.top != null;
-  const imgProps = props.imgProps || {};
+  const { w: forcedWidth, h: forcedHeight } = imgixParams;
+  const hasDOMDimensions = contentRect.bounds.top != null;
   const htmlAttributes = props.htmlAttributes || {};
+  const dpr = imgixParams.dpr || window.devicePixelRatio || 1;
+  const ref = htmlAttributes.ref;
+  const onRef = el => {
+    measureRef(el);
+    if (typeof ref === "function") {
+      ref(el);
+    }
+  };
 
-  // console.log("-------------------------------------------");
-  // console.log("isLoaded", isLoaded);
-  if (!isLoaded) {
+  const { width, height } = (() => {
+    const bothWidthAndHeightPassed =
+      forcedWidth != null && forcedHeight != null;
+
+    if (bothWidthAndHeightPassed) {
+      return { width: forcedWidth, height: forcedHeight };
+    }
+
+    if (!hasDOMDimensions) {
+      return { width: undefined, height: undefined };
+    }
+    const ar = contentRect.bounds.width / contentRect.bounds.height;
+
+    const neitherWidthNorHeightPassed =
+      forcedWidth == null && forcedHeight == null;
+    if (neitherWidthNorHeightPassed) {
+      const width = findNearestWidth(contentRect.bounds.width);
+      const height = Math.ceil(width / ar);
+      return { width, height };
+    }
+    if (forcedWidth != null) {
+      const height = Math.ceil(forcedWidth / ar);
+      return { width: forcedWidth, height };
+    } else if (forcedHeight != null) {
+      const width = Math.ceil(forcedHeight * ar);
+      return { width, height: forcedHeight };
+    }
+  })();
+  const isReady = width != null && height != null;
+
+  const commonProps = {
+    ...htmlAttributes
+  };
+
+  if (!isReady) {
     return (
-      <div className={className} ref={measureRef} {...htmlAttributes}>
+      <div
+        {...commonProps}
+        className={`react-imgix-bg-loading ${className}`}
+        ref={onRef}
+      >
         {children}
       </div>
     );
   }
 
-  // const fixed
-
-  const width =
-    forcedWidth != null
-      ? forcedWidth
-      : // : findNearestWidth(contentRect.bounds.width);
-        contentRect.bounds.width;
-  const height =
-    forcedHeight != null ? forcedHeight : contentRect.bounds.height;
-
   const renderedSrc = (() => {
-    if (!isLoaded) {
-      return undefined;
-    }
-
     const srcOptions = {
       ...imgixParams,
       ...(disableLibraryParam ? {} : { ixlib: `react-${PACKAGE_VERSION}` }),
       width,
       height,
       fit: "crop",
-      backgroundSize: "cover"
+      backgroundSize: "cover",
+      dpr
     };
 
     return constructUrl(src, srcOptions);
   })();
 
-  // console.log("htmlAttributes", htmlAttributes);
   const style = {
     ...htmlAttributes.style,
     backgroundImage: `url(${renderedSrc})`,
     backgroundSize:
       (htmlAttributes.style || {}).backgroundSize !== undefined
         ? htmlAttributes.style.backgroundSize
-        : "cover",
-    ...(forcedHeight != null ? { height: forcedHeight } : {}),
-    ...(forcedWidth != null ? { width: forcedWidth } : {})
+        : "cover"
   };
 
   return (
-    <div
-      className={className}
-      ref={measureRef}
-      {...props.htmlAttributes}
-      style={style}
-    >
+    <div {...commonProps} className={className} ref={onRef} style={style}>
       {children}
     </div>
   );
