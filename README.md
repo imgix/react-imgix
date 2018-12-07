@@ -331,9 +331,9 @@ This is accomplished by passing `w` and `h` as props to imgixParams.
 ```jsx
 <Background
   src="https://.../image.png"
-  imgixParams={{w: 1920, h: 500}}
+  imgixParams={{ w: 1920, h: 500 }}
   className="blog-title"
-  >
+>
   <h2>Blog Title</h2>
 </Background>
 ```
