@@ -2,21 +2,13 @@ import React from "react";
 import Measure, { withContentRect } from "react-measure";
 import constructUrl from "./constructUrl";
 import targetWidths from "./targetWidths";
+import findClosest from "findClosest";
+
 const PACKAGE_VERSION = require("../package.json").version;
 
 const noop = () => {};
 
-const findNearestWidth = actualWidth =>
-  targetWidths.reduce((currentCandidate, candidateWidth) => {
-    // <= ensures that the largest value is used
-    if (
-      Math.abs(candidateWidth - actualWidth) <=
-      Math.abs(currentCandidate - actualWidth)
-    ) {
-      return candidateWidth;
-    }
-    return currentCandidate;
-  }, Number.MAX_VALUE);
+const findNearestWidth = actualWidth => findClosest(actualWidth, targetWidths);
 
 const BackgroundImpl = props => {
   const {
