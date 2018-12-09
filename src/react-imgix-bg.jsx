@@ -95,7 +95,6 @@ const BackgroundImpl = props => {
       width,
       height,
       fit: "crop",
-      backgroundSize: "cover",
       dpr
     };
 
