@@ -217,8 +217,7 @@ describe("Background Mode", () => {
       const aspectRatio = targetWidth / targetHeight;
       const sut = await renderBGAndWaitUntilLoaded(
         <div>
-          <style
-          >{`.bg-img { width: ${targetWidth}px; height: ${targetHeight}px}`}</style>
+          <style>{`.bg-img { width: ${targetWidth}px; height: ${targetHeight}px}`}</style>
           <Background src={`${src}`} className="bg-img">
             <div>Content</div>
           </Background>
@@ -446,6 +445,29 @@ describe("Background Mode", () => {
     expect(bgImageSrcURL.searchParams.get("dpr")).toBe("3");
 
     window.devicePixelRatio = oldDPR;
+  });
+  it("the dpr is rounded to 2dp", async () => {
+    const targetWidth = 105;
+    const targetHeight = 110;
+    const sut = await renderBGAndWaitUntilLoaded(
+      <div>
+        <style>{`.bg-img { width: 10px; height: 10px}`}</style>
+        <Background
+          src={`${src}`}
+          imgixParams={{
+            dpr: 3.444
+          }}
+          htmlAttributes={{}}
+          className="bg-img"
+        >
+          <div>Content</div>
+        </Background>
+      </div>
+    );
+
+    const bgImageSrcURL = findURLfromSUT(sut);
+
+    expect(bgImageSrcURL.searchParams.get("dpr")).toBe("3.44");
   });
 
   it("window resize", async () => {
