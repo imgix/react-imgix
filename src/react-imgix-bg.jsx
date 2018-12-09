@@ -10,6 +10,8 @@ const noop = () => {};
 
 const findNearestWidth = actualWidth => findClosest(actualWidth, targetWidths);
 
+const toFixed = (dp, value) => +value.toFixed(2);
+
 const BackgroundImpl = props => {
   const {
     measureRef,
@@ -25,7 +27,7 @@ const BackgroundImpl = props => {
   const { w: forcedWidth, h: forcedHeight } = imgixParams;
   const hasDOMDimensions = contentRect.bounds.top != null;
   const htmlAttributes = props.htmlAttributes || {};
-  const dpr = imgixParams.dpr || window.devicePixelRatio || 1;
+  const dpr = toFixed(2, imgixParams.dpr || window.devicePixelRatio || 1);
   const ref = htmlAttributes.ref;
   const onRef = el => {
     measureRef(el);
