@@ -445,7 +445,7 @@ Imgix params to add to the image `src`. This is also how width and height can be
 _For example_:
 
 ```js
-<Imgix imgixParams={{ mask: "ellipse" }} />
+<Background imgixParams={{ mask: "ellipse" }} />
 ```
 
 ##### className :: string
