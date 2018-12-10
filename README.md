@@ -299,7 +299,7 @@ This works for Source and Picture elements as well.
 
 #### Background mode
 
-Images can be rendered as the background of a container around some children by using `<Background />`. The component will measure the natural size of the container as determined by the CSS on the page, and will render an optimal image for those dimensions.
+Images can be rendered as a background behind children by using `<Background />`. The component will measure the natural size of the container as determined by the CSS on the page, and will render an optimal image for those dimensions.
 
 Example:
 
