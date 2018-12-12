@@ -7,6 +7,12 @@ import Uri from "jsuri";
 import React from "react";
 import { mount, shallow } from "enzyme";
 
+const isIE = (() => {
+  const ua = window.navigator.userAgent;
+  const isIE = /MSIE|Trident/.test(ua);
+  return isIE;
+})();
+
 const src = "https://assets.imgix.net/examples/pione.jpg";
 
 const DELAY = 70;
@@ -420,6 +426,10 @@ describe("Background Mode", () => {
     window.devicePixelRatio = oldDPR;
   });
   it("the dpr can be overriden", async () => {
+    // IE doesn't allow us to override window.devicePixelRatio
+    if (isIE) {
+      return;
+    }
     const oldDPR = window.devicePixelRatio;
     window.devicePixelRatio = 2;
 
