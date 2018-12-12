@@ -2,6 +2,7 @@ import Imgix from "react-imgix";
 import * as ReactDOM from "react-dom";
 import { Background } from "react-imgix-bg";
 import targetWidths from "targetWidths";
+import Uri from "jsuri";
 
 import React from "react";
 import { mount, shallow } from "enzyme";
@@ -17,7 +18,7 @@ const findClosestWidthFromTargetWidths = targetWidth =>
     }
     return acc;
   }, Number.MAX_VALUE);
-const findURLfromSUT = sut => {
+const findURIfromSUT = sut => {
   const container = sut.find(".bg-img").first();
 
   if (!container) {
@@ -34,8 +35,8 @@ const findURLfromSUT = sut => {
 
   const bgImageSrc = bgImageStyle.backgroundImage.slice(5, -2);
 
-  const bgImageSrcURL = new URL(bgImageSrc);
-  return bgImageSrcURL;
+  const bgImageSrcURI = new Uri(bgImageSrc);
+  return bgImageSrcURI;
 };
 
 const renderBGAndWaitUntilLoaded = async element => {
@@ -182,10 +183,10 @@ describe("Background Mode", () => {
       setTimeout(() => resolve(renderedEl), DELAY);
     });
 
-    const bgImageSrcURL = findURLfromSUT(sut);
+    const bgImageSrcURL = findURIfromSUT(sut);
 
-    expect(bgImageSrcURL.searchParams.get("w")).toBe("" + expectedWidth);
-    expect(bgImageSrcURL.searchParams.get("h")).toBe("" + expectedHeight);
+    expect(bgImageSrcURL.getQueryParamValue("w")).toBe("" + expectedWidth);
+    expect(bgImageSrcURL.getQueryParamValue("h")).toBe("" + expectedHeight);
   };
 
   //////////////////////////////
@@ -217,22 +218,21 @@ describe("Background Mode", () => {
       const aspectRatio = targetWidth / targetHeight;
       const sut = await renderBGAndWaitUntilLoaded(
         <div>
-          <style
-          >{`.bg-img { width: ${targetWidth}px; height: ${targetHeight}px}`}</style>
+          <style>{`.bg-img { width: ${targetWidth}px; height: ${targetHeight}px}`}</style>
           <Background src={`${src}`} className="bg-img">
             <div>Content</div>
           </Background>
         </div>
       );
 
-      const bgImageSrcURL = findURLfromSUT(sut);
+      const bgImageSrcURL = findURIfromSUT(sut);
 
       const expectedWidth = findClosestWidthFromTargetWidths(targetWidth);
       const expectedHeight = Math.round(expectedWidth / aspectRatio);
 
-      expect(bgImageSrcURL.searchParams.get("w")).toBe(`${expectedWidth}`);
-      expect(bgImageSrcURL.searchParams.get("h")).toBe(`${expectedHeight}`);
-      expect(bgImageSrcURL.searchParams.get("fit")).toBe("crop");
+      expect(bgImageSrcURL.getQueryParamValue("w")).toBe(`${expectedWidth}`);
+      expect(bgImageSrcURL.getQueryParamValue("h")).toBe(`${expectedHeight}`);
+      expect(bgImageSrcURL.getQueryParamValue("fit")).toBe("crop");
     });
   });
   describe("when both width and height provided", () => {
@@ -250,10 +250,10 @@ describe("Background Mode", () => {
         </Background>
       );
 
-      const bgImageSrcURL = findURLfromSUT(sut);
+      const bgImageSrcURL = findURIfromSUT(sut);
 
-      expect(bgImageSrcURL.searchParams.get("w")).toBe("300");
-      expect(bgImageSrcURL.searchParams.get("h")).toBe("350");
+      expect(bgImageSrcURL.getQueryParamValue("w")).toBe("300");
+      expect(bgImageSrcURL.getQueryParamValue("h")).toBe("350");
     });
     it("sets width and height to values passed", async () => {
       const sut = await renderBGAndWaitUntilLoaded(
@@ -272,10 +272,10 @@ describe("Background Mode", () => {
         </div>
       );
 
-      const bgImageSrcURL = findURLfromSUT(sut);
+      const bgImageSrcURL = findURIfromSUT(sut);
 
-      expect(bgImageSrcURL.searchParams.get("w")).toBe("300");
-      expect(bgImageSrcURL.searchParams.get("h")).toBe("350");
+      expect(bgImageSrcURL.getQueryParamValue("w")).toBe("300");
+      expect(bgImageSrcURL.getQueryParamValue("h")).toBe("350");
     });
   });
 
@@ -413,9 +413,9 @@ describe("Background Mode", () => {
       </div>
     );
 
-    const bgImageSrcURL = findURLfromSUT(sut);
+    const bgImageSrcURL = findURIfromSUT(sut);
 
-    expect(bgImageSrcURL.searchParams.get("dpr")).toBe("2");
+    expect(bgImageSrcURL.getQueryParamValue("dpr")).toBe("2");
 
     window.devicePixelRatio = oldDPR;
   });
@@ -441,9 +441,9 @@ describe("Background Mode", () => {
       </div>
     );
 
-    const bgImageSrcURL = findURLfromSUT(sut);
+    const bgImageSrcURL = findURIfromSUT(sut);
 
-    expect(bgImageSrcURL.searchParams.get("dpr")).toBe("3");
+    expect(bgImageSrcURL.getQueryParamValue("dpr")).toBe("3");
 
     window.devicePixelRatio = oldDPR;
   });
@@ -466,9 +466,9 @@ describe("Background Mode", () => {
       </div>
     );
 
-    const bgImageSrcURL = findURLfromSUT(sut);
+    const bgImageSrcURL = findURIfromSUT(sut);
 
-    expect(bgImageSrcURL.searchParams.get("dpr")).toBe("3.44");
+    expect(bgImageSrcURL.getQueryParamValue("dpr")).toBe("3.44");
   });
 
   it("window resize", async () => {
@@ -497,10 +497,10 @@ describe("Background Mode", () => {
       setTimeout(resolve, 1000);
     });
 
-    const bgImageSrcURL = findURLfromSUT(sut);
+    const bgImageSrcURL = findURIfromSUT(sut);
 
     const expectedWidth = BROWSER_WIDTH / 2;
-    expect(bgImageSrcURL.searchParams.get("w")).toBe("" + expectedWidth);
+    expect(bgImageSrcURL.getQueryParamValue("w")).toBe("" + expectedWidth);
   });
 
   it("can pass ref to component", async () => {
@@ -527,7 +527,7 @@ describe("Background Mode", () => {
 
     expect(ref).toBeTruthy();
     expect(ref instanceof HTMLElement).toBe(true);
-    expect(findURLfromSUT(sut).searchParams.get("w")).toBe("100");
+    expect(findURIfromSUT(sut).getQueryParamValue("w")).toBe("100");
   });
 });
 
