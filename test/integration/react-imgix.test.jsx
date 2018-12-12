@@ -174,7 +174,12 @@ describe("Background Mode", () => {
   };
   const shouldBehaveLikeBg = function(size = "cover") {
     it("the element should have backgroundImage and backgroundSize set", () => {
-      expect(sut.getDOMNode().style).toMatchObject({
+      expect(
+        sut
+          .find(".bg-img")
+          .first()
+          .getDOMNode().style
+      ).toMatchObject({
         backgroundImage: expect.stringContaining(src),
         backgroundSize: size
       });
@@ -224,8 +229,7 @@ describe("Background Mode", () => {
       const aspectRatio = targetWidth / targetHeight;
       const sut = await renderBGAndWaitUntilLoaded(
         <div>
-          <style
-          >{`.bg-img { width: ${targetWidth}px; height: ${targetHeight}px}`}</style>
+          <style>{`.bg-img { width: ${targetWidth}px; height: ${targetHeight}px}`}</style>
           <Background src={`${src}`} className="bg-img">
             <div>Content</div>
           </Background>
