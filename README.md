@@ -220,7 +220,7 @@ If you'd like to use LQIP images, like before, we recommend using [lazysizes](ht
 	sizes="..."
 	attributeConfig={{
 		src: 'data-src',
-		srcSet: 'data-srcset'
+		srcSet: 'data-srcset',
 		sizes: 'data-sizes'
 	}}
 	htmlAttributes={{
@@ -370,7 +370,7 @@ Allows the src, srcset, and sizes attributes to be remapped to different HTML at
 ```js
 	attributeConfig={{
 		src: 'data-src',
-		srcSet: 'data-srcset'
+		srcSet: 'data-srcset',
 		sizes: 'data-sizes'
 	}}
 ```
