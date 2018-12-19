@@ -199,7 +199,7 @@ If you'd like to lazy load images, we recommend using [lazysizes](https://github
 	sizes="..."
 	attributeConfig={{
 		src: 'data-src',
-		srcSet: 'data-srcset'
+		srcSet: 'data-srcset',
 		sizes: 'data-sizes'
 	}}
 />
