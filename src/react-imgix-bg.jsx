@@ -10,7 +10,7 @@ const noop = () => {};
 
 const findNearestWidth = actualWidth => findClosest(actualWidth, targetWidths);
 
-const toFixed = (dp, value) => +value.toFixed(2);
+const toFixed = (dp, value) => +value.toFixed(dp);
 
 const BackgroundImpl = props => {
   const {
