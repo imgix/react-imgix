@@ -229,8 +229,7 @@ describe("Background Mode", () => {
       const aspectRatio = targetWidth / targetHeight;
       const sut = await renderBGAndWaitUntilLoaded(
         <div>
-          <style
-          >{`.bg-img { width: ${targetWidth}px; height: ${targetHeight}px}`}</style>
+          <style>{`.bg-img { width: ${targetWidth}px; height: ${targetHeight}px}`}</style>
           <Background src={`${src}`} className="bg-img">
             <div>Content</div>
           </Background>
@@ -411,6 +410,10 @@ describe("Background Mode", () => {
   });
 
   it("scales the background image by the devices dpr", async () => {
+		// window.devicePixelRatio is not allowed in IE.
+    if (isIE) {
+      return;
+    }
     const oldDPR = window.devicePixelRatio;
     window.devicePixelRatio = 2;
 
