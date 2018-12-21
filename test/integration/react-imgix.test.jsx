@@ -48,7 +48,7 @@ const findURIfromSUT = sut => {
 const renderBGAndWaitUntilLoaded = async element => {
   return new Promise((resolve, reject) => {
     let running;
-    let waitUntilHasStyle = (maxTimes = 10, delay = 10, n = 0) => {
+    let waitUntilHasStyle = (maxTimes = 20, delay = 10, n = 0) => {
       if (!el) {
         return;
       }
