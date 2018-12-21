@@ -68,7 +68,7 @@
     "babel-preset-env": "1.7.0",
     "babel-preset-react": "6.24.1",
     "babel-preset-stage-0": "6.24.1",
-    "browserslist": "4.3.5",
+    "browserslist": "4.3.6",
     "common-tags": "1.8.0",
     "cross-env": "5.2.0",
     "enzyme": "3.8.0",
