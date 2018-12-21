@@ -39,7 +39,14 @@ const findURIfromSUT = sut => {
     );
   }
 
-  const bgImageSrc = bgImageStyle.backgroundImage.slice(5, -2);
+  const bgImageSrc = (() => {
+    const bgImage = bgImageStyle.backgroundImage;
+    // Mobile Safari trims speech marks from url('') styles, so this checks if they've been trimmed or not
+    if (bgImage.startsWith('url("') || bgImage.startsWith("url('")) {
+      return bgImageStyle.backgroundImage.slice(5, -2);
+    }
+    return bgImageStyle.backgroundImage.slice(4, -1);
+  })();
 
   const bgImageSrcURI = new Uri(bgImageSrc);
   return bgImageSrcURI;
@@ -419,13 +426,13 @@ describe("Background Mode", () => {
     });
   });
 
-  it("scales the background image by the devices dpr", async () => {
+  it.only("scales the background image by the devices dpr", async () => {
     // window.devicePixelRatio is not allowed in IE.
     if (isIE) {
       return;
     }
-    const oldDPR = window.devicePixelRatio;
-    window.devicePixelRatio = 2;
+    const oldDPR = global.devicePixelRatio;
+    global.devicePixelRatio = 2;
 
     const targetWidth = 105;
     const targetHeight = 110;
@@ -442,7 +449,7 @@ describe("Background Mode", () => {
 
     expect(bgImageSrcURL.getQueryParamValue("dpr")).toBe("2");
 
-    window.devicePixelRatio = oldDPR;
+    global.devicePixelRatio = oldDPR;
   });
   it("the dpr can be overriden", async () => {
     // IE doesn't allow us to override window.devicePixelRatio
