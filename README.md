@@ -50,10 +50,10 @@ This module exports two transpiled versions. If a ES6-module-aware bundler is be
 ## Usage
 
 ```js
-import Imgix from 'react-imgix'
+import Imgix from "react-imgix";
 
 // in react component
-<Imgix src={string} />
+<Imgix src={string} />;
 ```
 
 ### Examples
@@ -202,9 +202,9 @@ If you'd like to lazy load images, we recommend using [lazysizes](https://github
   src="..."
   sizes="..."
   attributeConfig={{
-    src: 'data-src',
-    srcSet: 'data-srcset'
-    sizes: 'data-sizes'
+    src: "data-src",
+    srcSet: "data-srcset",
+    sizes: "data-sizes"
   }}
 />
 ```
@@ -223,12 +223,12 @@ If you'd like to use LQIP images, like before, we recommend using [lazysizes](ht
   src="..."
   sizes="..."
   attributeConfig={{
-    src: 'data-src',
-    srcSet: 'data-srcset'
-    sizes: 'data-sizes'
+    src: "data-src",
+    srcSet: "data-srcset",
+    sizes: "data-sizes"
   }}
   htmlAttributes={{
-    src: '...' // low quality image here
+    src: "..." // low quality image here
   }}
 />
 ```
@@ -240,7 +240,7 @@ If you'd like to use LQIP images, like before, we recommend using [lazysizes](ht
 Using the [<picture> element](https://docs.imgix.com/tutorials/using-imgix-picture-element) you can create responsive images:
 
 ```js
-import Imgix, { Picture, Source } from 'react-imgix'
+import Imgix, { Picture, Source } from "react-imgix";
 
 <Picture>
   <Source
@@ -254,7 +254,7 @@ import Imgix, { Picture, Source } from 'react-imgix'
     htmlAttributes={{ media: "(min-width: 320px)" }}
   />
   <Imgix src={src} width={100} />
-</Picture>
+</Picture>;
 ```
 
 In order to reduce the duplication in props, JSX supports object spread for props:
@@ -411,7 +411,7 @@ Allows the src, srcset, and sizes attributes to be remapped to different HTML at
 ```js
   attributeConfig={{
     src: 'data-src',
-    srcSet: 'data-srcset'
+    srcSet: 'data-srcset',
     sizes: 'data-sizes'
   }}
 ```
