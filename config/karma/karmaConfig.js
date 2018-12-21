@@ -275,7 +275,7 @@ const fullConfig = karmaConfig => {
     },
 
     browsers: bsBrowsersWithoutChromeAndFirefox,
-    reporters: [...baseConfig.reporters, "BrowserStack"],
+    reporters: [...baseConfig.reporters],
     customLaunchers: customBSLaunchers,
     plugins: [...baseConfig.plugins, "karma-browserstack-launcher"],
     client: {
