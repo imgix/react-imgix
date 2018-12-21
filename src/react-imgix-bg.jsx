@@ -2,7 +2,7 @@ import React from "react";
 import Measure, { withContentRect } from "react-measure";
 import constructUrl from "./constructUrl";
 import targetWidths from "./targetWidths";
-import findClosest from "findClosest";
+ import findClosest from "./findClosest";
 
 const PACKAGE_VERSION = require("../package.json").version;
 
