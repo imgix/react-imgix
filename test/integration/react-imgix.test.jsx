@@ -174,12 +174,14 @@ describe("Background Mode", () => {
   };
   const shouldBehaveLikeBg = function(size = "cover") {
     it("the element should have backgroundImage and backgroundSize set", () => {
-      expect(
-        sut
-          .find(".bg-img")
-          .first()
-          .getDOMNode().style
-      ).toMatchObject({
+      const style = sut
+        .find(".bg-img")
+        .first()
+        .getDOMNode().style;
+      expect({
+        backgroundImage: style.backgroundImage,
+        backgroundSize: style.backgroundSize
+      }).toMatchObject({
         backgroundImage: expect.stringContaining(src),
         backgroundSize: size
       });
@@ -358,10 +360,14 @@ describe("Background Mode", () => {
   describe("without the backgroundSize prop set", () => {
     beforeEach(async () => {
       sut = await renderBGAndWaitUntilLoaded(
-        <Background
-          src={src}
-          htmlAttributes={{ style: { backgroundSize: null } }}
-        />
+        <div>
+          <style>{`.bg-img { width: 10px; height: 10px}`}</style>
+          <Background
+            src={src}
+            className="bg-img"
+            htmlAttributes={{ style: { backgroundSize: null } }}
+          />
+        </div>
       );
     });
     shouldBehaveLikeBg("");
@@ -370,10 +376,13 @@ describe("Background Mode", () => {
   describe("with the backgroundSize prop set to 'contain'", () => {
     beforeEach(async () => {
       sut = await renderBGAndWaitUntilLoaded(
-        <Background
-          src={src}
-          htmlAttributes={{ style: { backgroundSize: "contain" } }}
-        />
+        <div>
+          <style>{`.bg-img { width: 10px; height: 10px}`}</style>
+          <Background
+            src={src}
+            htmlAttributes={{ style: { backgroundSize: "contain" } }}
+          />
+        </div>
       );
     });
     shouldBehaveLikeBg("contain");
@@ -410,7 +419,7 @@ describe("Background Mode", () => {
   });
 
   it("scales the background image by the devices dpr", async () => {
-		// window.devicePixelRatio is not allowed in IE.
+    // window.devicePixelRatio is not allowed in IE.
     if (isIE) {
       return;
     }
