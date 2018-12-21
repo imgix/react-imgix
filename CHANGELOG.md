@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="8.5.0"></a>
+# [8.5.0](https://github.com/imgix/react-imgix/compare/v8.4.0...v8.5.0) (2018-12-21)
+
+
+### Features
+
+* add container to render image as background behind children [WIP] ([#236](https://github.com/imgix/react-imgix/issues/236)) ([5c3ecf6](https://github.com/imgix/react-imgix/commit/5c3ecf6)), closes [#160](https://github.com/imgix/react-imgix/issues/160)
+
+
+
 <a name="8.4.0"></a>
 # [8.4.0](https://github.com/imgix/react-imgix/compare/v8.3.1...v8.4.0) (2018-11-26)
 
