@@ -76,10 +76,14 @@ This will generate HTML similar to the following:
 
 ```html
 <img
-	src="https://assets.imgix.net/examples/pione.jpg?auto=format&amp;crop=faces&amp;fit=crop&amp;ixlib=react-7.2.0"
-	sizes="100vw"
-	srcset="https://assets.imgix.net/examples/pione.jpg?auto=format&amp;crop=faces&amp;fit=crop&amp;ixlib=react-7.2.0&amp;w=100 100w, https://assets.imgix.net/examples/pione.jpg?auto=format&amp;crop=faces&amp;fit=crop&amp;ixlib=react-7.2.0&amp;w=200 200w,..."
->
+  src="https://assets.imgix.net/examples/pione.jpg?auto=format&amp;crop=faces&amp;fit=crop&amp;ixlib=react-7.2.0"
+  sizes="100vw"
+  srcset="
+    https://assets.imgix.net/examples/pione.jpg?auto=format&amp;crop=faces&amp;fit=crop&amp;ixlib=react-7.2.0&amp;w=100 100w,
+    https://assets.imgix.net/examples/pione.jpg?auto=format&amp;crop=faces&amp;fit=crop&amp;ixlib=react-7.2.0&amp;w=200 200w,
+    ...
+  "
+/>
 ```
 
 Since imgix can generate as many derivative resolutions as needed, react-imgix calculates them programmatically, using the dimensions you specify. All of this information has been placed into the srcset and sizes attributes.
@@ -194,14 +198,14 @@ If you'd like to lazy load images, we recommend using [lazysizes](https://github
 
 ```jsx
 <Imgix
-	className="lazyload"
-	src="..."
-	sizes="..."
-	attributeConfig={{
-		src: 'data-src',
-		srcSet: 'data-srcset'
-		sizes: 'data-sizes'
-	}}
+  className="lazyload"
+  src="..."
+  sizes="..."
+  attributeConfig={{
+    src: 'data-src',
+    srcSet: 'data-srcset'
+    sizes: 'data-sizes'
+  }}
 />
 ```
 
@@ -215,17 +219,17 @@ If you'd like to use LQIP images, like before, we recommend using [lazysizes](ht
 
 ```jsx
 <Imgix
-	className="lazyload"
-	src="..."
-	sizes="..."
-	attributeConfig={{
-		src: 'data-src',
-		srcSet: 'data-srcset'
-		sizes: 'data-sizes'
-	}}
-	htmlAttributes={{
-		src: '...' // low quality image here
-	}}
+  className="lazyload"
+  src="..."
+  sizes="..."
+  attributeConfig={{
+    src: 'data-src',
+    srcSet: 'data-srcset'
+    sizes: 'data-sizes'
+  }}
+  htmlAttributes={{
+    src: '...' // low quality image here
+  }}
 />
 ```
 
@@ -259,16 +263,16 @@ In order to reduce the duplication in props, JSX supports object spread for prop
 import Imgix, { Picture, Source } from 'react-imgix'
 
 const commonProps = {
-	src: 'https://...',
-	imgixParams: {
-		fit: 'crop',
-		crop: 'faces'
-	}
+  src: 'https://...',
+  imgixParams: {
+    fit: 'crop',
+    crop: 'faces'
+  }
 }
 
 <Picture>
-	<Source
-		{...commonProps}
+  <Source
+    {...commonProps}
     width={400}
     htmlAttributes={{ media: "(min-width: 768px)" }}
   />
@@ -295,7 +299,44 @@ This works for Source and Picture elements as well.
 
 #### Background mode
 
-This feature has been removed from react-imgix when `sizes` and `srcset` was implemented. It was decided that it was too hard to implement this feature consistently. If you would still like to use this feature, please give this issue a thumbs up: [https://github.com/imgix/react-imgix/issues/160](https://github.com/imgix/react-imgix/issues/160) If we get enough requests for this, we will re-implement it.
+Images can be rendered as a background behind children by using `<Background />`. The component will measure the natural size of the container as determined by the CSS on the page, and will render an optimal image for those dimensions.
+
+Example:
+
+```jsx
+// In CSS
+.blog-title {
+  width: 100vw;
+  height: calc(100vw - 100px);
+}
+
+// In Component (React)
+import { Background } from 'react-imgix'
+
+<Background src="https://.../image.png" className="blog-title">
+  <h2>Blog Title</h2>
+</Background>
+```
+
+This component shares a lot of props that are used in the main component, such as `imgixParams`, and `htmlAttributes`.
+
+As the component has to measure the element in the DOM, it will mount it first and then re-render with an image as the background image. Thus, this technique doesn't work very well with server rendering. If you'd like for this to work well with server rendering, you'll have to set a width and height manually.
+
+**Set width and height:**
+
+Setting the width and/or height explicitly is recommended if you already know these beforehand. This will save the component from having to do two render passes, and it will render a background image immediately.
+
+This is accomplished by passing `w` and `h` as props to imgixParams.
+
+```jsx
+<Background
+  src="https://.../image.png"
+  imgixParams={{ w: 1920, h: 500 }}
+  className="blog-title"
+>
+  <h2>Blog Title</h2>
+</Background>
+```
 
 #### Custom URLS
 
@@ -368,11 +409,11 @@ Called on `componentDidMount` with the mounted DOM node as an argument.
 Allows the src, srcset, and sizes attributes to be remapped to different HTML attributes. For example:
 
 ```js
-	attributeConfig={{
-		src: 'data-src',
-		srcSet: 'data-srcset'
-		sizes: 'data-sizes'
-	}}
+  attributeConfig={{
+    src: 'data-src',
+    srcSet: 'data-srcset'
+    sizes: 'data-sizes'
+  }}
 ```
 
 This re-maps src to `data-src`, srcSet to `data-srcset`, etc.
@@ -386,6 +427,34 @@ This re-maps src to `data-src`, srcSet to `data-srcset`, etc.
 ##### onMounted :: func
 
 Called on `componentDidMount` with the mounted DOM node as an argument.
+
+##### htmlAttributes :: object
+
+Any other attributes to add to the html node (example: `alt`, `data-*`, `className`).
+
+#### Background Props
+
+##### src :: string, required
+
+Usually in the form: `https://[your_domain].imgix.net/[image]`. Don't include any parameters.
+
+##### imgixParams :: object
+
+Imgix params to add to the image `src`. This is also how width and height can be explicitly set. For more information about this, see the "Background" section above.
+
+_For example_:
+
+```js
+<Background imgixParams={{ mask: "ellipse" }} />
+```
+
+##### className :: string
+
+`className` applied to top level component. To set `className` on the image itself see `htmlAttributes`.
+
+##### disableLibraryParam :: bool
+
+By default this component adds a parameter to the generated url to help imgix with analytics and support for this library. This can be disabled by setting this prop to `true`.
 
 ##### htmlAttributes :: object
 
@@ -433,14 +502,14 @@ To upgrade to version 8, the following changes should be made.
 
       // this...
       <Imgix type='picture'>
-      	<Imgix type='source' src={src}>
-      	<Imgix type='source' src={src}>
+        <Imgix type='source' src={src}>
+        <Imgix type='source' src={src}>
       </Imgix>
 
       // becomes...
       <Picture>
-      	<Source src={src}>
-      	<Source src={src}>
+        <Source src={src}>
+        <Source src={src}>
       </Picture>
 
   See [Picture support](#picture-support) for more information.
