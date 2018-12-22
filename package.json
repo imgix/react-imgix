@@ -98,7 +98,7 @@
     "standard-version": "4.4.0",
     "webpack": "4.28.2",
     "webpack-cli": "3.1.2",
-    "webpack-dev-server": "3.1.11"
+    "webpack-dev-server": "3.1.12"
   },
   "jest": {
     "roots": [
