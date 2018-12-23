@@ -220,10 +220,7 @@ describe("Background Mode", () => {
   describe("when neither width nor height are passed", () => {
     it("renders nothing at first", () => {
       shouldRenderNoBGImage(
-        <Background
-          src={`${src}`}
-          className="bg-img"
-        >
+        <Background src={`${src}`} className="bg-img">
           <div>Content</div>
         </Background>
       );
