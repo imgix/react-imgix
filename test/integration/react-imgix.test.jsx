@@ -222,9 +222,6 @@ describe("Background Mode", () => {
       shouldRenderNoBGImage(
         <Background
           src={`${src}`}
-          imgixParams={{
-            w: 200
-          }}
           className="bg-img"
         >
           <div>Content</div>
@@ -426,7 +423,7 @@ describe("Background Mode", () => {
     });
   });
 
-  it.only("scales the background image by the devices dpr", async () => {
+  it("scales the background image by the devices dpr", async () => {
     // window.devicePixelRatio is not allowed in IE.
     if (isIE) {
       return;
