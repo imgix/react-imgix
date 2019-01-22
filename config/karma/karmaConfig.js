@@ -148,13 +148,7 @@ const getOSVersionAndDeviceForMobileSafariVersion = version => {
       device: "iPhone 8"
     };
   }
-  if (12.0 === versionNumber) {
-    return {
-      os_version: "12.0",
-      device: "iPhone XS"
-    };
-  }
-  if (12.1 === versionNumber) {
+  if (12 <= versionNumber && versionNumber < 13) {
     return {
       os_version: "12.1",
       device: "iPhone XS"
