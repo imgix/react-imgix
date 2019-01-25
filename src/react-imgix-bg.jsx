@@ -88,7 +88,7 @@ const BackgroundImpl = props => {
       ...(disableLibraryParam ? {} : { ixlib: `react-${PACKAGE_VERSION}` }),
       width,
       height,
-      fit: "crop",
+      fit: (imgixParams.fit) ? imgixParams.fit : "crop",
       dpr
     };
 
