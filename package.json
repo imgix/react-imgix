@@ -96,7 +96,7 @@
     "sinon": "7.2.3",
     "skin-deep": "1.2.0",
     "standard-version": "4.4.0",
-    "webpack": "4.29.0",
+    "webpack": "4.29.1",
     "webpack-cli": "3.2.1",
     "webpack-dev-server": "3.1.14"
   },
