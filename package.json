@@ -71,7 +71,7 @@
     "browserslist": "4.4.1",
     "common-tags": "1.8.0",
     "cross-env": "5.2.0",
-    "enzyme": "3.8.0",
+    "enzyme": "3.9.0",
     "enzyme-adapter-react-16": "1.9.1",
     "expect": "23.6.0",
     "jest": "23.6.0",
