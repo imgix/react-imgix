@@ -38,7 +38,7 @@ const COMMON_PROP_TYPES = {
 
 const SHARED_IMGIX_AND_SOURCE_PROP_TYPES = {
   ...COMMON_PROP_TYPES,
-  genSrcSet: PropTypes.bool,
+  genSrcSet: PropTypes.oneOfType([PropTypes.bool, PropTypes.array]),
   disableLibraryParam: PropTypes.bool,
   imgixParams: PropTypes.object,
   sizes: PropTypes.string,
@@ -62,6 +62,22 @@ function parseAspectRatio(aspectRatio) {
   const [width, height] = aspectRatio.split(":");
 
   return parseFloat(width) / parseFloat(height);
+}
+
+/**
+ * Return an imgix options object with the corresponding dpr value. If there is none return an empty object.
+ */
+function getDprSpecificOptions(optionsArray, dpr) {
+  if (!Array.isArray(optionsArray)) {
+    return {};
+  }
+
+  const optionsObject = optionsArray.find((obj) => obj.dpr == dpr);
+  if (optionsObject === undefined) {
+    return {};
+  }
+
+  return optionsObject;
 }
 
 /**
@@ -94,10 +110,10 @@ function buildSrc({
     srcSet = src;
   } else {
     if (fixedSize || type === "source") {
-      const dpr2 = constructUrl(rawSrc, { ...srcOptions, dpr: 2 });
-      const dpr3 = constructUrl(rawSrc, { ...srcOptions, dpr: 3 });
-      const dpr4 = constructUrl(rawSrc, { ...srcOptions, dpr: 4 });
-      const dpr5 = constructUrl(rawSrc, { ...srcOptions, dpr: 5 });
+      const dpr2 = constructUrl(rawSrc, { ...srcOptions, ...getDprSpecificOptions(genSrcSet, 2), dpr: 2 });
+      const dpr3 = constructUrl(rawSrc, { ...srcOptions, ...getDprSpecificOptions(genSrcSet, 3), dpr: 3 });
+      const dpr4 = constructUrl(rawSrc, { ...srcOptions, ...getDprSpecificOptions(genSrcSet, 4), dpr: 4 });
+      const dpr5 = constructUrl(rawSrc, { ...srcOptions, ...getDprSpecificOptions(genSrcSet, 5), dpr: 5 });
       srcSet = `${dpr2} 2x, ${dpr3} 3x, ${dpr4} 4x, ${dpr5} 5x`;
     } else {
       let showARWarning = false;
