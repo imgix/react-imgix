@@ -38,7 +38,7 @@ const COMMON_PROP_TYPES = {
 
 const SHARED_IMGIX_AND_SOURCE_PROP_TYPES = {
   ...COMMON_PROP_TYPES,
-  disableSrcSet: PropTypes.bool,
+  genSrcSet: PropTypes.bool,
   disableLibraryParam: PropTypes.bool,
   imgixParams: PropTypes.object,
   sizes: PropTypes.string,
@@ -72,7 +72,7 @@ function buildSrc({
   width,
   height,
   disableLibraryParam,
-  disableSrcSet,
+  genSrcSet,
   type,
   imgixParams,
   aspectRatio
@@ -90,7 +90,7 @@ function buildSrc({
 
   let srcSet;
 
-  if (disableSrcSet) {
+  if (genSrcSet === false) {
     srcSet = src;
   } else {
     if (fixedSize || type === "source") {
@@ -168,7 +168,7 @@ class ReactImgix extends Component {
     ...SHARED_IMGIX_AND_SOURCE_PROP_TYPES
   };
   static defaultProps = {
-    disableSrcSet: false,
+    genSrcSet: true,
     onMounted: noop
   };
 
@@ -178,7 +178,7 @@ class ReactImgix extends Component {
   };
 
   render() {
-    const { disableSrcSet, type, width, height } = this.props;
+    const { genSrcSet, type, width, height } = this.props;
 
     // Pre-render checks
     if (NODE_ENV !== "production" && config.warnings.sizesAttribute) {
@@ -215,7 +215,7 @@ class ReactImgix extends Component {
       height: height <= 1 ? null : height,
       [attributeConfig.src]: src
     };
-    if (!disableSrcSet) {
+    if (genSrcSet !== false) {
       childProps[attributeConfig.srcSet] = srcSet;
     }
 
@@ -307,7 +307,7 @@ class SourceImpl extends Component {
     ...SHARED_IMGIX_AND_SOURCE_PROP_TYPES
   };
   static defaultProps = {
-    disableSrcSet: false,
+    genSrcSet: true,
     onMounted: noop
   };
 
@@ -316,7 +316,7 @@ class SourceImpl extends Component {
     this.props.onMounted(node);
   };
   render() {
-    const { disableSrcSet, width, height } = this.props;
+    const { genSrcSet, width, height } = this.props;
 
     const htmlAttributes = this.props.htmlAttributes || {};
 
@@ -341,7 +341,7 @@ class SourceImpl extends Component {
     // inside of a <picture> element a <source> element ignores its src
     // attribute in favor of srcSet so we set that with either an actual
     // srcSet or a single src
-    if (disableSrcSet) {
+    if (genSrcSet === false) {
       childProps[attributeConfig.srcSet] = src;
     } else {
       childProps[attributeConfig.srcSet] = `${src}, ${srcSet}`;
