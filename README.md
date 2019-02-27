@@ -388,13 +388,25 @@ Force images to be a certain height.
 
 Force images to be a certain width.
 
-##### disableSrcSet :: bool, default = false
-
-Disable generation of variable width src sets to enable responsiveness.
-
 ##### disableLibraryParam :: bool
 
 By default this component adds a parameter to the generated url to help imgix with analytics and support for this library. This can be disabled by setting this prop to `true`.
+
+##### genSrcSet :: bool | array, default = true
+
+As a boolean, enable generation of variable width src sets to enable responsiveness. As an array, enable generation of variable width src sets and allows setting of different imgix params to each src in the src set.
+
+_For example_:
+
+```js
+import Imgix from "react-imgix";
+
+// As a boolean. Disables generation of variable width src sets.
+<Imgix src="https://assets.imgix.net/examples/pione.jpg" genSrcSet={false} />;
+
+// As an array.
+<Imgix src="https://assets.imgix.net/examples/pione.jpg" genSrcSet={[{q: 95, dpr: 1}, {q: 75, dpr: 2}, {q: 50, dpr: 3}]} />;
+```
 
 ##### htmlAttributes :: object
 
@@ -488,6 +500,12 @@ The warnings available are:
 | sizesAttribute | This library requires a `sizes` prop to be passed so that the images can render responsively. This should only turned off in very special circumstances.                                                                        |
 
 ## Upgrade Guides
+
+### 8.5.1 to 8.6
+
+To upgrade to version 8.6, the following changes should be made.
+
+- Rename `disableSrcSet` to `genSrcSet` and invert the value passed down as the prop's value. i.e. `disableSrcSet={false}` becomes `genSrcSet={true}` or simply `genSrcSet`
 
 ### 7.x to 8.0
 
