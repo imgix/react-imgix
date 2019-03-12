@@ -574,8 +574,7 @@ describe("Background Mode", () => {
   it("the fit parameter can be overriden", async () => {
     const sut = await renderBGAndWaitUntilLoaded(
       <div>
-        <Background src={src} className="bg-img"
-        imgixParams = {{ fit: "clip" }}>
+        <Background src={src} className="bg-img" imgixParams={{ fit: "clip" }}>
           <div>Content</div>
         </Background>
       </div>
