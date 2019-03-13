@@ -84,11 +84,11 @@ const BackgroundImpl = props => {
 
   const renderedSrc = (() => {
     const srcOptions = {
+      fit: "crop",
       ...imgixParams,
       ...(disableLibraryParam ? {} : { ixlib: `react-${PACKAGE_VERSION}` }),
       width,
       height,
-      fit: "crop",
       dpr
     };
 

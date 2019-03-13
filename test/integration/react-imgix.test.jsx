@@ -559,6 +559,30 @@ describe("Background Mode", () => {
     expect(ref instanceof HTMLElement).toBe(true);
     expect(findURIfromSUT(sut).getQueryParamValue("w")).toBe("100");
   });
+  it("the fit parameter defaults to 'crop'", async () => {
+    const sut = await renderBGAndWaitUntilLoaded(
+      <div>
+        <Background src={src} className="bg-img">
+          <div>Content</div>
+        </Background>
+      </div>
+    );
+
+    const bgImageSrcURL = findURIfromSUT(sut);
+    expect(bgImageSrcURL.getQueryParamValue("fit")).toBe("crop");
+  });
+  it("the fit parameter can be overriden", async () => {
+    const sut = await renderBGAndWaitUntilLoaded(
+      <div>
+        <Background src={src} className="bg-img" imgixParams={{ fit: "clip" }}>
+          <div>Content</div>
+        </Background>
+      </div>
+    );
+
+    const bgImageSrcURL = findURIfromSUT(sut);
+    expect(bgImageSrcURL.getQueryParamValue("fit")).toBe("clip");
+  });
 });
 
 function injectScript(src) {
