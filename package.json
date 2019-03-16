@@ -96,7 +96,7 @@
     "rimraf": "2.6.3",
     "sinon": "7.2.7",
     "skin-deep": "1.2.0",
-    "standard-version": "5.0.1",
+    "standard-version": "5.0.2",
     "webpack": "4.29.6",
     "webpack-cli": "3.3.0",
     "webpack-dev-server": "3.2.1"
