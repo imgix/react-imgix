@@ -94,7 +94,7 @@
     "react-test-renderer": "16.8.4",
     "read-pkg-up": "4.0.0",
     "rimraf": "2.6.3",
-    "sinon": "7.2.7",
+    "sinon": "7.3.0",
     "skin-deep": "1.2.0",
     "standard-version": "5.0.2",
     "webpack": "4.29.6",
