@@ -5,6 +5,7 @@ import { shallow as enzymeShallow, mount } from "enzyme";
 import PropTypes from "prop-types";
 import { shallowUntilTarget } from "../helpers";
 import targetWidths from "targetWidths";
+import { CONSTANTS } from "../../src/common";
 
 import Imgix, {
   __ReactImgixImpl,
@@ -127,6 +128,44 @@ describe("When in default mode", () => {
         expect(element / prev).toBeLessThan(1 + INCREMENT_ALLOWED);
         prev = element;
       }
+    });
+
+    describe("supports varying q to dpr matching when rendering a fixed-size image", () => {
+      it("generates predefined q and dpr pairs", async () => {
+        const sut = shallow(<Imgix src={src} width={100} />);
+        const srcset = sut.props().srcSet.split(", ");
+
+        expect(srcset[0].split(" ")[0]).toContain("q=" + CONSTANTS.q_dpr1);
+        expect(srcset[1].split(" ")[0]).toContain("q=" + CONSTANTS.q_dpr2);
+        expect(srcset[2].split(" ")[0]).toContain("q=" + CONSTANTS.q_dpr3);
+        expect(srcset[3].split(" ")[0]).toContain("q=" + CONSTANTS.q_dpr4);
+        expect(srcset[4].split(" ")[0]).toContain("q=" + CONSTANTS.q_dpr5);
+      });
+      it("allows q to dpr matching to be disabled", async () => {
+        const sut = shallow(
+          <Imgix src={src} width={100} disableQualityByDPR={true} />
+        );
+        const srcset = sut.props().srcSet.split(", ");
+
+        expect(srcset[0].split(" ")[0]).not.toContain("q=" + CONSTANTS.q_dpr1);
+        expect(srcset[1].split(" ")[0]).not.toContain("q=" + CONSTANTS.q_dpr2);
+        expect(srcset[2].split(" ")[0]).not.toContain("q=" + CONSTANTS.q_dpr3);
+        expect(srcset[3].split(" ")[0]).not.toContain("q=" + CONSTANTS.q_dpr4);
+        expect(srcset[4].split(" ")[0]).not.toContain("q=" + CONSTANTS.q_dpr5);
+      });
+      it("allows the q parameter to be overriden when explicitly passed in", async () => {
+        const q_override = 100;
+        const sut = shallow(
+          <Imgix src={src} width={100} imgixParams={{ q: q_override }} />
+        );
+        const srcset = sut.props().srcSet.split(", ");
+
+        expect(srcset[0].split(" ")[0]).toContain("q=" + q_override);
+        expect(srcset[1].split(" ")[0]).toContain("q=" + q_override);
+        expect(srcset[2].split(" ")[0]).toContain("q=" + q_override);
+        expect(srcset[3].split(" ")[0]).toContain("q=" + q_override);
+        expect(srcset[4].split(" ")[0]).toContain("q=" + q_override);
+      });
     });
   });
 });
