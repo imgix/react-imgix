@@ -241,14 +241,15 @@ describe("When in <source> mode", () => {
       const srcSet = renderImage().props().srcSet;
 
       const srcSets = srcSet.split(", ");
-      expect(srcSets).toHaveLength(5);
+      expect(srcSets).toHaveLength(6);
       srcSets.forEach(srcSet => {
         expect(srcSet).toContain(src);
       });
-      expect(srcSets[1].split(" ")[1]).toBe("2x");
-      expect(srcSets[2].split(" ")[1]).toBe("3x");
-      expect(srcSets[3].split(" ")[1]).toBe("4x");
-      expect(srcSets[4].split(" ")[1]).toBe("5x");
+      expect(srcSets[1].split(" ")[1]).toBe("1x");
+      expect(srcSets[2].split(" ")[1]).toBe("2x");
+      expect(srcSets[3].split(" ")[1]).toBe("3x");
+      expect(srcSets[4].split(" ")[1]).toBe("4x");
+      expect(srcSets[5].split(" ")[1]).toBe("5x");
     });
   });
 
