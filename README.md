@@ -17,8 +17,8 @@ A [React](https://facebook.github.io/react/) component that renders images using
 - [Examples](#examples)
   - [Basic Use Case](#basic-use-case)
   - [Server-side rendering](#server-side-rendering)
-  - [Flexible image rendering](#fixed-image-rendering-ie-non-flexible)
-  - [Fixed image rendering](#fixed-image-rendering)
+  - [Flexible image rendering](#flexible-image-rendering)
+  - [Fixed image rendering](#fixed-image-rendering-ie-non-flexible)
   - [Lazy Loading](#lazy-loading)
   - [Low Quality Image Placeholder Technique (LQIP)](#low-quality-image-placeholder-technique-lqip)
   - [Picture support](#picture-support)
@@ -188,6 +188,23 @@ import Imgix from "react-imgix";
   width={100} // This sets what resolution the component should load from the CDN and the size of the resulting image
   height={200}
 />;
+```
+
+Fixed image rendering will automatically append a variable `q` parameter mapped to each `dpr` parameter when generating a srcset. This technique is commonly used to compensate for the increased filesize of high-DPR images. Since high-DPR images are displayed at a higher pixel density on devices, image quality can be lowered to reduce overall filesize without sacrificing perceived visual quality. For more information and examples of this technique in action, see [this blog post](https://blog.imgix.com/2016/03/30/dpr-quality).
+This behavior will respect any overriding `q` value passed in via `imgixParams` and can be disabled altogether with the boolean property `disableQualityByDPR`.
+
+```js
+<Imgix src="https://domain.imgix.net/image.jpg" width={100} />
+```
+
+will generate the following srcset:
+
+```html
+https://domain.imgix.net/image.jpg?q=75&w=100&dpr=1 1x,
+https://domain.imgix.net/image.jpg?q=50&w=100&dpr=2 2x,
+https://domain.imgix.net/image.jpg?q=35&w=100&dpr=3 3x,
+https://domain.imgix.net/image.jpg?q=23&w=100&dpr=4 4x,
+https://domain.imgix.net/image.jpg?q=20&w=100&dpr=5 5x
 ```
 
 [![Edit 4z1rzq04q7](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/4z1rzq04q7?view=preview)
@@ -417,6 +434,10 @@ Allows the src, srcset, and sizes attributes to be remapped to different HTML at
 ```
 
 This re-maps src to `data-src`, srcSet to `data-srcset`, etc.
+
+##### disableQualityByDPR :: bool, default = false
+
+Disable generation of variable `q` parameters when rendering a fixed-size image.
 
 #### Picture Props
 

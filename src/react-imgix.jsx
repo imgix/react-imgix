@@ -8,7 +8,7 @@ import targetWidths from "./targetWidths";
 import constructUrl from "./constructUrl";
 import { deprecatePropsHOC, ShouldComponentUpdateHOC } from "./HOCs";
 
-import { warning, shallowEqual, compose, config } from "./common";
+import { warning, shallowEqual, compose, config, CONSTANTS } from "./common";
 
 const PACKAGE_VERSION = require("../package.json").version;
 const NODE_ENV = process.env.NODE_ENV;
@@ -38,6 +38,7 @@ const COMMON_PROP_TYPES = {
 
 const SHARED_IMGIX_AND_SOURCE_PROP_TYPES = {
   ...COMMON_PROP_TYPES,
+  disableQualityByDPR: PropTypes.bool,
   disableSrcSet: PropTypes.bool,
   disableLibraryParam: PropTypes.bool,
   imgixParams: PropTypes.object,
@@ -75,7 +76,8 @@ function buildSrc({
   disableSrcSet,
   type,
   imgixParams,
-  aspectRatio
+  aspectRatio,
+  disableQualityByDPR
 }) {
   const fixedSize = width != null || height != null;
 
@@ -94,11 +96,32 @@ function buildSrc({
     srcSet = src;
   } else {
     if (fixedSize || type === "source") {
-      const dpr2 = constructUrl(rawSrc, { ...srcOptions, dpr: 2 });
-      const dpr3 = constructUrl(rawSrc, { ...srcOptions, dpr: 3 });
-      const dpr4 = constructUrl(rawSrc, { ...srcOptions, dpr: 4 });
-      const dpr5 = constructUrl(rawSrc, { ...srcOptions, dpr: 5 });
-      srcSet = `${dpr2} 2x, ${dpr3} 3x, ${dpr4} 4x, ${dpr5} 5x`;
+      const dpr1 = constructUrl(rawSrc, {
+        ...(disableQualityByDPR || { q: CONSTANTS.q_dpr1 }),
+        ...srcOptions,
+        dpr: 1
+      });
+      const dpr2 = constructUrl(rawSrc, {
+        ...(disableQualityByDPR || { q: CONSTANTS.q_dpr2 }),
+        ...srcOptions,
+        dpr: 2
+      });
+      const dpr3 = constructUrl(rawSrc, {
+        ...(disableQualityByDPR || { q: CONSTANTS.q_dpr3 }),
+        ...srcOptions,
+        dpr: 3
+      });
+      const dpr4 = constructUrl(rawSrc, {
+        ...(disableQualityByDPR || { q: CONSTANTS.q_dpr4 }),
+        ...srcOptions,
+        dpr: 4
+      });
+      const dpr5 = constructUrl(rawSrc, {
+        ...(disableQualityByDPR || { q: CONSTANTS.q_dpr5 }),
+        ...srcOptions,
+        dpr: 5
+      });
+      srcSet = `${dpr1} 1x, ${dpr2} 2x, ${dpr3} 3x, ${dpr4} 4x, ${dpr5} 5x`;
     } else {
       let showARWarning = false;
       const buildSrcSetPair = targetWidth => {
