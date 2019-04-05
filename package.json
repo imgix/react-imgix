@@ -1,12 +1,12 @@
 {
   "name": "react-imgix",
-  "version": "8.5.1",
+  "version": "8.6.0",
   "description": "React Component for displaying an image from Imgix",
   "author": "Frederick Fogerty <frederick.fogerty@gmail.com> (https://github.com/frederickfogerty)",
   "contributors": [
     "Frederick Fogerty <frederick.fogerty@gmail.com> (https://github.com/frederickfogerty)",
     "Max Kolyanov (https://github.com/maxkolyanov)",
-    "Sherwin Heydarbeygi <sherwin@imgix.com> (https://github.com/sherwinski)" 
+    "Sherwin Heydarbeygi <sherwin@imgix.com> (https://github.com/sherwinski)"
   ],
   "license": "ISC",
   "bugs": {

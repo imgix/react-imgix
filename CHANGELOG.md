@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+# [8.6.0](https://github.com/imgix/react-imgix/compare/v8.5.1...v8.6.0) (2019-04-04)
+
+
+### Bug Fixes
+
+* ensure `fit` parameter will respect overriding value, fixes [#268](https://github.com/imgix/react-imgix/issues/268) ([#311](https://github.com/imgix/react-imgix/issues/311)) ([15b0073](https://github.com/imgix/react-imgix/commit/15b0073)), fixes [#268](https://github.com/imgix/react-imgix/issues/268)
+
+
+### Features
+
+* append variable q parameters per dpr when rendering a fixed-size image ([#322](https://github.com/imgix/react-imgix/issues/322)) ([6594cea](https://github.com/imgix/react-imgix/commit/6594cea)), resolves [#129](https://github.com/imgix/react-imgix/issues/129)
+
+
+
 <a name="8.5.1"></a>
 ## [8.5.1](https://github.com/imgix/react-imgix/compare/v8.5.0...v8.5.1) (2018-12-21)
 
