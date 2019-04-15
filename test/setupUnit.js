@@ -1,4 +1,5 @@
 require("./setup");
+import "@babel/polyfill";
 
 // TODO: Only initialise jest-extended for unit tests until https://github.com/jest-community/jest-extended/pull/140 is merged.
 const addExtraJestMatchers = () => require("jest-extended");
