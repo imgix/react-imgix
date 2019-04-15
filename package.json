@@ -127,7 +127,9 @@
       "node_modules",
       "src"
     ],
-    "setupTestFrameworkScriptFile": "<rootDir>/test/setupUnit.js"
+    "setupFilesAfterEnv": [
+      "<rootDir>/test/setupUnit.js"
+    ]
   },
   "browserslist": [
     "ie 11",
