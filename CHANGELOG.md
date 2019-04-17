@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [8.6.1](https://github.com/imgix/react-imgix/compare/v8.6.0...v8.6.1) (2019-04-17)
+
+
+### Bug Fixes
+
+* **deps:** pin react-measure version to avoid regression ([#343](https://github.com/imgix/react-imgix/issues/343)) ([3344502](https://github.com/imgix/react-imgix/commit/3344502))
+
+
+
 # [8.6.0](https://github.com/imgix/react-imgix/compare/v8.5.1...v8.6.0) (2019-04-04)
 
 
