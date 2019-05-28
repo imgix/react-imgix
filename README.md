@@ -415,7 +415,7 @@ By default this component adds a parameter to the generated url to help imgix wi
 
 ##### htmlAttributes :: object
 
-Any other attributes to add to the html node (example: `alt`, `data-*`, `className`).
+Any other attributes to add to the html node (example: `alt`, `data-*`, `class`).
 
 ##### onMounted :: func
 
@@ -451,7 +451,7 @@ Called on `componentDidMount` with the mounted DOM node as an argument.
 
 ##### htmlAttributes :: object
 
-Any other attributes to add to the html node (example: `alt`, `data-*`, `className`).
+Any other attributes to add to the html node (example: `alt`, `data-*`, `class`).
 
 #### Background Props
 
