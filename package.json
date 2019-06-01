@@ -104,7 +104,7 @@
     "karma-webpack": "3.0.5",
     "mocha": "6.1.4",
     "prettier": "1.17.1",
-    "puppeteer": "1.16.0",
+    "puppeteer": "1.17.0",
     "react": "16.8.6",
     "react-addons-test-utils": "15.6.2",
     "react-dom": "16.8.6",
