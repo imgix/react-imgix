@@ -133,7 +133,7 @@ function buildSrc({
   } else {
     if (fixedSize || type === "source") {
       const { q: qOption, ...urlParams } = srcOptions;
-      
+
       // Get the q from the raw src.
       const [, qSrc] = Q_PARAM_REGEX.exec(rawSrc) || [];
       // Use the quality setting from the options, but fall back
