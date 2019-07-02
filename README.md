@@ -68,7 +68,7 @@ import Imgix from "react-imgix";
 <Imgix src="https://assets.imgix.net/examples/pione.jpg" sizes="100vw" />;
 ```
 
-[![Edit xp0348lv0z](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/xp0348lv0z?view=preview)
+[![Edit xp0348lv0z](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/charming-keller-kjnsq)
 
 **Please note:** `100vw` is an appropriate `sizes` value for a full-bleed image. If your image is not full-bleed, you should use a different value for `sizes`. [Eric Portis' "Srcset and sizes"](https://ericportis.com/posts/2014/srcset-sizes/) article goes into depth on how to use the `sizes` attribute.
 
@@ -102,7 +102,7 @@ import Imgix from "react-imgix";
 
 NB: Since this library sets [`fit`](https://docs.imgix.com/apis/url/size/fit) to `crop` by default, when just a width or height is set, the image will resize and maintain aspect ratio. When both are set, the image will be cropped to that size, maintaining pixel aspect ratio (i.e. edges are clipped in order to not stretch the photo). If this isn't desired, set `fit` to be another value (e.g. `clip`)
 
-[![Edit xp0348lv0z](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/xp0348lv0z?view=preview)
+[![Edit xp0348lv0z](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/charming-keller-kjnsq)
 
 #### Server-side rendering
 
@@ -159,7 +159,7 @@ import "./styles.css";
 </div>;
 ```
 
-[![Edit xp0348lv0z](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/xp0348lv0z?view=preview)
+[![Edit xp0348lv0z](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/charming-keller-kjnsq)
 
 **Aspect Ratio:** A developer can pass a desired aspect ratio, which will be used when
 generating srcsets to generate the correct height, according to the aspect ratio.
@@ -207,7 +207,7 @@ https://domain.imgix.net/image.jpg?q=23&w=100&dpr=4 4x,
 https://domain.imgix.net/image.jpg?q=20&w=100&dpr=5 5x
 ```
 
-[![Edit 4z1rzq04q7](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/4z1rzq04q7?view=preview)
+[![Edit 4z1rzq04q7](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/adoring-monad-dbxht)
 
 #### Lazy Loading
 
