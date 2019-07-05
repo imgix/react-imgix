@@ -12,6 +12,7 @@ import { warning, shallowEqual, compose, config, CONSTANTS } from "./common";
 
 const PACKAGE_VERSION = require("../package.json").version;
 const NODE_ENV = process.env.NODE_ENV;
+const Q_PARAM_REGEX = /&?q=([^&]+)/;
 
 const buildKey = idx => `react-imgix-${idx}`;
 
@@ -66,6 +67,41 @@ function parseAspectRatio(aspectRatio) {
 }
 
 /**
+ * Returns a function which builds a srcSet string with the width,
+ * and height if there is one
+ */
+function buildSrcSetPairFunction(url, aspectRatioDecimal = 0, fixedHeight) {
+  if (fixedHeight) {
+    return targetWidth =>
+      `${url}&h=${fixedHeight}&w=${targetWidth} ${targetWidth}w`;
+  }
+  if (aspectRatioDecimal > 0) {
+    return targetWidth =>
+      `${url}&h=${Math.ceil(
+        targetWidth / aspectRatioDecimal
+      )}&w=${targetWidth} ${targetWidth}w`;
+  }
+
+  return targetWidth => `${url}&w=${targetWidth} ${targetWidth}w`;
+}
+
+/**
+ * Returns a function which builds a srcSet string with dpr,
+ * and quality if not disabled.
+ */
+function buildDprSrcFunction(url, disableQualityByDPR, quality) {
+  // Use quality if explicitly passed in -- either as an option or already in the url
+  if (disableQualityByDPR && quality) {
+    return dpr => `${url}&q=${quality}&dpr=${dpr} ${dpr}x`;
+  }
+  if (disableQualityByDPR) {
+    return dpr => `${url}&dpr=${dpr} ${dpr}x`;
+  }
+  return dpr =>
+    `${url}&q=${quality || CONSTANTS[`q_dpr${dpr}`]}&dpr=${dpr} ${dpr}x`;
+}
+
+/**
  * Build a imgix source url with parameters from a raw url
  */
 function buildSrc({
@@ -96,54 +132,37 @@ function buildSrc({
     srcSet = src;
   } else {
     if (fixedSize || type === "source") {
-      const dpr1 = constructUrl(rawSrc, {
-        ...(disableQualityByDPR || { q: CONSTANTS.q_dpr1 }),
-        ...srcOptions,
-        dpr: 1
-      });
-      const dpr2 = constructUrl(rawSrc, {
-        ...(disableQualityByDPR || { q: CONSTANTS.q_dpr2 }),
-        ...srcOptions,
-        dpr: 2
-      });
-      const dpr3 = constructUrl(rawSrc, {
-        ...(disableQualityByDPR || { q: CONSTANTS.q_dpr3 }),
-        ...srcOptions,
-        dpr: 3
-      });
-      const dpr4 = constructUrl(rawSrc, {
-        ...(disableQualityByDPR || { q: CONSTANTS.q_dpr4 }),
-        ...srcOptions,
-        dpr: 4
-      });
-      const dpr5 = constructUrl(rawSrc, {
-        ...(disableQualityByDPR || { q: CONSTANTS.q_dpr5 }),
-        ...srcOptions,
-        dpr: 5
-      });
-      srcSet = `${dpr1} 1x, ${dpr2} 2x, ${dpr3} 3x, ${dpr4} 4x, ${dpr5} 5x`;
+      const { q: qOption, ...urlParams } = srcOptions;
+
+      // Get the q from the raw src.
+      const [, qSrc] = Q_PARAM_REGEX.exec(rawSrc) || [];
+      // Use the quality setting from the options, but fall back
+      // to the q param already in the src
+      const q = qOption || qSrc;
+      // Remove q query param if it is already in the url
+      // We’ll add it back using either q passed as an option, q from the src
+      // or use the constants for each dpr
+      const srcWithoutQ = rawSrc.replace(Q_PARAM_REGEX, "");
+      const constructedUrl = constructUrl(srcWithoutQ, urlParams);
+      const buildDprSrc = buildDprSrcFunction(
+        constructedUrl,
+        disableQualityByDPR,
+        q
+      );
+      srcSet = [1, 2, 3, 4, 5].map(buildDprSrc).join(", ");
     } else {
-      let showARWarning = false;
-      const buildSrcSetPair = targetWidth => {
-        let urlParams = {
-          ...srcOptions,
-          width: targetWidth
-        };
-        const aspectRatioDecimal = parseAspectRatio(aspectRatio);
-        if (aspectRatio != null && aspectRatioDecimal === false) {
-          // false indicates invalid
-          showARWarning = true;
-        }
-        if (
-          !srcOptions.height &&
-          aspectRatioDecimal &&
-          aspectRatioDecimal > 0
-        ) {
-          urlParams.height = Math.ceil(targetWidth / aspectRatioDecimal);
-        }
-        const url = constructUrl(rawSrc, urlParams);
-        return `${url} ${targetWidth}w`;
-      };
+      const { width, height, ...urlParams } = srcOptions;
+      const constructedUrl = constructUrl(rawSrc, urlParams);
+
+      const aspectRatioDecimal = parseAspectRatio(aspectRatio);
+      // false indicates invalid
+      let showARWarning = aspectRatio != null && aspectRatioDecimal === false;
+
+      const buildSrcSetPair = buildSrcSetPairFunction(
+        constructedUrl,
+        aspectRatioDecimal,
+        height
+      );
       srcSet = targetWidths.map(buildSrcSetPair).join(", ");
 
       if (showARWarning && config.warnings.invalidARFormat) {
