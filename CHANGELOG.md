@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+# [8.6.2](https://github.com/imgix/react-imgix/compare/v8.6.1...v8.6.2) (2019-07-05)
+
+
+### Features
+
+* perf: optimize url construction ([#395](https://github.com/imgix/react-imgix/issues/395)) ([25c0012](https://github.com/imgix/react-imgix/commit/25c0012))
+
+
+
 ## [8.6.1](https://github.com/imgix/react-imgix/compare/v8.6.0...v8.6.1) (2019-04-17)
 
 
