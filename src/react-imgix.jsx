@@ -6,13 +6,13 @@ import PropTypes from "prop-types";
 
 import targetWidths from "./targetWidths";
 import constructUrl from "./constructUrl";
+import extractQueryParams from "./extractQueryParams";
 import { deprecatePropsHOC, ShouldComponentUpdateHOC } from "./HOCs";
 
 import { warning, shallowEqual, compose, config, CONSTANTS } from "./common";
 
 const PACKAGE_VERSION = require("../package.json").version;
 const NODE_ENV = process.env.NODE_ENV;
-const Q_PARAM_REGEX = /&?q=([^&]+)/;
 
 const buildKey = idx => `react-imgix-${idx}`;
 
@@ -105,7 +105,7 @@ function buildDprSrcFunction(url, disableQualityByDPR, quality) {
  * Build a imgix source url with parameters from a raw url
  */
 function buildSrc({
-  src: rawSrc,
+  src: inputSrc,
   width,
   height,
   disableLibraryParam,
@@ -117,7 +117,10 @@ function buildSrc({
 }) {
   const fixedSize = width != null || height != null;
 
+  const [rawSrc, params] = extractQueryParams(inputSrc);
+
   const srcOptions = {
+    ...params,
     ...imgixParams,
     ...(disableLibraryParam ? {} : { ixlib: `react-${PACKAGE_VERSION}` }),
     ...(fixedSize && height ? { height } : {}),
@@ -132,18 +135,9 @@ function buildSrc({
     srcSet = src;
   } else {
     if (fixedSize || type === "source") {
-      const { q: qOption, ...urlParams } = srcOptions;
+      const { q, ...urlParams } = srcOptions;
+      const constructedUrl = constructUrl(rawSrc, urlParams);
 
-      // Get the q from the raw src.
-      const [, qSrc] = Q_PARAM_REGEX.exec(rawSrc) || [];
-      // Use the quality setting from the options, but fall back
-      // to the q param already in the src
-      const q = qOption || qSrc;
-      // Remove q query param if it is already in the url
-      // We’ll add it back using either q passed as an option, q from the src
-      // or use the constants for each dpr
-      const srcWithoutQ = rawSrc.replace(Q_PARAM_REGEX, "");
-      const constructedUrl = constructUrl(srcWithoutQ, urlParams);
       const buildDprSrc = buildDprSrcFunction(
         constructedUrl,
         disableQualityByDPR,
@@ -151,7 +145,7 @@ function buildSrc({
       );
       srcSet = [1, 2, 3, 4, 5].map(buildDprSrc).join(", ");
     } else {
-      const { width, height, ...urlParams } = srcOptions;
+      const { width, w, height, ...urlParams } = srcOptions;
       const constructedUrl = constructUrl(rawSrc, urlParams);
 
       const aspectRatioDecimal = parseAspectRatio(aspectRatio);

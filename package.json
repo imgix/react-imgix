@@ -35,7 +35,7 @@
     "build:watch": "cross-env BABEL_ENV=es babel src --out-dir es --watch",
     "clean": "rimraf lib es",
     "prepublish": "npm run build",
-    "pretty": "prettier --write \"src/**/*.js\"",
+    "pretty": "prettier --write '{src,test}/**/*.{js,jsx}'",
     "release": "standard-version",
     "test:headless": "karma start config/karma/karmaConfigHeadless.js --singleRun",
     "test:headless:watch": "karma start config/karma/karmaConfigHeadless.js",

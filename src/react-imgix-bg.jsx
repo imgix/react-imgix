@@ -1,6 +1,7 @@
 import React from "react";
 import Measure, { withContentRect } from "react-measure";
 import constructUrl from "./constructUrl";
+import extractQueryParams from "./extractQueryParams";
 import targetWidths from "./targetWidths";
 import findClosest from "./findClosest";
 
@@ -83,7 +84,9 @@ const BackgroundImpl = props => {
   }
 
   const renderedSrc = (() => {
+    const [rawSrc, params] = extractQueryParams(src);
     const srcOptions = {
+      ...params,
       fit: "crop",
       ...imgixParams,
       ...(disableLibraryParam ? {} : { ixlib: `react-${PACKAGE_VERSION}` }),
@@ -92,7 +95,7 @@ const BackgroundImpl = props => {
       dpr
     };
 
-    return constructUrl(src, srcOptions);
+    return constructUrl(rawSrc, srcOptions);
   })();
 
   const style = {
