@@ -10,7 +10,7 @@ function targetWidths() {
     resolutions.push(ensureEven(prev));
     prev *= 1 + (INCREMENT_PERCENTAGE / 100) * 2;
   }
-  
+
   resolutions.push(MAX_SIZE);
   return resolutions;
 }
