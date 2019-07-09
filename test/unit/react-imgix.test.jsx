@@ -105,7 +105,7 @@ describe("When in default mode", () => {
       const max = Math.max(...srcsetWidths);
 
       expect(min).not.toBeLessThan(100);
-      expect(min).not.toBeGreaterThan(8192);
+      expect(max).not.toBeGreaterThan(8192);
     });
 
     // 18% used to allow +-1% for rounding
@@ -237,19 +237,65 @@ describe("When in <source> mode", () => {
     it("props.srcSet should be set to a valid src", () => {
       expect(renderImage().props().srcSet).toContain(src);
     });
-    it("srcSet should be in the form src, src 2x, src 3x, src 4x, src 5x", () => {
+
+    it("should have a srcSet set correctly", async () => {
+      const srcset = renderImage().props().srcSet;
+      expect(srcset).not.toBeUndefined();
+      expect(srcset.split(", ")[0].split(" ")).toHaveLength(2);
+      const aSrcFromSrcSet = srcset.split(", ")[0].split(" ")[0];
+      expect(aSrcFromSrcSet).toContain(src);
+      const aWidthFromSrcSet = srcset.split(", ")[0].split(" ")[1];
+      expect(aWidthFromSrcSet).toMatch(/^\d+w$/);
+    });
+
+    it("returns the expected number of `url widthDescriptor` pairs", function() {
+      const srcset = renderImage().props().srcSet;
+
+      expect(srcset.split(",").length).toEqual(targetWidths.length);
+    });
+
+    it("should not exceed the bounds of [100, 8192]", () => {
+      const srcset = renderImage().props().srcSet;
+
+      const srcsetWidths = srcset
+        .split(", ")
+        .map(srcset => srcset.split(" ")[1])
+        .map(width => width.slice(0, -1))
+        .map(Number.parseFloat);
+
+      const min = Math.min(...srcsetWidths);
+      const max = Math.max(...srcsetWidths);
+
+      expect(min).not.toBeLessThan(100);
+      expect(max).not.toBeGreaterThan(8192);
+    });
+  });
+
+  describe("in fixed width mode", () => {
+    const renderImage = () => {
+      return shallowSource(
+        <Source
+          src={src}
+          width={100}
+          htmlAttributes={htmlAttributes}
+          sizes={sizes}
+        />
+      );
+    };
+
+    it("srcSet should be in the form src 1x, src 2x, src 3x, src 4x, src 5x", () => {
       const srcSet = renderImage().props().srcSet;
 
       const srcSets = srcSet.split(", ");
-      expect(srcSets).toHaveLength(6);
+      expect(srcSets).toHaveLength(5);
       srcSets.forEach(srcSet => {
         expect(srcSet).toContain(src);
       });
-      expect(srcSets[1].split(" ")[1]).toBe("1x");
-      expect(srcSets[2].split(" ")[1]).toBe("2x");
-      expect(srcSets[3].split(" ")[1]).toBe("3x");
-      expect(srcSets[4].split(" ")[1]).toBe("4x");
-      expect(srcSets[5].split(" ")[1]).toBe("5x");
+      expect(srcSets[0].split(" ")[1]).toBe("1x");
+      expect(srcSets[1].split(" ")[1]).toBe("2x");
+      expect(srcSets[2].split(" ")[1]).toBe("3x");
+      expect(srcSets[3].split(" ")[1]).toBe("4x");
+      expect(srcSets[4].split(" ")[1]).toBe("5x");
     });
   });
 
