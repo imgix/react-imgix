@@ -542,6 +542,15 @@ describe("When using the component", () => {
     expectSrcsToContain(sut, `w=${width}`);
   });
 
+  it("responsive width should overwrite the width query parameter correctly", () => {
+    sut = shallow(
+      <Imgix src={"https://mysource.imgix.net/demo.png?w=333"} sizes="100wv" />
+    );
+
+    expect(sut.props().src).toContain("w=333");
+    expect(sut.props().srcSet).not.toContain("w=333");
+  });
+
   it("a width prop between 0 and 1 should not be passed as a prop to the child element rendered", () => {
     const width = 0.5;
     sut = shallow(
