@@ -6,6 +6,7 @@ import PropTypes from "prop-types";
 
 import targetWidths from "./targetWidths";
 import constructUrl from "./constructUrl";
+import extractQueryParams from "./extractQueryParams";
 import { deprecatePropsHOC, ShouldComponentUpdateHOC } from "./HOCs";
 
 import { warning, shallowEqual, compose, config, CONSTANTS } from "./common";
@@ -105,7 +106,7 @@ function buildDprSrcFunction(url, disableQualityByDPR, quality) {
  * Build a imgix source url with parameters from a raw url
  */
 function buildSrc({
-  src: rawSrc,
+  src: inputSrc,
   width,
   height,
   disableLibraryParam,
@@ -117,7 +118,10 @@ function buildSrc({
 }) {
   const fixedSize = width != null || height != null;
 
+  const [rawSrc, params] = extractQueryParams(inputSrc);
+
   const srcOptions = {
+    ...params,
     ...imgixParams,
     ...(disableLibraryParam ? {} : { ixlib: `react-${PACKAGE_VERSION}` }),
     ...(fixedSize && height ? { height } : {}),
@@ -151,7 +155,7 @@ function buildSrc({
       );
       srcSet = [1, 2, 3, 4, 5].map(buildDprSrc).join(", ");
     } else {
-      const { width, height, ...urlParams } = srcOptions;
+      const { width, w, height, ...urlParams } = srcOptions;
       const constructedUrl = constructUrl(rawSrc, urlParams);
 
       const aspectRatioDecimal = parseAspectRatio(aspectRatio);

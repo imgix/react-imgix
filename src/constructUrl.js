@@ -7,6 +7,7 @@ Minor syntax modifications have been made
 
 var Base64 = require("js-base64").Base64;
 const PACKAGE_VERSION = require("../package.json").version;
+import extractQueryParams from "./extractQueryParams";
 
 // @see https://www.imgix.com/docs/reference
 var PARAM_EXPANSION = Object.freeze({
@@ -105,21 +106,7 @@ var DEFAULT_OPTIONS = Object.freeze({
 });
 
 function constructUrlFromParams(src, params) {
-  const [url, query] = src.split("?");
-  const oldParams = query
-    ? query
-        .split("&")
-        .map(x => {
-          const [key, val] = x.split("=");
-          return [key, decodeURIComponent(val)];
-        })
-        .reduce((obj, [key, val]) => Object.assign(obj, { [key]: val }), {})
-    : {};
-  const allParams = {
-    ...oldParams,
-    ...params
-  };
-  return `${url}?${Object.entries(allParams)
+  return `${src}?${Object.entries(params)
     .map(([a, b]) => `${a}=${encodeURIComponent(b)}`)
     .join("&")}`;
 }
@@ -159,7 +146,10 @@ function constructUrl(src, longOptions) {
 function buildURLPublic(src, imgixParams = {}, options = {}) {
   const { disableLibraryParam } = options;
 
-  return constructUrl(src, {
+  const [rawSrc, params] = extractQueryParams(src);
+
+  return constructUrl(rawSrc, {
+    ...params,
     ...imgixParams,
     ...(disableLibraryParam ? {} : { ixlib: `react-${PACKAGE_VERSION}` })
   });
