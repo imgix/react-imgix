@@ -105,7 +105,7 @@ describe("When in default mode", () => {
       const max = Math.max(...srcsetWidths);
 
       expect(min).not.toBeLessThan(100);
-      expect(min).not.toBeGreaterThan(8192);
+      expect(max).not.toBeGreaterThan(8192);
     });
 
     // 18% used to allow +-1% for rounding
@@ -267,7 +267,7 @@ describe("When in <source> mode", () => {
       const max = Math.max(...srcsetWidths);
 
       expect(min).not.toBeLessThan(100);
-      expect(min).not.toBeGreaterThan(8192);
+      expect(max).not.toBeGreaterThan(8192);
     });
   });
 
