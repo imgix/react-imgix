@@ -274,11 +274,16 @@ describe("When in <source> mode", () => {
   describe("in fixed width mode", () => {
     const renderImage = () => {
       return shallowSource(
-        <Source src={src} width = {100} htmlAttributes={htmlAttributes} sizes={sizes} />
+        <Source
+          src={src}
+          width={100}
+          htmlAttributes={htmlAttributes}
+          sizes={sizes}
+        />
       );
     };
 
-    it("srcSet should be in the form src, src 2x, src 3x, src 4x, src 5x", () => {
+    it("srcSet should be in the form src 1x, src 2x, src 3x, src 4x, src 5x", () => {
       const srcSet = renderImage().props().srcSet;
 
       const srcSets = srcSet.split(", ");
