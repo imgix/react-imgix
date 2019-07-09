@@ -131,7 +131,7 @@ function buildSrc({
   if (disableSrcSet) {
     srcSet = src;
   } else {
-    if (fixedSize || type === "source") {
+    if (fixedSize) {
       const { q: qOption, ...urlParams } = srcOptions;
 
       // Get the q from the raw src.
@@ -386,7 +386,7 @@ class SourceImpl extends Component {
     if (disableSrcSet) {
       childProps[attributeConfig.srcSet] = src;
     } else {
-      childProps[attributeConfig.srcSet] = `${src}, ${srcSet}`;
+      childProps[attributeConfig.srcSet] = `${srcSet}`;
     }
     // for now we'll take media from htmlAttributes which isn't ideal because
     //   a) this isn't an <img>
