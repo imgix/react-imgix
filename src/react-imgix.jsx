@@ -13,7 +13,6 @@ import { warning, shallowEqual, compose, config, CONSTANTS } from "./common";
 
 const PACKAGE_VERSION = require("../package.json").version;
 const NODE_ENV = process.env.NODE_ENV;
-const Q_PARAM_REGEX = /&?q=([^&]+)/;
 
 const buildKey = idx => `react-imgix-${idx}`;
 
@@ -136,18 +135,9 @@ function buildSrc({
     srcSet = src;
   } else {
     if (fixedSize || type === "source") {
-      const { q: qOption, ...urlParams } = srcOptions;
+      const { q, ...urlParams } = srcOptions;
+      const constructedUrl = constructUrl(rawSrc, urlParams);
 
-      // Get the q from the raw src.
-      const [, qSrc] = Q_PARAM_REGEX.exec(rawSrc) || [];
-      // Use the quality setting from the options, but fall back
-      // to the q param already in the src
-      const q = qOption || qSrc;
-      // Remove q query param if it is already in the url
-      // We’ll add it back using either q passed as an option, q from the src
-      // or use the constants for each dpr
-      const srcWithoutQ = rawSrc.replace(Q_PARAM_REGEX, "");
-      const constructedUrl = constructUrl(srcWithoutQ, urlParams);
       const buildDprSrc = buildDprSrcFunction(
         constructedUrl,
         disableQualityByDPR,
