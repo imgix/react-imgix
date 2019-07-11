@@ -1,6 +1,6 @@
 {
   "name": "react-imgix",
-  "version": "8.6.2",
+  "version": "8.6.3",
   "description": "React Component for displaying an image from Imgix",
   "author": "Frederick Fogerty <frederick.fogerty@gmail.com> (https://github.com/frederickfogerty)",
   "contributors": [
