@@ -72,17 +72,25 @@ function parseAspectRatio(aspectRatio) {
  */
 function buildSrcSetPairFunction(url, aspectRatioDecimal = 0, fixedHeight) {
   if (fixedHeight) {
-    return targetWidth =>
-      `${url}&h=${fixedHeight}&w=${targetWidth} ${targetWidth}w`;
+    const buildSrcSetPairWithFixedHeight = targetWidth =>
+      url + "&h=" + fixedHeight + "&w=" + targetWidth + " " + targetWidth + "w";
+    return buildSrcSetPairWithFixedHeight;
   }
   if (aspectRatioDecimal > 0) {
-    return targetWidth =>
-      `${url}&h=${Math.ceil(
-        targetWidth / aspectRatioDecimal
-      )}&w=${targetWidth} ${targetWidth}w`;
+    const buildSrcSetPairWithAspectRatio = targetWidth =>
+      url +
+      "&h=" +
+      Math.ceil(targetWidth / aspectRatioDecimal) +
+      "&w=" +
+      targetWidth +
+      " " +
+      targetWidth +
+      "w";
+    return buildSrcSetPairWithAspectRatio;
   }
-
-  return targetWidth => `${url}&w=${targetWidth} ${targetWidth}w`;
+  const buildSrcSetPairWithTargetWidth = targetWidth =>
+    url + "&w=" + targetWidth + " " + targetWidth + "w";
+  return buildSrcSetPairWithTargetWidth;
 }
 
 /**
