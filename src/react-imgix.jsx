@@ -91,14 +91,19 @@ function buildSrcSetPairFunction(url, aspectRatioDecimal = 0, fixedHeight) {
  */
 function buildDprSrcFunction(url, disableQualityByDPR, quality) {
   // Use quality if explicitly passed in -- either as an option or already in the url
-  if (disableQualityByDPR && quality) {
-    return dpr => `${url}&q=${quality}&dpr=${dpr} ${dpr}x`;
+  if (quality) {
+    const buildDprSrcWithQuality = (_, dpr) =>
+      url + "&q=" + quality + "&dpr=" + (dpr + 1) + " " + (dpr + 1) + "x";
+    return buildDprSrcWithQuality;
   }
   if (disableQualityByDPR) {
-    return dpr => `${url}&dpr=${dpr} ${dpr}x`;
+    const buildDprSrcWithoutQuality = (_, dpr) =>
+      url + "&dpr=" + (dpr + 1) + " " + (dpr + 1) + "x";
+    return buildDprSrcWithoutQuality;
   }
-  return dpr =>
-    `${url}&q=${quality || CONSTANTS[`q_dpr${dpr}`]}&dpr=${dpr} ${dpr}x`;
+  const buildDprSrcWithQualityByDpr = (quality, dpr) =>
+    url + "&q=" + quality + "&dpr=" + (dpr + 1) + " " + (dpr + 1) + "x";
+  return buildDprSrcWithQualityByDpr;
 }
 
 /**
@@ -143,7 +148,9 @@ function buildSrc({
         disableQualityByDPR,
         q
       );
-      srcSet = [1, 2, 3, 4, 5].map(buildDprSrc).join(", ");
+      srcSet = Object.values(CONSTANTS)
+        .map(buildDprSrc)
+        .join(", ");
     } else {
       const { width, w, height, ...urlParams } = srcOptions;
       const constructedUrl = constructUrl(rawSrc, urlParams);
