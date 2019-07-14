@@ -106,9 +106,14 @@ var DEFAULT_OPTIONS = Object.freeze({
 });
 
 function constructUrlFromParams(src, params) {
-  return `${src}?${Object.entries(params)
-    .map(([a, b]) => `${a}=${encodeURIComponent(b)}`)
-    .join("&")}`;
+  const keys = Object.keys(params);
+  const keysLength = keys.length;
+  let url = src + "?";
+  for (let i = 0; i < keysLength; i++) {
+    const key = keys[i];
+    url += key + "=" + encodeURIComponent(params[key]) + "&";
+  }
+  return url.slice(0, -1);
 }
 
 /**
