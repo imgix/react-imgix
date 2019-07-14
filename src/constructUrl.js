@@ -145,11 +145,15 @@ function buildURLPublic(src, imgixParams = {}, options = {}) {
 
   const [rawSrc, params] = extractQueryParams(src);
 
-  return constructUrl(rawSrc, {
-    ...params,
-    ...imgixParams,
-    ...(disableLibraryParam ? {} : { ixlib: `react-${PACKAGE_VERSION}` })
-  });
+  return constructUrl(
+    rawSrc,
+    Object.assign(
+      {},
+      params,
+      imgixParams,
+      disableLibraryParam ? {} : { ixlib: `react-${PACKAGE_VERSION}` }
+    )
+  );
 }
 
 export default constructUrl;
