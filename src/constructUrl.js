@@ -123,9 +123,12 @@ function constructUrl(src, longOptions) {
     return "";
   }
 
-  var shortOptions = Object.assign({}, DEFAULT_OPTIONS);
-  Object.keys(longOptions).forEach(function(key) {
-    var val = longOptions[key];
+  const shortOptions = Object.assign({}, DEFAULT_OPTIONS);
+  const keys = Object.keys(longOptions);
+  const keysLength = keys.length;
+  for (let i = 0; i < keysLength; i++) {
+    let key = keys[i];
+    let val = longOptions[key];
 
     if (PARAM_EXPANSION[key]) {
       key = PARAM_EXPANSION[key];
@@ -138,7 +141,7 @@ function constructUrl(src, longOptions) {
     }
 
     shortOptions[key] = val;
-  });
+  }
 
   return constructUrlFromParams(src, shortOptions);
 }
