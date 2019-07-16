@@ -106,9 +106,14 @@ var DEFAULT_OPTIONS = Object.freeze({
 });
 
 function constructUrlFromParams(src, params) {
-  return `${src}?${Object.entries(params)
-    .map(([a, b]) => `${a}=${encodeURIComponent(b)}`)
-    .join("&")}`;
+  const keys = Object.keys(params);
+  const keysLength = keys.length;
+  let url = src + "?";
+  for (let i = 0; i < keysLength; i++) {
+    const key = keys[i];
+    url += key + "=" + encodeURIComponent(params[key]) + "&";
+  }
+  return url.slice(0, -1);
 }
 
 /**
@@ -123,9 +128,12 @@ function constructUrl(src, longOptions) {
     return "";
   }
 
-  var shortOptions = Object.assign({}, DEFAULT_OPTIONS);
-  Object.keys(longOptions).forEach(function(key) {
-    var val = longOptions[key];
+  const shortOptions = Object.assign({}, DEFAULT_OPTIONS);
+  const keys = Object.keys(longOptions);
+  const keysLength = keys.length;
+  for (let i = 0; i < keysLength; i++) {
+    let key = keys[i];
+    let val = longOptions[key];
 
     if (PARAM_EXPANSION[key]) {
       key = PARAM_EXPANSION[key];
@@ -138,7 +146,7 @@ function constructUrl(src, longOptions) {
     }
 
     shortOptions[key] = val;
-  });
+  }
 
   return constructUrlFromParams(src, shortOptions);
 }
