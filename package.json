@@ -86,7 +86,7 @@
     "babel-jest": "24.8.0",
     "babel-loader": "8.0.6",
     "babel-plugin-inline-package-json": "2.0.0",
-    "browserslist": "4.6.4",
+    "browserslist": "4.6.6",
     "common-tags": "1.8.0",
     "cross-env": "5.2.0",
     "enzyme": "3.10.0",
