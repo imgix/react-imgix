@@ -105,17 +105,6 @@ var DEFAULT_OPTIONS = Object.freeze({
   auto: "format" // http://www.imgix.com/docs/reference/automatic#param-auto
 });
 
-function constructUrlFromParams(src, params) {
-  const keys = Object.keys(params);
-  const keysLength = keys.length;
-  let url = src + "?";
-  for (let i = 0; i < keysLength; i++) {
-    const key = keys[i];
-    url += key + "=" + encodeURIComponent(params[key]) + "&";
-  }
-  return url.slice(0, -1);
-}
-
 /**
  * Construct a URL for an image with an Imgix proxy, expanding image options
  * per the [API reference docs](https://www.imgix.com/docs/reference).
@@ -128,27 +117,27 @@ function constructUrl(src, longOptions) {
     return "";
   }
 
-  const shortOptions = Object.assign({}, DEFAULT_OPTIONS);
   const keys = Object.keys(longOptions);
   const keysLength = keys.length;
+  let url = src + "?";
   for (let i = 0; i < keysLength; i++) {
     let key = keys[i];
     let val = longOptions[key];
 
     if (PARAM_EXPANSION[key]) {
       key = PARAM_EXPANSION[key];
+    } else {
+      key = encodeURIComponent(key);
     }
-
-    key = encodeURIComponent(key);
 
     if (key.substr(-2) === "64") {
       val = Base64.encodeURI(val);
     }
 
-    shortOptions[key] = val;
+    url += key + "=" + encodeURIComponent(val) + "&";
   }
 
-  return constructUrlFromParams(src, shortOptions);
+  return url.slice(0, -1);
 }
 
 function buildURLPublic(src, imgixParams = {}, options = {}) {
