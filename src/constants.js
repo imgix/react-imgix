@@ -1,4 +1,4 @@
-const CONSTANTS = {
+export const DPR_QUALITY = {
   q_dpr1: 75,
   q_dpr2: 50,
   q_dpr3: 35,
@@ -6,4 +6,4 @@ const CONSTANTS = {
   q_dpr5: 20
 };
 
-export default CONSTANTS;
+export const DPR_QUALITY_VALUES = Object.values(DPR_QUALITY);

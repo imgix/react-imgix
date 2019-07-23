@@ -9,7 +9,8 @@ import constructUrl from "./constructUrl";
 import extractQueryParams from "./extractQueryParams";
 import { deprecatePropsHOC, ShouldComponentUpdateHOC } from "./HOCs";
 
-import { warning, shallowEqual, compose, config, CONSTANTS } from "./common";
+import { warning, shallowEqual, compose, config } from "./common";
+import { DPR_QUALITY_VALUES } from "./constants";
 
 const PACKAGE_VERSION = require("../package.json").version;
 const NODE_ENV = process.env.NODE_ENV;
@@ -66,40 +67,35 @@ function parseAspectRatio(aspectRatio) {
   return parseFloat(width) / parseFloat(height);
 }
 
-/**
- * Returns a function which builds a srcSet string with the width,
- * and height if there is one
- */
-function buildSrcSetPairFunction(url, aspectRatioDecimal = 0, fixedHeight) {
-  if (fixedHeight) {
-    return targetWidth =>
-      `${url}&h=${fixedHeight}&w=${targetWidth} ${targetWidth}w`;
-  }
-  if (aspectRatioDecimal > 0) {
-    return targetWidth =>
-      `${url}&h=${Math.ceil(
-        targetWidth / aspectRatioDecimal
-      )}&w=${targetWidth} ${targetWidth}w`;
-  }
+const buildSrcSetPairWithFixedHeight = (url, targetWidth, fixedHeight, _) =>
+  url + "&h=" + fixedHeight + "&w=" + targetWidth + " " + targetWidth + "w";
 
-  return targetWidth => `${url}&w=${targetWidth} ${targetWidth}w`;
-}
+const buildSrcSetPairWithAspectRatio = (
+  url,
+  targetWidth,
+  _,
+  aspectRatioDecimal
+) =>
+  url +
+  "&h=" +
+  Math.ceil(targetWidth / aspectRatioDecimal) +
+  "&w=" +
+  targetWidth +
+  " " +
+  targetWidth +
+  "w";
 
-/**
- * Returns a function which builds a srcSet string with dpr,
- * and quality if not disabled.
- */
-function buildDprSrcFunction(url, disableQualityByDPR, quality) {
-  // Use quality if explicitly passed in -- either as an option or already in the url
-  if (disableQualityByDPR && quality) {
-    return dpr => `${url}&q=${quality}&dpr=${dpr} ${dpr}x`;
-  }
-  if (disableQualityByDPR) {
-    return dpr => `${url}&dpr=${dpr} ${dpr}x`;
-  }
-  return dpr =>
-    `${url}&q=${quality || CONSTANTS[`q_dpr${dpr}`]}&dpr=${dpr} ${dpr}x`;
-}
+const buildSrcSetPairWithTargetWidth = (url, targetWidth, _1, _2) =>
+  url + "&w=" + targetWidth + " " + targetWidth + "w";
+
+const buildDprSrcWithQuality = (url, quality, dpr) =>
+  url + "&q=" + quality + "&dpr=" + dpr + " " + dpr + "x";
+
+const buildDprSrcWithoutQuality = (url, _, dpr) =>
+  url + "&dpr=" + dpr + " " + dpr + "x";
+
+const buildDprSrcWithQualityByDpr = (url, quality, dpr) =>
+  url + "&q=" + quality + "&dpr=" + dpr + " " + dpr + "x";
 
 /**
  * Build a imgix source url with parameters from a raw url
@@ -138,12 +134,20 @@ function buildSrc({
       const { q, ...urlParams } = srcOptions;
       const constructedUrl = constructUrl(rawSrc, urlParams);
 
-      const buildDprSrc = buildDprSrcFunction(
-        constructedUrl,
-        disableQualityByDPR,
-        q
-      );
-      srcSet = [1, 2, 3, 4, 5].map(buildDprSrc).join(", ");
+      let srcFn = buildDprSrcWithQualityByDpr;
+      if (q) {
+        srcFn = buildDprSrcWithQuality;
+      } else if (disableQualityByDPR) {
+        srcFn = buildDprSrcWithoutQuality;
+      }
+
+      srcSet = "";
+      const len = DPR_QUALITY_VALUES.length;
+      for (let i = 0; i < len; i++) {
+        const quality = DPR_QUALITY_VALUES[i];
+        srcSet += srcFn(constructedUrl, q || quality, i + 1) + ", ";
+      }
+      srcSet = srcSet.slice(0, -2);
     } else {
       const { width, w, height, ...urlParams } = srcOptions;
       const constructedUrl = constructUrl(rawSrc, urlParams);
@@ -152,12 +156,20 @@ function buildSrc({
       // false indicates invalid
       let showARWarning = aspectRatio != null && aspectRatioDecimal === false;
 
-      const buildSrcSetPair = buildSrcSetPairFunction(
-        constructedUrl,
-        aspectRatioDecimal,
-        height
-      );
-      srcSet = targetWidths.map(buildSrcSetPair).join(", ");
+      let srcFn = buildSrcSetPairWithTargetWidth;
+      if (height) {
+        srcFn = buildSrcSetPairWithFixedHeight;
+      } else if (aspectRatioDecimal) {
+        srcFn = buildSrcSetPairWithAspectRatio;
+      }
+      srcSet = "";
+      const len = targetWidths.length;
+      for (let i = 0; i < len; i++) {
+        const targetWidth = targetWidths[i];
+        srcSet +=
+          srcFn(constructedUrl, targetWidth, height, aspectRatioDecimal) + ", ";
+      }
+      srcSet = srcSet.slice(0, -2);
 
       if (showARWarning && config.warnings.invalidARFormat) {
         console.warn(
