@@ -38,17 +38,20 @@ const COMMON_PROP_TYPES = {
   htmlAttributes: PropTypes.object
 };
 
-const SHARED_IMGIX_AND_SOURCE_PROP_TYPES = {
-  ...COMMON_PROP_TYPES,
-  disableQualityByDPR: PropTypes.bool,
-  disableSrcSet: PropTypes.bool,
-  disableLibraryParam: PropTypes.bool,
-  imgixParams: PropTypes.object,
-  sizes: PropTypes.string,
-  width: PropTypes.number,
-  height: PropTypes.number,
-  src: PropTypes.string.isRequired
-};
+const SHARED_IMGIX_AND_SOURCE_PROP_TYPES = Object.assign(
+  {},
+  COMMON_PROP_TYPES,
+  {
+    disableQualityByDPR: PropTypes.bool,
+    disableSrcSet: PropTypes.bool,
+    disableLibraryParam: PropTypes.bool,
+    imgixParams: PropTypes.object,
+    sizes: PropTypes.string,
+    width: PropTypes.number,
+    height: PropTypes.number,
+    src: PropTypes.string.isRequired
+  }
+);
 
 /**
  * Parse an aspect ratio in the format w:h to a decimal. If false is returned, the aspect ratio is in the wrong format.
@@ -115,13 +118,14 @@ function buildSrc({
 
   const [rawSrc, params] = extractQueryParams(inputSrc);
 
-  const srcOptions = {
-    ...params,
-    ...imgixParams,
-    ...(disableLibraryParam ? {} : { ixlib: `react-${PACKAGE_VERSION}` }),
-    ...(fixedSize && height ? { height } : {}),
-    ...(fixedSize && width ? { width } : {})
-  };
+  const srcOptions = Object.assign(
+    {},
+    params,
+    imgixParams,
+    disableLibraryParam ? {} : { ixlib: `react-${PACKAGE_VERSION}` },
+    fixedSize && height ? { height } : {},
+    fixedSize && width ? { width } : {}
+  );
 
   const src = constructUrl(rawSrc, srcOptions);
 
@@ -189,10 +193,7 @@ function buildSrc({
  * Combines default imgix params with custom imgix params to make a imgix params config object
  */
 function imgixParams(props) {
-  const params = {
-    ...defaultImgixParams,
-    ...props.imgixParams
-  };
+  const params = Object.assign({}, defaultImgixParams, props.imgixParams);
 
   let fit = false;
   if (params.crop != null) fit = "crop";
@@ -202,19 +203,14 @@ function imgixParams(props) {
     delete params.ar;
   }
 
-  return {
-    ...params,
-    fit
-  };
+  return Object.assign({}, params, { fit });
 }
 
 /**
  * React component used to render <img> elements with Imgix
  */
 class ReactImgix extends Component {
-  static propTypes = {
-    ...SHARED_IMGIX_AND_SOURCE_PROP_TYPES
-  };
+  static propTypes = Object.assign({}, SHARED_IMGIX_AND_SOURCE_PROP_TYPES);
   static defaultProps = {
     disableSrcSet: false,
     onMounted: noop
@@ -244,25 +240,26 @@ class ReactImgix extends Component {
 
     const htmlAttributes = this.props.htmlAttributes || {};
 
-    const { src, srcSet } = buildSrc({
-      ...this.props,
-      type: "img",
-      imgixParams: imgixParams(this.props),
-      aspectRatio: (this.props.imgixParams || {}).ar
-    });
+    const { src, srcSet } = buildSrc(
+      Object.assign({}, this.props, {
+        type: "img",
+        imgixParams: imgixParams(this.props),
+        aspectRatio: (this.props.imgixParams || {}).ar
+      })
+    );
 
-    const attributeConfig = {
-      ...defaultAttributeMap,
-      ...this.props.attributeConfig
-    };
-    const childProps = {
-      ...this.props.htmlAttributes,
+    const attributeConfig = Object.assign(
+      {},
+      defaultAttributeMap,
+      this.props.attributeConfig
+    );
+    const childProps = Object.assign({}, this.props.htmlAttributes, {
       [attributeConfig.sizes]: this.props.sizes,
       className: this.props.className,
       width: width <= 1 ? null : width,
       height: height <= 1 ? null : height,
       [attributeConfig.src]: src
-    };
+    });
     if (!disableSrcSet) {
       childProps[attributeConfig.srcSet] = srcSet;
     }
@@ -295,10 +292,9 @@ ReactImgix.displayName = "ReactImgix";
  * React component used to render <picture> elements with Imgix
  */
 class PictureImpl extends Component {
-  static propTypes = {
-    ...COMMON_PROP_TYPES,
+  static propTypes = Object.assign({}, COMMON_PROP_TYPES, {
     children: PropTypes.any
-  };
+  });
   static defaultProps = {
     onMounted: noop
   };
@@ -351,9 +347,7 @@ PictureImpl.displayName = "ReactImgixPicture";
  * React component used to render <source> elements with Imgix
  */
 class SourceImpl extends Component {
-  static propTypes = {
-    ...SHARED_IMGIX_AND_SOURCE_PROP_TYPES
-  };
+  static propTypes = Object.assign({}, SHARED_IMGIX_AND_SOURCE_PROP_TYPES);
   static defaultProps = {
     disableSrcSet: false,
     onMounted: noop
@@ -368,23 +362,24 @@ class SourceImpl extends Component {
 
     const htmlAttributes = this.props.htmlAttributes || {};
 
-    const { src, srcSet } = buildSrc({
-      ...this.props,
-      type: "source",
-      imgixParams: imgixParams(this.props)
-    });
+    const { src, srcSet } = buildSrc(
+      Object.assign({}, this.props, {
+        type: "source",
+        imgixParams: imgixParams(this.props)
+      })
+    );
 
-    const attributeConfig = {
-      ...defaultAttributeMap,
-      ...this.props.attributeConfig
-    };
-    const childProps = {
-      ...this.props.htmlAttributes,
+    const attributeConfig = Object.assign(
+      {},
+      defaultAttributeMap,
+      this.props.attributeConfig
+    );
+    const childProps = Object.assign({}, this.props.htmlAttributes, {
       [attributeConfig.sizes]: this.props.sizes,
       className: this.props.className,
       width: width <= 1 ? null : width,
       height: height <= 1 ? null : height
-    };
+    });
 
     // inside of a <picture> element a <source> element ignores its src
     // attribute in favor of srcSet so we set that with either an actual
