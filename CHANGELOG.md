@@ -2,6 +2,8 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [8.6.4](https://github.com/imgix/react-imgix/compare/v8.6.3...v8.6.4) (2019-08-08)
+
 ### [8.6.3](https://github.com/imgix/react-imgix/compare/v8.6.2...v8.6.3) (2019-07-11)
 
 
