@@ -4,6 +4,16 @@ All notable changes to this project will be documented in this file. See [standa
 
 ### [8.6.4](https://github.com/imgix/react-imgix/compare/v8.6.3...v8.6.4) (2019-08-08)
 
+
+### Features
+
+* perf: optimize URL handling ([#414](https://github.com/imgix/react-imgix/pull/414)) ([8d14dcb](https://github.com/imgix/react-imgix/commit/8d14dcb))
+* perf: optimize `constructUrl` function ([#418](https://github.com/imgix/react-imgix/pull/418)) ([8d392a0](https://github.com/imgix/react-imgix/commit/8d392a0))
+* perf: use string concatenation instead of template strings ([#420](https://github.com/imgix/react-imgix/pull/420)) ([f41cc73](https://github.com/imgix/react-imgix/commit/f41cc73))
+* perf: use `Object.assign` instead of spread operator ([#423](https://github.com/imgix/react-imgix/pull/423)) ([29b25d5](https://github.com/imgix/react-imgix/commit/29b25d5))
+
+
+
 ### [8.6.3](https://github.com/imgix/react-imgix/compare/v8.6.2...v8.6.3) (2019-07-11)
 
 
