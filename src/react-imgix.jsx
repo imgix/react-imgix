@@ -73,21 +73,6 @@ function parseAspectRatio(aspectRatio) {
 const buildSrcSetPairWithFixedHeight = (url, targetWidth, fixedHeight, _) =>
   url + "&h=" + fixedHeight + "&w=" + targetWidth + " " + targetWidth + "w";
 
-const buildSrcSetPairWithAspectRatio = (
-  url,
-  targetWidth,
-  _,
-  aspectRatioDecimal
-) =>
-  url +
-  "&h=" +
-  Math.ceil(targetWidth / aspectRatioDecimal) +
-  "&w=" +
-  targetWidth +
-  " " +
-  targetWidth +
-  "w";
-
 const buildSrcSetPairWithTargetWidth = (url, targetWidth, _1, _2) =>
   url + "&w=" + targetWidth + " " + targetWidth + "w";
 
@@ -111,7 +96,6 @@ function buildSrc({
   disableSrcSet,
   type,
   imgixParams,
-  aspectRatio,
   disableQualityByDPR
 }) {
   const fixedSize = width != null || height != null;
@@ -156,6 +140,7 @@ function buildSrc({
       const { width, w, height, ...urlParams } = srcOptions;
       const constructedUrl = constructUrl(rawSrc, urlParams);
 
+      const aspectRatio = imgixParams.ar;
       const aspectRatioDecimal = parseAspectRatio(aspectRatio);
       // false indicates invalid
       let showARWarning = aspectRatio != null && aspectRatioDecimal === false;
@@ -163,15 +148,14 @@ function buildSrc({
       let srcFn = buildSrcSetPairWithTargetWidth;
       if (height) {
         srcFn = buildSrcSetPairWithFixedHeight;
-      } else if (aspectRatioDecimal) {
-        srcFn = buildSrcSetPairWithAspectRatio;
       }
+
       srcSet = "";
       const len = targetWidths.length;
       for (let i = 0; i < len; i++) {
         const targetWidth = targetWidths[i];
         srcSet +=
-          srcFn(constructedUrl, targetWidth, height, aspectRatioDecimal) + ", ";
+          srcFn(constructedUrl, targetWidth, height) + ", ";
       }
       srcSet = srcSet.slice(0, -2);
 
@@ -199,9 +183,6 @@ function imgixParams(props) {
   if (params.crop != null) fit = "crop";
   if (params.fit) fit = params.fit;
 
-  if (params.ar) {
-    delete params.ar;
-  }
 
   return Object.assign({}, params, { fit });
 }
@@ -244,7 +225,6 @@ class ReactImgix extends Component {
       Object.assign({}, this.props, {
         type: "img",
         imgixParams: imgixParams(this.props),
-        aspectRatio: (this.props.imgixParams || {}).ar
       })
     );
 
