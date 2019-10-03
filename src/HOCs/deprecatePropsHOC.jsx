@@ -66,9 +66,7 @@ const deprecatePropsHOC = WrappedComponent => {
   WithDeprecatedProps.defaultProps = {
     imgixParams: {}
   };
-  WithDeprecatedProps.displayName = `WithDeprecatedProps(${
-    WrappedComponent.displayName
-  })`;
+  WithDeprecatedProps.displayName = `WithDeprecatedProps(${WrappedComponent.displayName})`;
 
   return WithDeprecatedProps;
 };

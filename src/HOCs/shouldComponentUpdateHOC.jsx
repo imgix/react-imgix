@@ -38,9 +38,7 @@ const ShouldComponentUpdateHOC = WrappedComponent => {
       return <WrappedComponent {...this.props} />;
     }
   }
-  ShouldComponentUpdateHOC.displayName = `ShouldComponentUpdateHOC(${
-    WrappedComponent.displayName
-  })`;
+  ShouldComponentUpdateHOC.displayName = `ShouldComponentUpdateHOC(${WrappedComponent.displayName})`;
   return ShouldComponentUpdateHOC;
 };
 

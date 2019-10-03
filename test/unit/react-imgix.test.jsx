@@ -650,7 +650,6 @@ describe("When using the component", () => {
           removeFallbackSrcSet(srcSetUrls).forEach(srcSetUrl => {
             const w = parseParam(srcSetUrl, "w");
             const h = parseParam(srcSetUrl, "h");
-
             expect(h).toEqual(Math.ceil(w / arDecimal));
             expect(w).toBeTruthy();
             expect(h).toBeTruthy();
