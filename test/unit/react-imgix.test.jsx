@@ -632,7 +632,7 @@ describe("When using the component", () => {
           const parseParam = (url, param) => {
             const matched = url.match("[?&]" + param + "=([^&]+)");
             if (!matched) return undefined;
-            return parseInt(matched[1], 10);
+            return matched[1];
           };
           const removeFallbackSrcSet = srcSets => srcSets.slice(0, -1);
 
@@ -665,7 +665,7 @@ describe("When using the component", () => {
         ["11.123:11.123"]
       ].forEach(([validAR, validArDecimal]) =>
         testValidAR({
-          ar: validAR,
+          ar: validAR
         })
       );
     });
@@ -697,7 +697,7 @@ describe("When using the component", () => {
           removeFallbackSrcSet(srcSetUrls).forEach(srcSetUrl => {
             const w = parseParam(srcSetUrl, "w");
             const ar = parseParam(srcSetUrl, "ar");
-            
+
             expect(w).toBeTruthy();
             expect(ar).toBeTruthy();
           });
@@ -714,7 +714,9 @@ describe("When using the component", () => {
         "blah1:1",
         "1x1",
         "1:1blah",
-        "1:blah1"
+        "1:blah1",
+        0.145,
+        true
       ].forEach(invalidAR => testInvalidAR(invalidAR));
     });
 

@@ -54,20 +54,14 @@ const SHARED_IMGIX_AND_SOURCE_PROP_TYPES = Object.assign(
 );
 
 /**
- * Parse an aspect ratio in the format w:h to a decimal. If false is returned, the aspect ratio is in the wrong format.
+ * Validates that an aspect ratio is in the format w:h. If false is returned, the aspect ratio is in the wrong format.
  */
-function parseAspectRatio(aspectRatio) {
+function aspectRatioIsValid(aspectRatio) {
   if (typeof aspectRatio !== "string") {
     return false;
   }
-  const isValidFormat = str => /^\d+(\.\d+)?:\d+(\.\d+)?$/.test(str);
-  if (!isValidFormat(aspectRatio)) {
-    return false;
-  }
 
-  const [width, height] = aspectRatio.split(":");
-
-  return parseFloat(width) / parseFloat(height);
+  return /^\d+(\.\d+)?:\d+(\.\d+)?$/.test(aspectRatio);
 }
 
 const buildSrcSetPairWithFixedHeight = (url, targetWidth, fixedHeight, _) =>
@@ -141,9 +135,8 @@ function buildSrc({
       const constructedUrl = constructUrl(rawSrc, urlParams);
 
       const aspectRatio = imgixParams.ar;
-      const aspectRatioDecimal = parseAspectRatio(aspectRatio);
-      // false indicates invalid
-      let showARWarning = aspectRatio != null && aspectRatioDecimal === false;
+      let showARWarning =
+        aspectRatio != null && aspectRatioIsValid(aspectRatio) === false;
 
       let srcFn = buildSrcSetPairWithTargetWidth;
       if (height) {
@@ -154,12 +147,15 @@ function buildSrc({
       const len = targetWidths.length;
       for (let i = 0; i < len; i++) {
         const targetWidth = targetWidths[i];
-        srcSet +=
-          srcFn(constructedUrl, targetWidth, height) + ", ";
+        srcSet += srcFn(constructedUrl, targetWidth, height) + ", ";
       }
       srcSet = srcSet.slice(0, -2);
 
-      if (showARWarning && config.warnings.invalidARFormat) {
+      if (
+        NODE_ENV !== "production" &&
+        showARWarning &&
+        config.warnings.invalidARFormat
+      ) {
         console.warn(
           `[Imgix] The aspect ratio passed ("${aspectRatio}") is not in the correct format. The correct format is "W:H".`
         );
@@ -182,7 +178,6 @@ function imgixParams(props) {
   let fit = false;
   if (params.crop != null) fit = "crop";
   if (params.fit) fit = params.fit;
-
 
   return Object.assign({}, params, { fit });
 }
@@ -224,7 +219,7 @@ class ReactImgix extends Component {
     const { src, srcSet } = buildSrc(
       Object.assign({}, this.props, {
         type: "img",
-        imgixParams: imgixParams(this.props),
+        imgixParams: imgixParams(this.props)
       })
     );
 
