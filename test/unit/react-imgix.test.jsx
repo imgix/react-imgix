@@ -649,7 +649,6 @@ describe("When using the component", () => {
           const srcSetUrls = srcSets.map(srcSet => srcSet.split(" ")[0]);
           removeFallbackSrcSet(srcSetUrls).forEach(srcSetUrl => {
             const ar = parseParam(srcSetUrl, "ar");
-
             expect(ar).toBeTruthy();
           });
         });
