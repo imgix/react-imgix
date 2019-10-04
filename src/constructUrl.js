@@ -5,9 +5,9 @@ Licensed under the Apache License 2.0, seen https://github.com/coursera/react-im
 Minor syntax modifications have been made
 */
 
-var Uri = require("jsuri");
 var Base64 = require("js-base64").Base64;
 const PACKAGE_VERSION = require("../package.json").version;
+import extractQueryParams from "./extractQueryParams";
 
 // @see https://www.imgix.com/docs/reference
 var PARAM_EXPANSION = Object.freeze({
@@ -105,15 +105,6 @@ var DEFAULT_OPTIONS = Object.freeze({
   auto: "format" // http://www.imgix.com/docs/reference/automatic#param-auto
 });
 
-function constructUrlFromParams(src, params) {
-  var optionKeys = Object.keys(params);
-  var fullUrl = optionKeys.reduce(function(uri, key) {
-    return uri.replaceQueryParam(key, params[key]);
-  }, new Uri(src));
-
-  return fullUrl.toString();
-}
-
 /**
  * Construct a URL for an image with an Imgix proxy, expanding image options
  * per the [API reference docs](https://www.imgix.com/docs/reference).
@@ -126,33 +117,43 @@ function constructUrl(src, longOptions) {
     return "";
   }
 
-  var shortOptions = Object.assign({}, DEFAULT_OPTIONS);
-  Object.keys(longOptions).forEach(function(key) {
-    var val = longOptions[key];
+  const keys = Object.keys(longOptions);
+  const keysLength = keys.length;
+  let url = src + "?";
+  for (let i = 0; i < keysLength; i++) {
+    let key = keys[i];
+    let val = longOptions[key];
 
     if (PARAM_EXPANSION[key]) {
       key = PARAM_EXPANSION[key];
+    } else {
+      key = encodeURIComponent(key);
     }
-
-    key = encodeURIComponent(key);
 
     if (key.substr(-2) === "64") {
       val = Base64.encodeURI(val);
     }
 
-    shortOptions[key] = val;
-  });
+    url += key + "=" + encodeURIComponent(val) + "&";
+  }
 
-  return constructUrlFromParams(src, shortOptions);
+  return url.slice(0, -1);
 }
 
 function buildURLPublic(src, imgixParams = {}, options = {}) {
   const { disableLibraryParam } = options;
 
-  return constructUrl(src, {
-    ...imgixParams,
-    ...(disableLibraryParam ? {} : { ixlib: `react-${PACKAGE_VERSION}` })
-  });
+  const [rawSrc, params] = extractQueryParams(src);
+
+  return constructUrl(
+    rawSrc,
+    Object.assign(
+      {},
+      params,
+      imgixParams,
+      disableLibraryParam ? {} : { ixlib: `react-${PACKAGE_VERSION}` }
+    )
+  );
 }
 
 export default constructUrl;

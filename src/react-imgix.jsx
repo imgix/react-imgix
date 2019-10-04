@@ -6,9 +6,11 @@ import PropTypes from "prop-types";
 
 import targetWidths from "./targetWidths";
 import constructUrl from "./constructUrl";
+import extractQueryParams from "./extractQueryParams";
 import { deprecatePropsHOC, ShouldComponentUpdateHOC } from "./HOCs";
 
-import { warning, shallowEqual, compose, config, CONSTANTS } from "./common";
+import { warning, shallowEqual, compose, config } from "./common";
+import { DPR_QUALITY_VALUES } from "./constants";
 
 const PACKAGE_VERSION = require("../package.json").version;
 const NODE_ENV = process.env.NODE_ENV;
@@ -36,57 +38,72 @@ const COMMON_PROP_TYPES = {
   htmlAttributes: PropTypes.object
 };
 
-const SHARED_IMGIX_AND_SOURCE_PROP_TYPES = {
-  ...COMMON_PROP_TYPES,
-  disableQualityByDPR: PropTypes.bool,
-  disableSrcSet: PropTypes.bool,
-  disableLibraryParam: PropTypes.bool,
-  imgixParams: PropTypes.object,
-  sizes: PropTypes.string,
-  width: PropTypes.number,
-  height: PropTypes.number,
-  src: PropTypes.string.isRequired
-};
+const SHARED_IMGIX_AND_SOURCE_PROP_TYPES = Object.assign(
+  {},
+  COMMON_PROP_TYPES,
+  {
+    disableQualityByDPR: PropTypes.bool,
+    disableSrcSet: PropTypes.bool,
+    disableLibraryParam: PropTypes.bool,
+    imgixParams: PropTypes.object,
+    sizes: PropTypes.string,
+    width: PropTypes.number,
+    height: PropTypes.number,
+    src: PropTypes.string.isRequired
+  }
+);
 
 /**
- * Parse an aspect ratio in the format w:h to a decimal. If false is returned, the aspect ratio is in the wrong format.
+ * Validates that an aspect ratio is in the format w:h. If false is returned, the aspect ratio is in the wrong format.
  */
-function parseAspectRatio(aspectRatio) {
+function aspectRatioIsValid(aspectRatio) {
   if (typeof aspectRatio !== "string") {
     return false;
   }
-  const isValidFormat = str => /^\d+(\.\d+)?:\d+(\.\d+)?$/.test(str);
-  if (!isValidFormat(aspectRatio)) {
-    return false;
-  }
 
-  const [width, height] = aspectRatio.split(":");
-
-  return parseFloat(width) / parseFloat(height);
+  return /^\d+(\.\d+)?:\d+(\.\d+)?$/.test(aspectRatio);
 }
+
+const buildSrcSetPairWithFixedHeight = (url, targetWidth, fixedHeight, _) =>
+  url + "&h=" + fixedHeight + "&w=" + targetWidth + " " + targetWidth + "w";
+
+const buildSrcSetPairWithTargetWidth = (url, targetWidth, _1, _2) =>
+  url + "&w=" + targetWidth + " " + targetWidth + "w";
+
+const buildDprSrcWithQuality = (url, quality, dpr) =>
+  url + "&q=" + quality + "&dpr=" + dpr + " " + dpr + "x";
+
+const buildDprSrcWithoutQuality = (url, _, dpr) =>
+  url + "&dpr=" + dpr + " " + dpr + "x";
+
+const buildDprSrcWithQualityByDpr = (url, quality, dpr) =>
+  url + "&q=" + quality + "&dpr=" + dpr + " " + dpr + "x";
 
 /**
  * Build a imgix source url with parameters from a raw url
  */
 function buildSrc({
-  src: rawSrc,
+  src: inputSrc,
   width,
   height,
   disableLibraryParam,
   disableSrcSet,
   type,
   imgixParams,
-  aspectRatio,
   disableQualityByDPR
 }) {
   const fixedSize = width != null || height != null;
 
-  const srcOptions = {
-    ...imgixParams,
-    ...(disableLibraryParam ? {} : { ixlib: `react-${PACKAGE_VERSION}` }),
-    ...(fixedSize && height ? { height } : {}),
-    ...(fixedSize && width ? { width } : {})
-  };
+  const [rawSrc, params] = extractQueryParams(inputSrc);
+
+  const srcOptions = Object.assign(
+    {},
+    params,
+    imgixParams,
+    disableLibraryParam ? {} : { ixlib: `react-${PACKAGE_VERSION}` },
+    fixedSize && height ? { height } : {},
+    fixedSize && width ? { width } : {}
+  );
 
   const src = constructUrl(rawSrc, srcOptions);
 
@@ -95,58 +112,50 @@ function buildSrc({
   if (disableSrcSet) {
     srcSet = src;
   } else {
-    if (fixedSize || type === "source") {
-      const dpr1 = constructUrl(rawSrc, {
-        ...(disableQualityByDPR || { q: CONSTANTS.q_dpr1 }),
-        ...srcOptions,
-        dpr: 1
-      });
-      const dpr2 = constructUrl(rawSrc, {
-        ...(disableQualityByDPR || { q: CONSTANTS.q_dpr2 }),
-        ...srcOptions,
-        dpr: 2
-      });
-      const dpr3 = constructUrl(rawSrc, {
-        ...(disableQualityByDPR || { q: CONSTANTS.q_dpr3 }),
-        ...srcOptions,
-        dpr: 3
-      });
-      const dpr4 = constructUrl(rawSrc, {
-        ...(disableQualityByDPR || { q: CONSTANTS.q_dpr4 }),
-        ...srcOptions,
-        dpr: 4
-      });
-      const dpr5 = constructUrl(rawSrc, {
-        ...(disableQualityByDPR || { q: CONSTANTS.q_dpr5 }),
-        ...srcOptions,
-        dpr: 5
-      });
-      srcSet = `${dpr1} 1x, ${dpr2} 2x, ${dpr3} 3x, ${dpr4} 4x, ${dpr5} 5x`;
-    } else {
-      let showARWarning = false;
-      const buildSrcSetPair = targetWidth => {
-        let urlParams = {
-          ...srcOptions,
-          width: targetWidth
-        };
-        const aspectRatioDecimal = parseAspectRatio(aspectRatio);
-        if (aspectRatio != null && aspectRatioDecimal === false) {
-          // false indicates invalid
-          showARWarning = true;
-        }
-        if (
-          !srcOptions.height &&
-          aspectRatioDecimal &&
-          aspectRatioDecimal > 0
-        ) {
-          urlParams.height = Math.ceil(targetWidth / aspectRatioDecimal);
-        }
-        const url = constructUrl(rawSrc, urlParams);
-        return `${url} ${targetWidth}w`;
-      };
-      srcSet = targetWidths.map(buildSrcSetPair).join(", ");
+    if (fixedSize) {
+      const { q, ...urlParams } = srcOptions;
+      const constructedUrl = constructUrl(rawSrc, urlParams);
 
-      if (showARWarning && config.warnings.invalidARFormat) {
+      let srcFn = buildDprSrcWithQualityByDpr;
+      if (q) {
+        srcFn = buildDprSrcWithQuality;
+      } else if (disableQualityByDPR) {
+        srcFn = buildDprSrcWithoutQuality;
+      }
+
+      srcSet = "";
+      const len = DPR_QUALITY_VALUES.length;
+      for (let i = 0; i < len; i++) {
+        const quality = DPR_QUALITY_VALUES[i];
+        srcSet += srcFn(constructedUrl, q || quality, i + 1) + ", ";
+      }
+      srcSet = srcSet.slice(0, -2);
+    } else {
+      const { width, w, height, ...urlParams } = srcOptions;
+      const constructedUrl = constructUrl(rawSrc, urlParams);
+
+      const aspectRatio = imgixParams.ar;
+      let showARWarning =
+        aspectRatio != null && aspectRatioIsValid(aspectRatio) === false;
+
+      let srcFn = buildSrcSetPairWithTargetWidth;
+      if (height) {
+        srcFn = buildSrcSetPairWithFixedHeight;
+      }
+
+      srcSet = "";
+      const len = targetWidths.length;
+      for (let i = 0; i < len; i++) {
+        const targetWidth = targetWidths[i];
+        srcSet += srcFn(constructedUrl, targetWidth, height) + ", ";
+      }
+      srcSet = srcSet.slice(0, -2);
+
+      if (
+        NODE_ENV !== "production" &&
+        showARWarning &&
+        config.warnings.invalidARFormat
+      ) {
         console.warn(
           `[Imgix] The aspect ratio passed ("${aspectRatio}") is not in the correct format. The correct format is "W:H".`
         );
@@ -164,32 +173,20 @@ function buildSrc({
  * Combines default imgix params with custom imgix params to make a imgix params config object
  */
 function imgixParams(props) {
-  const params = {
-    ...defaultImgixParams,
-    ...props.imgixParams
-  };
+  const params = Object.assign({}, defaultImgixParams, props.imgixParams);
 
   let fit = false;
   if (params.crop != null) fit = "crop";
   if (params.fit) fit = params.fit;
 
-  if (params.ar) {
-    delete params.ar;
-  }
-
-  return {
-    ...params,
-    fit
-  };
+  return Object.assign({}, params, { fit });
 }
 
 /**
  * React component used to render <img> elements with Imgix
  */
 class ReactImgix extends Component {
-  static propTypes = {
-    ...SHARED_IMGIX_AND_SOURCE_PROP_TYPES
-  };
+  static propTypes = Object.assign({}, SHARED_IMGIX_AND_SOURCE_PROP_TYPES);
   static defaultProps = {
     disableSrcSet: false,
     onMounted: noop
@@ -219,25 +216,25 @@ class ReactImgix extends Component {
 
     const htmlAttributes = this.props.htmlAttributes || {};
 
-    const { src, srcSet } = buildSrc({
-      ...this.props,
-      type: "img",
-      imgixParams: imgixParams(this.props),
-      aspectRatio: (this.props.imgixParams || {}).ar
-    });
+    const { src, srcSet } = buildSrc(
+      Object.assign({}, this.props, {
+        type: "img",
+        imgixParams: imgixParams(this.props)
+      })
+    );
 
-    const attributeConfig = {
-      ...defaultAttributeMap,
-      ...this.props.attributeConfig
-    };
-    const childProps = {
-      ...this.props.htmlAttributes,
+    const attributeConfig = Object.assign(
+      {},
+      defaultAttributeMap,
+      this.props.attributeConfig
+    );
+    const childProps = Object.assign({}, this.props.htmlAttributes, {
       [attributeConfig.sizes]: this.props.sizes,
       className: this.props.className,
       width: width <= 1 ? null : width,
       height: height <= 1 ? null : height,
       [attributeConfig.src]: src
-    };
+    });
     if (!disableSrcSet) {
       childProps[attributeConfig.srcSet] = srcSet;
     }
@@ -270,10 +267,9 @@ ReactImgix.displayName = "ReactImgix";
  * React component used to render <picture> elements with Imgix
  */
 class PictureImpl extends Component {
-  static propTypes = {
-    ...COMMON_PROP_TYPES,
+  static propTypes = Object.assign({}, COMMON_PROP_TYPES, {
     children: PropTypes.any
-  };
+  });
   static defaultProps = {
     onMounted: noop
   };
@@ -326,9 +322,7 @@ PictureImpl.displayName = "ReactImgixPicture";
  * React component used to render <source> elements with Imgix
  */
 class SourceImpl extends Component {
-  static propTypes = {
-    ...SHARED_IMGIX_AND_SOURCE_PROP_TYPES
-  };
+  static propTypes = Object.assign({}, SHARED_IMGIX_AND_SOURCE_PROP_TYPES);
   static defaultProps = {
     disableSrcSet: false,
     onMounted: noop
@@ -343,23 +337,24 @@ class SourceImpl extends Component {
 
     const htmlAttributes = this.props.htmlAttributes || {};
 
-    const { src, srcSet } = buildSrc({
-      ...this.props,
-      type: "source",
-      imgixParams: imgixParams(this.props)
-    });
+    const { src, srcSet } = buildSrc(
+      Object.assign({}, this.props, {
+        type: "source",
+        imgixParams: imgixParams(this.props)
+      })
+    );
 
-    const attributeConfig = {
-      ...defaultAttributeMap,
-      ...this.props.attributeConfig
-    };
-    const childProps = {
-      ...this.props.htmlAttributes,
+    const attributeConfig = Object.assign(
+      {},
+      defaultAttributeMap,
+      this.props.attributeConfig
+    );
+    const childProps = Object.assign({}, this.props.htmlAttributes, {
       [attributeConfig.sizes]: this.props.sizes,
       className: this.props.className,
       width: width <= 1 ? null : width,
       height: height <= 1 ? null : height
-    };
+    });
 
     // inside of a <picture> element a <source> element ignores its src
     // attribute in favor of srcSet so we set that with either an actual
@@ -367,7 +362,7 @@ class SourceImpl extends Component {
     if (disableSrcSet) {
       childProps[attributeConfig.srcSet] = src;
     } else {
-      childProps[attributeConfig.srcSet] = `${src}, ${srcSet}`;
+      childProps[attributeConfig.srcSet] = `${srcSet}`;
     }
     // for now we'll take media from htmlAttributes which isn't ideal because
     //   a) this isn't an <img>

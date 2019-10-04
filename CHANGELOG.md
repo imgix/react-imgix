@@ -1,6 +1,37 @@
-# Change Log
+# Changelog
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
+
+### [8.6.4](https://github.com/imgix/react-imgix/compare/v8.6.3...v8.6.4) (2019-08-08)
+
+
+### Features
+
+* perf: optimize URL handling ([#414](https://github.com/imgix/react-imgix/pull/414)) ([8d14dcb](https://github.com/imgix/react-imgix/commit/8d14dcb))
+* perf: optimize `constructUrl` function ([#418](https://github.com/imgix/react-imgix/pull/418)) ([8d392a0](https://github.com/imgix/react-imgix/commit/8d392a0))
+* perf: use string concatenation instead of template strings ([#420](https://github.com/imgix/react-imgix/pull/420)) ([f41cc73](https://github.com/imgix/react-imgix/commit/f41cc73))
+* perf: use `Object.assign` instead of spread operator ([#423](https://github.com/imgix/react-imgix/pull/423)) ([29b25d5](https://github.com/imgix/react-imgix/commit/29b25d5))
+
+
+
+### [8.6.3](https://github.com/imgix/react-imgix/compare/v8.6.2...v8.6.3) (2019-07-11)
+
+
+### Bug Fixes
+
+* render <Source> element as a fluid image by default ([#404](https://github.com/imgix/react-imgix/issues/404)) ([10a5434](https://github.com/imgix/react-imgix/commit/10a5434))
+* width query param overrides in srcSet ([#406](https://github.com/imgix/react-imgix/issues/406)) ([5791d11](https://github.com/imgix/react-imgix/commit/5791d11))
+
+
+
+# [8.6.2](https://github.com/imgix/react-imgix/compare/v8.6.1...v8.6.2) (2019-07-05)
+
+
+### Features
+
+* perf: optimize url construction ([#395](https://github.com/imgix/react-imgix/issues/395)) ([25c0012](https://github.com/imgix/react-imgix/commit/25c0012))
+
+
 
 ## [8.6.1](https://github.com/imgix/react-imgix/compare/v8.6.0...v8.6.1) (2019-04-17)
 

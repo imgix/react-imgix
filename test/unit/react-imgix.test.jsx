@@ -5,7 +5,7 @@ import { shallow as enzymeShallow, mount } from "enzyme";
 import PropTypes from "prop-types";
 import { shallowUntilTarget } from "../helpers";
 import targetWidths from "targetWidths";
-import { CONSTANTS } from "../../src/common";
+import { DPR_QUALITY } from "../../src/constants";
 
 import Imgix, {
   __ReactImgixImpl,
@@ -105,7 +105,7 @@ describe("When in default mode", () => {
       const max = Math.max(...srcsetWidths);
 
       expect(min).not.toBeLessThan(100);
-      expect(min).not.toBeGreaterThan(8192);
+      expect(max).not.toBeGreaterThan(8192);
     });
 
     // 18% used to allow +-1% for rounding
@@ -135,11 +135,11 @@ describe("When in default mode", () => {
         const sut = shallow(<Imgix src={src} width={100} />);
         const srcset = sut.props().srcSet.split(", ");
 
-        expect(srcset[0].split(" ")[0]).toContain("q=" + CONSTANTS.q_dpr1);
-        expect(srcset[1].split(" ")[0]).toContain("q=" + CONSTANTS.q_dpr2);
-        expect(srcset[2].split(" ")[0]).toContain("q=" + CONSTANTS.q_dpr3);
-        expect(srcset[3].split(" ")[0]).toContain("q=" + CONSTANTS.q_dpr4);
-        expect(srcset[4].split(" ")[0]).toContain("q=" + CONSTANTS.q_dpr5);
+        expect(srcset[0].split(" ")[0]).toContain("q=" + DPR_QUALITY.q_dpr1);
+        expect(srcset[1].split(" ")[0]).toContain("q=" + DPR_QUALITY.q_dpr2);
+        expect(srcset[2].split(" ")[0]).toContain("q=" + DPR_QUALITY.q_dpr3);
+        expect(srcset[3].split(" ")[0]).toContain("q=" + DPR_QUALITY.q_dpr4);
+        expect(srcset[4].split(" ")[0]).toContain("q=" + DPR_QUALITY.q_dpr5);
       });
       it("allows q to dpr matching to be disabled", async () => {
         const sut = shallow(
@@ -147,11 +147,21 @@ describe("When in default mode", () => {
         );
         const srcset = sut.props().srcSet.split(", ");
 
-        expect(srcset[0].split(" ")[0]).not.toContain("q=" + CONSTANTS.q_dpr1);
-        expect(srcset[1].split(" ")[0]).not.toContain("q=" + CONSTANTS.q_dpr2);
-        expect(srcset[2].split(" ")[0]).not.toContain("q=" + CONSTANTS.q_dpr3);
-        expect(srcset[3].split(" ")[0]).not.toContain("q=" + CONSTANTS.q_dpr4);
-        expect(srcset[4].split(" ")[0]).not.toContain("q=" + CONSTANTS.q_dpr5);
+        expect(srcset[0].split(" ")[0]).not.toContain(
+          "q=" + DPR_QUALITY.q_dpr1
+        );
+        expect(srcset[1].split(" ")[0]).not.toContain(
+          "q=" + DPR_QUALITY.q_dpr2
+        );
+        expect(srcset[2].split(" ")[0]).not.toContain(
+          "q=" + DPR_QUALITY.q_dpr3
+        );
+        expect(srcset[3].split(" ")[0]).not.toContain(
+          "q=" + DPR_QUALITY.q_dpr4
+        );
+        expect(srcset[4].split(" ")[0]).not.toContain(
+          "q=" + DPR_QUALITY.q_dpr5
+        );
       });
       it("allows the q parameter to be overriden when explicitly passed in", async () => {
         const q_override = 100;
@@ -237,19 +247,65 @@ describe("When in <source> mode", () => {
     it("props.srcSet should be set to a valid src", () => {
       expect(renderImage().props().srcSet).toContain(src);
     });
-    it("srcSet should be in the form src, src 2x, src 3x, src 4x, src 5x", () => {
+
+    it("should have a srcSet set correctly", async () => {
+      const srcset = renderImage().props().srcSet;
+      expect(srcset).not.toBeUndefined();
+      expect(srcset.split(", ")[0].split(" ")).toHaveLength(2);
+      const aSrcFromSrcSet = srcset.split(", ")[0].split(" ")[0];
+      expect(aSrcFromSrcSet).toContain(src);
+      const aWidthFromSrcSet = srcset.split(", ")[0].split(" ")[1];
+      expect(aWidthFromSrcSet).toMatch(/^\d+w$/);
+    });
+
+    it("returns the expected number of `url widthDescriptor` pairs", function() {
+      const srcset = renderImage().props().srcSet;
+
+      expect(srcset.split(",").length).toEqual(targetWidths.length);
+    });
+
+    it("should not exceed the bounds of [100, 8192]", () => {
+      const srcset = renderImage().props().srcSet;
+
+      const srcsetWidths = srcset
+        .split(", ")
+        .map(srcset => srcset.split(" ")[1])
+        .map(width => width.slice(0, -1))
+        .map(Number.parseFloat);
+
+      const min = Math.min(...srcsetWidths);
+      const max = Math.max(...srcsetWidths);
+
+      expect(min).not.toBeLessThan(100);
+      expect(max).not.toBeGreaterThan(8192);
+    });
+  });
+
+  describe("in fixed width mode", () => {
+    const renderImage = () => {
+      return shallowSource(
+        <Source
+          src={src}
+          width={100}
+          htmlAttributes={htmlAttributes}
+          sizes={sizes}
+        />
+      );
+    };
+
+    it("srcSet should be in the form src 1x, src 2x, src 3x, src 4x, src 5x", () => {
       const srcSet = renderImage().props().srcSet;
 
       const srcSets = srcSet.split(", ");
-      expect(srcSets).toHaveLength(6);
+      expect(srcSets).toHaveLength(5);
       srcSets.forEach(srcSet => {
         expect(srcSet).toContain(src);
       });
-      expect(srcSets[1].split(" ")[1]).toBe("1x");
-      expect(srcSets[2].split(" ")[1]).toBe("2x");
-      expect(srcSets[3].split(" ")[1]).toBe("3x");
-      expect(srcSets[4].split(" ")[1]).toBe("4x");
-      expect(srcSets[5].split(" ")[1]).toBe("5x");
+      expect(srcSets[0].split(" ")[1]).toBe("1x");
+      expect(srcSets[1].split(" ")[1]).toBe("2x");
+      expect(srcSets[2].split(" ")[1]).toBe("3x");
+      expect(srcSets[3].split(" ")[1]).toBe("4x");
+      expect(srcSets[4].split(" ")[1]).toBe("5x");
     });
   });
 
@@ -542,6 +598,15 @@ describe("When using the component", () => {
     expectSrcsToContain(sut, `w=${width}`);
   });
 
+  it("responsive width should overwrite the width query parameter correctly", () => {
+    sut = shallow(
+      <Imgix src={"https://mysource.imgix.net/demo.png?w=333"} sizes="100wv" />
+    );
+
+    expect(sut.props().src).toContain("w=333");
+    expect(sut.props().srcSet).not.toContain("w=333");
+  });
+
   it("a width prop between 0 and 1 should not be passed as a prop to the child element rendered", () => {
     const width = 0.5;
     sut = shallow(
@@ -562,12 +627,12 @@ describe("When using the component", () => {
 
   describe("aspectRatio", () => {
     describe("valid AR", () => {
-      const testValidAR = ({ ar, arDecimal }) => {
-        it(`a valid ar prop (${ar}) should generate height query parameter`, () => {
+      const testValidAR = ({ ar }) => {
+        it(`a valid ar prop (${ar}) should generate an ar query parameter`, () => {
           const parseParam = (url, param) => {
             const matched = url.match("[?&]" + param + "=([^&]+)");
             if (!matched) return undefined;
-            return parseInt(matched[1], 10);
+            return matched[1];
           };
           const removeFallbackSrcSet = srcSets => srcSets.slice(0, -1);
 
@@ -583,43 +648,38 @@ describe("When using the component", () => {
           const srcSets = srcSet.split(",").map(v => v.trim());
           const srcSetUrls = srcSets.map(srcSet => srcSet.split(" ")[0]);
           removeFallbackSrcSet(srcSetUrls).forEach(srcSetUrl => {
-            const w = parseParam(srcSetUrl, "w");
-            const h = parseParam(srcSetUrl, "h");
-
-            expect(h).toEqual(Math.ceil(w / arDecimal));
-            expect(w).toBeTruthy();
-            expect(h).toBeTruthy();
+            const ar = parseParam(srcSetUrl, "ar");
+            expect(ar).toBeTruthy();
           });
         });
       };
       [
-        ["1:1", "1"],
-        ["1.1:1", "1.1"],
-        ["1.12:1", "1.12"],
-        ["1.123:1", "1.123"],
-        ["1:1.1", "0.9090909090909091"],
-        ["1:1.12", "0.8928571428571428"],
-        ["1.1:1.1", "1"],
-        ["1.123:1.123", "1"],
-        ["11.123:11.123", "1"]
+        ["1:1"],
+        ["1.1:1"],
+        ["1.12:1"],
+        ["1.123:1"],
+        ["1:1.1"],
+        ["1:1.12"],
+        ["1.1:1.1"],
+        ["1.123:1.123"],
+        ["11.123:11.123"]
       ].forEach(([validAR, validArDecimal]) =>
         testValidAR({
-          ar: validAR,
-          arDecimal: validArDecimal
+          ar: validAR
         })
       );
     });
 
     describe("invalid AR", () => {
       const testInvalidAR = ar => {
-        it(`height should not be set when an invalid aspectRatio (${ar}) is passed`, () => {
+        it(`an invalid ar prop (${ar}) will still generate an ar query parameter`, () => {
           const oldConsole = global.console;
           global.console = { warn: jest.fn() };
 
           const parseParam = (url, param) => {
             const matched = url.match("[?&]" + param + "=([^&]+)");
             if (!matched) return undefined;
-            return parseInt(matched[1], 10);
+            return matched[1];
           };
           const removeFallbackSrcSet = srcSets => srcSets.slice(0, -1);
 
@@ -636,10 +696,10 @@ describe("When using the component", () => {
           const srcSetUrls = srcSets.map(srcSet => srcSet.split(" ")[0]);
           removeFallbackSrcSet(srcSetUrls).forEach(srcSetUrl => {
             const w = parseParam(srcSetUrl, "w");
-            const h = parseParam(srcSetUrl, "h");
+            const ar = parseParam(srcSetUrl, "ar");
 
             expect(w).toBeTruthy();
-            expect(h).toBeFalsy();
+            expect(ar).toBeTruthy();
           });
 
           global.console = oldConsole;
@@ -654,11 +714,13 @@ describe("When using the component", () => {
         "blah1:1",
         "1x1",
         "1:1blah",
-        "1:blah1"
+        "1:blah1",
+        0.145,
+        true
       ].forEach(invalidAR => testInvalidAR(invalidAR));
     });
 
-    it("srcsets should not have a height set when aspectRatio is not set", () => {
+    it("srcsets should not have an ar parameter when aspectRatio is not set", () => {
       sut = shallow(
         <Imgix
           src={src}
@@ -671,15 +733,15 @@ describe("When using the component", () => {
       const parseParam = (str, param) => {
         const matched = str.match("[?&]" + param + "=([^&]+)");
         if (!matched) return null;
-        return parseInt(matched[1], 10);
+        return matched[1];
       };
       srcSetUrls.forEach(srcSetUrl => {
-        const h = parseParam(srcSetUrl, "h");
-        expect(h).toBeFalsy();
+        const ar = parseParam(srcSetUrl, "ar");
+        expect(ar).toBeFalsy();
       });
     });
 
-    it("the generated src should not have ar included", () => {
+    it("the generated src should have an ar parameter included", () => {
       sut = shallow(
         <Imgix
           src={src}
@@ -688,7 +750,7 @@ describe("When using the component", () => {
         />
       );
 
-      expectSrcsTo(sut, expect.not.stringContaining("ar="));
+      expectSrcsTo(sut, expect.stringContaining("ar="));
     });
   });
 
