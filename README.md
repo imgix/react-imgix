@@ -162,7 +162,7 @@ import "./styles.css";
 [![Edit xp0348lv0z](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/charming-keller-kjnsq)
 
 **Aspect Ratio:** A developer can pass a desired aspect ratio, which will be used when
-generating srcsets to generate the correct height, according to the aspect ratio.
+generating srcsets to resize and crop your image as specified. For the `ar` parameter to take effect, ensure that the `fit` parameter is set to `crop`.
 
 ```js
 <div className="App">
