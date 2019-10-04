@@ -627,12 +627,12 @@ describe("When using the component", () => {
 
   describe("aspectRatio", () => {
     describe("valid AR", () => {
-      const testValidAR = ({ ar, arDecimal }) => {
-        it(`a valid ar prop (${ar}) should generate height query parameter`, () => {
+      const testValidAR = ({ ar }) => {
+        it(`a valid ar prop (${ar}) should generate an ar query parameter`, () => {
           const parseParam = (url, param) => {
             const matched = url.match("[?&]" + param + "=([^&]+)");
             if (!matched) return undefined;
-            return parseInt(matched[1], 10);
+            return matched[1];
           };
           const removeFallbackSrcSet = srcSets => srcSets.slice(0, -1);
 
@@ -648,42 +648,38 @@ describe("When using the component", () => {
           const srcSets = srcSet.split(",").map(v => v.trim());
           const srcSetUrls = srcSets.map(srcSet => srcSet.split(" ")[0]);
           removeFallbackSrcSet(srcSetUrls).forEach(srcSetUrl => {
-            const w = parseParam(srcSetUrl, "w");
-            const h = parseParam(srcSetUrl, "h");
-            expect(h).toEqual(Math.ceil(w / arDecimal));
-            expect(w).toBeTruthy();
-            expect(h).toBeTruthy();
+            const ar = parseParam(srcSetUrl, "ar");
+            expect(ar).toBeTruthy();
           });
         });
       };
       [
-        ["1:1", "1"],
-        ["1.1:1", "1.1"],
-        ["1.12:1", "1.12"],
-        ["1.123:1", "1.123"],
-        ["1:1.1", "0.9090909090909091"],
-        ["1:1.12", "0.8928571428571428"],
-        ["1.1:1.1", "1"],
-        ["1.123:1.123", "1"],
-        ["11.123:11.123", "1"]
+        ["1:1"],
+        ["1.1:1"],
+        ["1.12:1"],
+        ["1.123:1"],
+        ["1:1.1"],
+        ["1:1.12"],
+        ["1.1:1.1"],
+        ["1.123:1.123"],
+        ["11.123:11.123"]
       ].forEach(([validAR, validArDecimal]) =>
         testValidAR({
-          ar: validAR,
-          arDecimal: validArDecimal
+          ar: validAR
         })
       );
     });
 
     describe("invalid AR", () => {
       const testInvalidAR = ar => {
-        it(`height should not be set when an invalid aspectRatio (${ar}) is passed`, () => {
+        it(`an invalid ar prop (${ar}) will still generate an ar query parameter`, () => {
           const oldConsole = global.console;
           global.console = { warn: jest.fn() };
 
           const parseParam = (url, param) => {
             const matched = url.match("[?&]" + param + "=([^&]+)");
             if (!matched) return undefined;
-            return parseInt(matched[1], 10);
+            return matched[1];
           };
           const removeFallbackSrcSet = srcSets => srcSets.slice(0, -1);
 
@@ -700,10 +696,10 @@ describe("When using the component", () => {
           const srcSetUrls = srcSets.map(srcSet => srcSet.split(" ")[0]);
           removeFallbackSrcSet(srcSetUrls).forEach(srcSetUrl => {
             const w = parseParam(srcSetUrl, "w");
-            const h = parseParam(srcSetUrl, "h");
+            const ar = parseParam(srcSetUrl, "ar");
 
             expect(w).toBeTruthy();
-            expect(h).toBeFalsy();
+            expect(ar).toBeTruthy();
           });
 
           global.console = oldConsole;
@@ -718,11 +714,13 @@ describe("When using the component", () => {
         "blah1:1",
         "1x1",
         "1:1blah",
-        "1:blah1"
+        "1:blah1",
+        0.145,
+        true
       ].forEach(invalidAR => testInvalidAR(invalidAR));
     });
 
-    it("srcsets should not have a height set when aspectRatio is not set", () => {
+    it("srcsets should not have an ar parameter when aspectRatio is not set", () => {
       sut = shallow(
         <Imgix
           src={src}
@@ -735,15 +733,15 @@ describe("When using the component", () => {
       const parseParam = (str, param) => {
         const matched = str.match("[?&]" + param + "=([^&]+)");
         if (!matched) return null;
-        return parseInt(matched[1], 10);
+        return matched[1];
       };
       srcSetUrls.forEach(srcSetUrl => {
-        const h = parseParam(srcSetUrl, "h");
-        expect(h).toBeFalsy();
+        const ar = parseParam(srcSetUrl, "ar");
+        expect(ar).toBeFalsy();
       });
     });
 
-    it("the generated src should not have ar included", () => {
+    it("the generated src should have an ar parameter included", () => {
       sut = shallow(
         <Imgix
           src={src}
@@ -752,7 +750,7 @@ describe("When using the component", () => {
         />
       );
 
-      expectSrcsTo(sut, expect.not.stringContaining("ar="));
+      expectSrcsTo(sut, expect.stringContaining("ar="));
     });
   });
 
