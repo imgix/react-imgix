@@ -11,6 +11,7 @@
   "plugins": [
     "@babel/plugin-transform-object-assign",
     "inline-package-json",
+    "transform-es2017-object-entries",
     "@babel/plugin-syntax-dynamic-import",
     "@babel/plugin-syntax-import-meta",
     "@babel/plugin-proposal-class-properties",
