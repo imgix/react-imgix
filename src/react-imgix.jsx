@@ -1,6 +1,5 @@
 import "./array-findindex";
 
-import ReactDOM from "react-dom";
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 
@@ -192,10 +191,14 @@ class ReactImgix extends Component {
     onMounted: noop
   };
 
-  componentDidMount = () => {
-    const node = ReactDOM.findDOMNode(this);
-    this.props.onMounted(node);
-  };
+  constructor(props) {
+    super(props);
+    this.imgRef = null;
+  }
+
+  componentDidMount() {
+    this.props.onMounted(this.imgRef);
+  }
 
   render() {
     const { disableSrcSet, type, width, height } = this.props;
@@ -233,7 +236,8 @@ class ReactImgix extends Component {
       className: this.props.className,
       width: width <= 1 ? null : width,
       height: height <= 1 ? null : height,
-      [attributeConfig.src]: src
+      [attributeConfig.src]: src,
+      ref: el => (this.imgRef = el)
     });
     if (!disableSrcSet) {
       childProps[attributeConfig.srcSet] = srcSet;
@@ -274,10 +278,15 @@ class PictureImpl extends Component {
     onMounted: noop
   };
 
-  componentDidMount = () => {
-    const node = ReactDOM.findDOMNode(this);
-    this.props.onMounted(node);
-  };
+  constructor(props) {
+    super(props);
+    this.pictureRef = null;
+  }
+
+  componentDidMount() {
+    this.props.onMounted(this.pictureRef);
+  }
+
   render() {
     const { children } = this.props;
 
@@ -291,10 +300,10 @@ class PictureImpl extends Component {
       ) || [];
 
     /*
-		We need to make sure an <img /> or <Imgix /> is the last child so we look for one in children
-		  a. if we find one, move it to the last entry if it's not already there
-		  b. if we don't find one, warn the user as they probably want to pass one.
-		*/
+    We need to make sure an <img /> or <Imgix /> is the last child so we look for one in children
+      a. if we find one, move it to the last entry if it's not already there
+      b. if we don't find one, warn the user as they probably want to pass one.
+    */
 
     // look for an <img> or <ReactImgix type='img'> - at the bare minimum we have to have a single <img> element or else it will not work.
     let imgIdx = _children.findIndex(
@@ -313,7 +322,7 @@ class PictureImpl extends Component {
       _children.push(_children.splice(imgIdx, 1)[0]);
     }
 
-    return <picture children={_children} />;
+    return <picture ref={el => (this.pictureRef = el)} children={_children} />;
   }
 }
 PictureImpl.displayName = "ReactImgixPicture";
@@ -328,10 +337,15 @@ class SourceImpl extends Component {
     onMounted: noop
   };
 
-  componentDidMount = () => {
-    const node = ReactDOM.findDOMNode(this);
-    this.props.onMounted(node);
-  };
+  constructor(props) {
+    super(props);
+    this.sourceRef = null;
+  }
+
+  componentDidMount() {
+    this.props.onMounted(this.sourceRef);
+  }
+
   render() {
     const { disableSrcSet, width, height } = this.props;
 
@@ -353,7 +367,8 @@ class SourceImpl extends Component {
       [attributeConfig.sizes]: this.props.sizes,
       className: this.props.className,
       width: width <= 1 ? null : width,
-      height: height <= 1 ? null : height
+      height: height <= 1 ? null : height,
+      ref: el => (this.sourceRef = el)
     });
 
     // inside of a <picture> element a <source> element ignores its src
