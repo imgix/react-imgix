@@ -1,6 +1,6 @@
 import "./array-findindex";
 
-import React, { Component, createRef } from "react";
+import React, { Component } from "react";
 import PropTypes from "prop-types";
 
 import targetWidths from "./targetWidths";
@@ -193,11 +193,11 @@ class ReactImgix extends Component {
 
   constructor(props) {
     super(props);
-    this.imgRef = createRef();
+    this.imgRef = null;
   }
 
   componentDidMount() {
-    this.props.onMounted(this.imgRef.current);
+    this.props.onMounted(this.imgRef);
   };
 
   render() {
@@ -237,7 +237,7 @@ class ReactImgix extends Component {
       width: width <= 1 ? null : width,
       height: height <= 1 ? null : height,
       [attributeConfig.src]: src,
-      ref: this.imgRef,
+      ref: el => (this.imgRef = el),
     });
     if (!disableSrcSet) {
       childProps[attributeConfig.srcSet] = srcSet;
@@ -280,11 +280,11 @@ class PictureImpl extends Component {
 
   constructor(props) {
     super(props);
-    this.pictureRef = createRef();
+    this.pictureRef = null;
   }
 
   componentDidMount() {
-    this.props.onMounted(this.pictureRef.current);
+    this.props.onMounted(this.pictureRef);
   };
 
   render() {
@@ -322,7 +322,7 @@ class PictureImpl extends Component {
       _children.push(_children.splice(imgIdx, 1)[0]);
     }
 
-    return <picture ref={this.pictureRef} children={_children} />;
+      return <picture ref={el => (this.pictureRef = el)} children={_children} />;
   }
 }
 PictureImpl.displayName = "ReactImgixPicture";
@@ -339,11 +339,11 @@ class SourceImpl extends Component {
 
   constructor(props) {
     super(props);
-    this.sourceRef = createRef();
+    this.sourceRef = null;
   }
 
   componentDidMount() {
-    this.props.onMounted(this.sourceRef.current);
+    this.props.onMounted(this.sourceRef);
   };
 
   render() {
@@ -368,7 +368,7 @@ class SourceImpl extends Component {
       className: this.props.className,
       width: width <= 1 ? null : width,
       height: height <= 1 ? null : height,
-      ref: this.sourceRef,
+      ref: el => (this.sourceRef = el),
     });
 
     // inside of a <picture> element a <source> element ignores its src
