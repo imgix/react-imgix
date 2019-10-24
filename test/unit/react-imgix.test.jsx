@@ -165,7 +165,7 @@ describe("When in image mode", () => {
         src={"https://mysource.imgix.net/demo.png"}
         sizes="100vw"
         onMounted={onMountedSpy}
-      />,
+      />
     );
 
     expect(onMountedSpy.callCount).toEqual(1);
@@ -431,7 +431,7 @@ describe("When in picture mode", () => {
     sut = mount(
       <Picture onMounted={onMountedSpy} foo={1}>
         <img />
-      </Picture>,
+      </Picture>
     );
 
     expect(onMountedSpy.callCount).toEqual(1);
