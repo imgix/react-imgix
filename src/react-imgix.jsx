@@ -322,7 +322,7 @@ class PictureImpl extends Component {
       _children.push(_children.splice(imgIdx, 1)[0]);
     }
 
-      return <picture ref={el => (this.pictureRef = el)} children={_children} />;
+    return <picture ref={el => (this.pictureRef = el)} children={_children} />;
   }
 }
 PictureImpl.displayName = "ReactImgixPicture";
