@@ -1,6 +1,5 @@
 import sinon from "sinon";
 import React from "react";
-import ReactDOM from "react-dom";
 import { shallow as enzymeShallow, mount } from "enzyme";
 import PropTypes from "prop-types";
 import { shallowUntilTarget } from "../helpers";
@@ -29,28 +28,6 @@ const src = "http://domain.imgix.net/image.jpg";
 let sut, vdom, instance;
 const EMPTY_IMAGE_SRC =
   "data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=";
-
-async function renderImageAndBreakInStages({
-  element,
-  mockImage = <img />,
-  afterFirstRender = async () => {},
-  afterSecondRender = async () => {}
-}) {
-  sinon.stub(ReactDOM, "findDOMNode").callsFake(() => mockImage);
-
-  const sut = shallow(element);
-
-  await afterFirstRender(sut);
-
-  await sut.instance().componentDidMount();
-  sut.update();
-
-  await afterSecondRender(sut);
-
-  ReactDOM.findDOMNode.restore();
-
-  return sut;
-}
 
 let oldConsole, log;
 beforeEach(() => {
@@ -182,23 +159,18 @@ describe("When in default mode", () => {
 
 describe("When in image mode", () => {
   it("a callback passed through the onMounted prop should be called", () => {
-    const mockImage = <img />;
-    sinon.stub(ReactDOM, "findDOMNode").callsFake(() => mockImage);
-
     const onMountedSpy = sinon.spy();
-    sut = shallow(
+    const sut = mount(
       <Imgix
         src={"https://mysource.imgix.net/demo.png"}
         sizes="100vw"
         onMounted={onMountedSpy}
-      />,
-      __ReactImgixImpl,
-      {}
+      />
     );
 
-    sinon.assert.calledWith(onMountedSpy, mockImage);
-
-    ReactDOM.findDOMNode.restore();
+    expect(onMountedSpy.callCount).toEqual(1);
+    const onMountArg = onMountedSpy.lastCall.args[0];
+    expect(onMountArg).toBeInstanceOf(HTMLImageElement);
   });
 });
 
@@ -326,23 +298,18 @@ describe("When in <source> mode", () => {
     });
   });
   it("a callback passed through the onMounted prop should be called", () => {
-    const mockImage = <source />;
-    sinon.stub(ReactDOM, "findDOMNode").callsFake(() => mockImage);
-
     const onMountedSpy = sinon.spy();
-    sut = shallow(
+    const sut = mount(
       <Source
         src={"https://mysource.imgix.net/demo.png"}
         sizes="100vw"
         onMounted={onMountedSpy}
-      />,
-      __SourceImpl,
-      {}
+      />
     );
 
-    sinon.assert.calledWith(onMountedSpy, mockImage);
-
-    ReactDOM.findDOMNode.restore();
+    expect(onMountedSpy.callCount).toEqual(1);
+    const onMountArg = onMountedSpy.lastCall.args[0];
+    expect(onMountArg).toBeInstanceOf(HTMLSourceElement);
   });
 });
 
@@ -460,21 +427,16 @@ describe("When in picture mode", () => {
   });
 
   it("a callback passed through the onMounted prop should be called", () => {
-    const mockImage = <source />;
-    sinon.stub(ReactDOM, "findDOMNode").callsFake(() => mockImage);
-
     const onMountedSpy = sinon.spy();
-    sut = shallow(
-      <Picture onMounted={onMountedSpy}>
+    sut = mount(
+      <Picture onMounted={onMountedSpy} foo={1}>
         <img />
-      </Picture>,
-      __PictureImpl,
-      {}
+      </Picture>
     );
 
-    sinon.assert.calledWith(onMountedSpy, mockImage);
-
-    ReactDOM.findDOMNode.restore();
+    expect(onMountedSpy.callCount).toEqual(1);
+    const onMountArg = onMountedSpy.lastCall.args[0];
+    expect(onMountArg).toBeInstanceOf(HTMLPictureElement);
   });
 });
 

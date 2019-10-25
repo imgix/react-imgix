@@ -7,7 +7,8 @@
     "Frederick Fogerty <frederick.fogerty@gmail.com> (https://github.com/frederickfogerty)",
     "Max Kolyanov (https://github.com/maxkolyanov)",
     "Sherwin Heydarbeygi <sherwin@imgix.com> (https://github.com/sherwinski)",
-    "Baldur Helgason <baldur.helgason@gmail.com> (https://github.com/baldurh)"
+    "Baldur Helgason <baldur.helgason@gmail.com> (https://github.com/baldurh)",
+    "Tanner Stirrat <tstirrat@gmail.com> (https://github.com/tstirrat15)"
   ],
   "license": "ISC",
   "bugs": {
@@ -104,9 +105,9 @@
     "karma-mocha-reporter": "2.2.5",
     "karma-safari-launcher": "1.0.0",
     "karma-webpack": "4.0.2",
-    "mocha": "6.2.1",
+    "mocha": "6.2.2",
     "prettier": "1.18.2",
-    "puppeteer": "1.20.0",
+    "puppeteer": "2.0.0",
     "react": "16.11.0",
     "react-addons-test-utils": "15.6.2",
     "react-dom": "16.11.0",
@@ -118,7 +119,7 @@
     "standard-version": "7.0.0",
     "webpack": "4.41.2",
     "webpack-cli": "3.3.9",
-    "webpack-dev-server": "3.8.2"
+    "webpack-dev-server": "3.9.0"
   },
   "jest": {
     "roots": [
