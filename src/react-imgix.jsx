@@ -8,15 +8,13 @@ import constructUrl from "./constructUrl";
 import extractQueryParams from "./extractQueryParams";
 import { ShouldComponentUpdateHOC } from "./HOCs";
 
-import { warning, shallowEqual, compose, config } from "./common";
+import { compose, config } from "./common";
 import { DPR_QUALITY_VALUES } from "./constants";
 
 const PACKAGE_VERSION = require("../package.json").version;
 const NODE_ENV = process.env.NODE_ENV;
 
 const buildKey = idx => `react-imgix-${idx}`;
-
-const validTypes = ["img", "picture", "source"];
 
 const defaultImgixParams = {
   auto: ["format"],
@@ -87,7 +85,6 @@ function buildSrc({
   height,
   disableLibraryParam,
   disableSrcSet,
-  type,
   imgixParams,
   disableQualityByDPR
 }) {
@@ -217,8 +214,6 @@ class ReactImgix extends Component {
       }
     }
 
-    const htmlAttributes = this.props.htmlAttributes || {};
-
     const { src, srcSet } = buildSrc(
       Object.assign({}, this.props, {
         type: "img",
@@ -329,8 +324,6 @@ class SourceImpl extends Component {
 
   render() {
     const { disableSrcSet, width, height } = this.props;
-
-    const htmlAttributes = this.props.htmlAttributes || {};
 
     const { src, srcSet } = buildSrc(
       Object.assign({}, this.props, {
