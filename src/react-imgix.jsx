@@ -363,9 +363,7 @@ class SourceImpl extends Component {
 }
 SourceImpl.displayName = "ReactImgixSource";
 
-const ReactImgixWrapped = compose(
-  ShouldComponentUpdateHOC
-)(ReactImgix);
+const ReactImgixWrapped = compose(ShouldComponentUpdateHOC)(ReactImgix);
 const Picture = compose(ShouldComponentUpdateHOC)(PictureImpl);
 const Source = compose(ShouldComponentUpdateHOC)(SourceImpl);
 
