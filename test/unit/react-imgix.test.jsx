@@ -1,7 +1,6 @@
 import sinon from "sinon";
 import React from "react";
 import { shallow as enzymeShallow, mount } from "enzyme";
-import PropTypes from "prop-types";
 import { shallowUntilTarget } from "../helpers";
 import targetWidths from "targetWidths";
 import { DPR_QUALITY } from "../../src/constants";
@@ -25,11 +24,9 @@ const shallowSource = element => shallow(element, __SourceImpl);
 const shallowPicture = element => shallow(element, __PictureImpl);
 
 const src = "http://domain.imgix.net/image.jpg";
-let sut, vdom, instance;
-const EMPTY_IMAGE_SRC =
-  "data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=";
-
+let sut;
 let oldConsole, log;
+
 beforeEach(() => {
   oldConsole = global.console;
   delete console.log;
