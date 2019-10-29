@@ -146,7 +146,7 @@ This component acts dynamically by default. The component will leverage `srcset`
 }
 ```
 
-`./app.css`
+`./app.js`
 
 ```js
 import "./styles.css";
