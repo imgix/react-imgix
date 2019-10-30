@@ -17,8 +17,7 @@ const NODE_ENV = process.env.NODE_ENV;
 const buildKey = idx => `react-imgix-${idx}`;
 
 const defaultImgixParams = {
-  auto: ["format"],
-  fit: "crop"
+  auto: ["format"]
 };
 
 const defaultAttributeMap = {
@@ -170,12 +169,7 @@ function buildSrc({
  */
 function imgixParams(props) {
   const params = Object.assign({}, defaultImgixParams, props.imgixParams);
-
-  let fit = false;
-  if (params.crop != null) fit = "crop";
-  if (params.fit) fit = params.fit;
-
-  return Object.assign({}, params, { fit });
+  return Object.assign({}, params);
 }
 
 /**
