@@ -457,10 +457,7 @@ describe("When using the component", () => {
     expect(sut.props().className).toContain(className);
   });
   it("the fit param should alter the fit query pararmeter correctly", () => {
-    expectSrcsTo(
-      sut,
-      expect.not.stringContaining("fit=crop")
-    );
+    expectSrcsTo(sut, expect.not.stringContaining("fit=crop"));
   });
   it("the keys of custom url parameters should be url encoded", () => {
     const helloWorldKey = "hello world";
