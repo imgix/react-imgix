@@ -6,17 +6,15 @@ import PropTypes from "prop-types";
 import targetWidths from "./targetWidths";
 import constructUrl from "./constructUrl";
 import extractQueryParams from "./extractQueryParams";
-import { deprecatePropsHOC, ShouldComponentUpdateHOC } from "./HOCs";
+import { ShouldComponentUpdateHOC } from "./HOCs";
 
-import { warning, shallowEqual, compose, config } from "./common";
+import { compose, config } from "./common";
 import { DPR_QUALITY_VALUES } from "./constants";
 
 const PACKAGE_VERSION = require("../package.json").version;
 const NODE_ENV = process.env.NODE_ENV;
 
 const buildKey = idx => `react-imgix-${idx}`;
-
-const validTypes = ["img", "picture", "source"];
 
 const defaultImgixParams = {
   auto: ["format"],
@@ -87,7 +85,6 @@ function buildSrc({
   height,
   disableLibraryParam,
   disableSrcSet,
-  type,
   imgixParams,
   disableQualityByDPR
 }) {
@@ -217,8 +214,6 @@ class ReactImgix extends Component {
       }
     }
 
-    const htmlAttributes = this.props.htmlAttributes || {};
-
     const { src, srcSet } = buildSrc(
       Object.assign({}, this.props, {
         type: "img",
@@ -243,25 +238,6 @@ class ReactImgix extends Component {
       childProps[attributeConfig.srcSet] = srcSet;
     }
 
-    if (type === "bg") {
-      // TODO: Remove in v9
-      throw new Error(
-        `type='bg' has been removed in this version of react-imgix. If you would like this re-implemented please give this issues a thumbs up: https://github.com/imgix/react-imgix/issues/160`
-      );
-    }
-
-    if (type === "source") {
-      // TODO: Remove in v9
-      throw new Error(
-        `type='source' has been changed to <Source />. Please see the upgrade guide at: https://github.com/imgix/react-imgix#7x-to-80`
-      );
-    }
-    if (type === "picture") {
-      // TODO: Remove in v9
-      throw new Error(
-        `type='picture' has been changed to <Picture />. Please see the upgrade guide at: https://github.com/imgix/react-imgix#7x-to-80`
-      );
-    }
     return <img {...childProps} />;
   }
 }
@@ -349,8 +325,6 @@ class SourceImpl extends Component {
   render() {
     const { disableSrcSet, width, height } = this.props;
 
-    const htmlAttributes = this.props.htmlAttributes || {};
-
     const { src, srcSet } = buildSrc(
       Object.assign({}, this.props, {
         type: "source",
@@ -389,10 +363,7 @@ class SourceImpl extends Component {
 }
 SourceImpl.displayName = "ReactImgixSource";
 
-const ReactImgixWrapped = compose(
-  deprecatePropsHOC,
-  ShouldComponentUpdateHOC
-)(ReactImgix);
+const ReactImgixWrapped = compose(ShouldComponentUpdateHOC)(ReactImgix);
 const Picture = compose(ShouldComponentUpdateHOC)(PictureImpl);
 const Source = compose(ShouldComponentUpdateHOC)(SourceImpl);
 

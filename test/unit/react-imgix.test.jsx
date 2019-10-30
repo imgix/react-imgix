@@ -1,7 +1,6 @@
 import sinon from "sinon";
 import React from "react";
 import { shallow as enzymeShallow, mount } from "enzyme";
-import PropTypes from "prop-types";
 import { shallowUntilTarget } from "../helpers";
 import targetWidths from "targetWidths";
 import { DPR_QUALITY } from "../../src/constants";
@@ -25,11 +24,9 @@ const shallowSource = element => shallow(element, __SourceImpl);
 const shallowPicture = element => shallow(element, __PictureImpl);
 
 const src = "http://domain.imgix.net/image.jpg";
-let sut, vdom, instance;
-const EMPTY_IMAGE_SRC =
-  "data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=";
-
+let sut;
 let oldConsole, log;
+
 beforeEach(() => {
   oldConsole = global.console;
   delete console.log;
@@ -45,6 +42,7 @@ function sleep(ms) {
     setTimeout(resolve, ms);
   });
 }
+
 describe("When in default mode", () => {
   it("the rendered element's type should be img", () => {
     const sut = shallow(<Imgix src={src} sizes="100vw" />);
@@ -804,179 +802,6 @@ describe("Attribute config", () => {
     });
   });
 });
-describe("deprecations", () => {
-  describe("to be deprecated in v9", () => {
-    const DEPRECATED_PROPS = ["auto", "fit", "crop"];
-
-    DEPRECATED_PROPS.forEach(deprecatedProp => {
-      it(`should show deprecation warning for ${deprecatedProp}`, () => {
-        const oldConsole = global.console;
-        global.console = { error: jest.fn() };
-
-        const props = {
-          [deprecatedProp]: "value"
-        };
-
-        shallow(<Imgix src={src} sizes="100vw" {...props} />);
-
-        expect(console.error).toHaveBeenCalledWith(
-          expect.stringContaining(
-            `The prop '${deprecatedProp}' has been deprecated`
-          )
-        );
-
-        global.console = oldConsole;
-      });
-      it(`value for ${deprecatedProp} should be added to imgixParams`, () => {
-        // Silence warnings
-        const oldConsole = global.console;
-        global.console = { error: jest.fn() };
-
-        const props = {
-          [deprecatedProp]: "value"
-        };
-        const sut = enzymeShallow(<Imgix src={src} sizes="100vw" {...props} />);
-
-        expect(sut.props().imgixParams[deprecatedProp]).toEqual("value");
-
-        global.console = oldConsole;
-      });
-    });
-    it(`should show deprecation warning for customParams`, () => {
-      const oldConsole = global.console;
-      global.console = { error: jest.fn() };
-
-      shallow(<Imgix src={src} sizes="100vw" customParams={{ width: 100 }} />);
-
-      expect(console.error).toHaveBeenCalledWith(
-        expect.stringContaining(`The prop 'customParams' has been replaced`)
-      );
-
-      global.console = oldConsole;
-    });
-    it(`customParams is mapped to imgixParams`, () => {
-      // Silence warnings
-      const oldConsole = global.console;
-      global.console = { error: jest.fn() };
-
-      const sut = enzymeShallow(
-        <Imgix src={src} sizes="100vw" customParams={{ width: 100 }} />
-      );
-
-      expect(sut.props().imgixParams.width).toEqual(100);
-
-      global.console = oldConsole;
-    });
-
-    const DEPRECATED_CROP_HELPERS = ["faces", "entropy"];
-
-    DEPRECATED_CROP_HELPERS.forEach(deprecatedProp => {
-      it(`should show deprecation warning for ${deprecatedProp}`, () => {
-        const oldConsole = global.console;
-        global.console = { error: jest.fn(), log: log };
-
-        const props = {
-          [deprecatedProp]: true
-        };
-
-        shallow(<Imgix src={src} sizes="100vw" {...props} />);
-
-        expect(console.error).toHaveBeenCalledWith(
-          expect.stringContaining(
-            `The prop '${deprecatedProp}' has been deprecated`
-          )
-        );
-
-        global.console = oldConsole;
-      });
-      it(`value for ${deprecatedProp} should be added to imgixParams.crop`, () => {
-        // Silence warnings
-        const oldConsole = global.console;
-        global.console = { error: jest.fn(), log: log };
-
-        const props = {
-          [deprecatedProp]: true
-        };
-        const sut = enzymeShallow(<Imgix src={src} sizes="100vw" {...props} />);
-
-        expect(sut.props().imgixParams.crop).toEqual(deprecatedProp);
-
-        global.console = oldConsole;
-      });
-
-      it(`value for ${deprecatedProp} should not overwrite imgixParams.crop`, () => {
-        // Silence warnings
-        const oldConsole = global.console;
-        global.console = { error: jest.fn(), log: log };
-
-        const props = {
-          [deprecatedProp]: true
-        };
-        const sut = enzymeShallow(
-          <Imgix
-            src={src}
-            sizes="100vw"
-            {...props}
-            imgixParams={{ crop: `not-${deprecatedProp}` }}
-          />
-        );
-
-        expect(sut.props().imgixParams.crop).toEqual(`not-${deprecatedProp}`);
-
-        global.console = oldConsole;
-      });
-
-      it(`value for ${deprecatedProp} should not overwrite crop`, () => {
-        // Silence warnings
-        const oldConsole = global.console;
-        global.console = { error: jest.fn(), log: log };
-
-        const props = {
-          [deprecatedProp]: true
-        };
-        const sut = enzymeShallow(
-          <Imgix
-            src={src}
-            sizes="100vw"
-            {...props}
-            crop={`not-${deprecatedProp}`}
-          />
-        );
-
-        expect(sut.props().imgixParams.crop).toEqual(`not-${deprecatedProp}`);
-
-        global.console = oldConsole;
-      });
-    });
-    it("the faces param should alter the crop query parameter correctly", () => {
-      // Silence warnings
-      const oldConsole = global.console;
-      global.console = { error: jest.fn(), log: log };
-      sut = shallow(<Imgix src={src} sizes="100vw" entropy />);
-
-      sut = shallow(
-        <Imgix
-          src={src}
-          sizes="100vw"
-          faces
-          imgixParams={{ auto: ["format", "enhance"] }}
-        />
-      );
-      expectSrcsToContain(sut, "crop=faces");
-      global.console = oldConsole;
-    });
-    it("the entropy param should alter the crop and fit query parameters correctly", () => {
-      // Silence warnings
-      const oldConsole = global.console;
-      global.console = { error: jest.fn(), log: log };
-      sut = shallow(<Imgix src={src} sizes="100vw" entropy />);
-
-      expectSrcsToContain(sut, "crop=entropy");
-      expectSrcsToContain(sut, "fit=crop");
-      global.console = oldConsole;
-    });
-  });
-});
 
 const expectSrcsTo = (sut, matcher) => {
   const src = sut.props().src;
@@ -992,12 +817,14 @@ const expectSrcsTo = (sut, matcher) => {
     expect(srcSetUrl).toEqual(matcher);
   });
 };
+
 const expectSrcsToContain = (sut, shouldContainString) =>
   expectSrcsTo(sut, expect.stringContaining(shouldContainString));
 
 const expectUrlToContainIxLibParam = url => {
   expect(url).toEqual(createIxLibParamMatcher());
 };
+
 const createIxLibParamMatcher = () => {
   const expectedVersion = require("read-pkg-up").sync().pkg.version;
   const expectedParam = `ixlib=react-${expectedVersion}`;
