@@ -456,16 +456,8 @@ describe("When using the component", () => {
   it("the rendered element should contain the class name provided", () => {
     expect(sut.props().className).toContain(className);
   });
-  it("the crop param should alter the crop and fit query parameters correctly", () => {
-    sut = shallow(
-      <Imgix src={src} sizes="100vw" imgixParams={{ crop: "faces,entropy" }} />
-    );
-
-    expectSrcsToContain(sut, "crop=faces%2Centropy");
-    expectSrcsToContain(sut, "fit=crop");
-  });
   it("the fit param should alter the fit query pararmeter correctly", () => {
-    expectSrcsToContain(sut, "fit=crop");
+    expectSrcsTo(sut, expect.not.stringContaining("fit=crop"));
   });
   it("the keys of custom url parameters should be url encoded", () => {
     const helloWorldKey = "hello world";

@@ -76,11 +76,11 @@ This will generate HTML similar to the following:
 
 ```html
 <img
-  src="https://assets.imgix.net/examples/pione.jpg?auto=format&amp;crop=faces&amp;fit=crop&amp;ixlib=react-7.2.0"
+  src="https://assets.imgix.net/examples/pione.jpg?auto=format&amp;crop=faces&amp;ixlib=react-7.2.0"
   sizes="100vw"
   srcset="
-    https://assets.imgix.net/examples/pione.jpg?auto=format&amp;crop=faces&amp;fit=crop&amp;ixlib=react-7.2.0&amp;w=100 100w,
-    https://assets.imgix.net/examples/pione.jpg?auto=format&amp;crop=faces&amp;fit=crop&amp;ixlib=react-7.2.0&amp;w=200 200w,
+    https://assets.imgix.net/examples/pione.jpg?auto=format&amp;crop=faces&amp;ixlib=react-7.2.0&amp;w=100 100w,
+    https://assets.imgix.net/examples/pione.jpg?auto=format&amp;crop=faces&amp;ixlib=react-7.2.0&amp;w=200 200w,
     ...
   "
 />
@@ -99,8 +99,6 @@ import Imgix from "react-imgix";
   height={200}
 />;
 ```
-
-NB: Since this library sets [`fit`](https://docs.imgix.com/apis/url/size/fit) to `crop` by default, when just a width or height is set, the image will resize and maintain aspect ratio. When both are set, the image will be cropped to that size, maintaining pixel aspect ratio (i.e. edges are clipped in order to not stretch the photo). If this isn't desired, set `fit` to be another value (e.g. `clip`)
 
 [![Edit xp0348lv0z](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/charming-keller-kjnsq)
 
