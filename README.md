@@ -512,10 +512,10 @@ The warnings available are:
 
 This release brings the react-imgix API more in-line with that of imgix's rendering service.
 
-The largest change users will notice is that this project's component will no longer generate a default `fit=crop` parameter. This was original intention behind this was so that generated images would maintain aspect ratio when at least one of the dimensions were specified. However, the default imgix API behavior [sets `fit=clip`](https://docs.imgix.com/apis/url/size/fit#clip), which is now reflected in this project.
+The largest change users will notice is that this project's component will no longer generate a default `fit=crop` parameter. The original intention behind this was that generated images would maintain aspect ratio when at least one of the dimensions were specified. However, the default imgix API behavior [sets `fit=clip`](https://docs.imgix.com/apis/url/size/fit#clip), which is now reflected in this project.
 Although this may not cause breaking changes for all users, it can result in unusual rendered image behavior in some cases. As such, we would rather err on the side of caution and provide users the ability to opt in to these changes via a major release.
 
-If you are currently relying on the default generation of `fit=crop` when rendering images, you will have to manually specify it when invoking the component:
+If you are currently relying on the default generation of `fit=crop` when rendering images, you will now have to manually specify it when invoking the component:
 
 ```jsx
 <Imgix
@@ -525,7 +525,7 @@ If you are currently relying on the default generation of `fit=crop` when render
 />
 ```
 
-The other major change relates to how the component determines an image's aspect ratio. Instead of appending a calculated height `h=` value based on specified dimensions, the URL string will now be built using the [imgix aspect ratio parameter](https://blog.imgix.com/2019/07/17/aspect-ratio-parameter-makes-cropping-even-easier) `ar=`. Luckily, the interface for specifying an aspect ratio is no different from before. However, a user will have to pass in the `fit=crop` parameter in order for it to take effect:
+The other major change relates to how the component determines an image's aspect ratio. Instead of appending a calculated height `h=` value based on specified dimensions, the URL string will now be built using the [imgix aspect ratio parameter](https://blog.imgix.com/2019/07/17/aspect-ratio-parameter-makes-cropping-even-easier) `ar=`. Luckily, the interface for specifying an aspect ratio is no different from before. However, users will have to pass in the `fit=crop` parameter in order for it to take effect:
 
 ```jsx
 <Imgix
