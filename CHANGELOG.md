@@ -2,6 +2,46 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+# [9.0.0](https://github.com/imgix/react-imgix/compare/v8.6.3...v9.0.0) (2019-11-01)
+
+This release brings the react-imgix API more in-line with that of imgix's rendering service.
+
+The largest change users will notice is that this project's component will no longer generate a default `fit=crop` parameter. The original intention behind this was that generated images would maintain aspect ratio when at least one of the dimensions were specified. However, the default imgix API behavior [sets `fit=clip`](https://docs.imgix.com/apis/url/size/fit#clip), which is now reflected in this project.
+Although this may not cause breaking changes for all users, it can result in unusual rendered image behavior in some cases. As such, we would rather err on the side of caution and provide users the ability to opt in to these changes via a major release.
+
+If you are currently relying on the default generation of `fit=crop` when rendering images, you will now have to manually specify it when invoking the component:
+
+```jsx
+<Imgix
+	src="https://assets.imgix.net/examples/pione.jpg"
+  sizes="100vw"
+  imgixParams={{ fit: "crop" }}
+/>
+```
+
+The other major change relates to how the component determines an image's aspect ratio. Instead of appending a calculated height `h=` value based on specified dimensions, the URL string will now be built using the [imgix aspect ratio parameter](https://blog.imgix.com/2019/07/17/aspect-ratio-parameter-makes-cropping-even-easier) `ar=`. Luckily, the interface for specifying an aspect ratio is no different from before. However, users will have to pass in the `fit=crop` parameter in order for it to take effect:
+
+```jsx
+<Imgix
+  src="http://assets.imgix.net/examples/pione.jpg"
+  width={400}
+	imgixParams={{ ar: "2:1", fit: "crop" }}
+/>
+```
+
+### Refactor
+
+* refactor: use ar parameter instead of calculating aspect ratio ([#462](https://github.com/imgix/react-imgix/pull/462)) ([fbe8082](https://github.com/imgix/react-imgix/commit/fbe8082ddce2d61b31bf19bf72b4d4b492ea0751))
+* refactor: replace findDOMNode with callback refs ([#476](https://github.com/imgix/react-imgix/pull/476)) ([db3a1d7](https://github.com/imgix/react-imgix/commit/db3a1d70037b485fada972fe68b885d8ac6e4fb9))
+
+### Bug Fixes
+
+* remove default fit parameter ([#484](https://github.com/imgix/react-imgix/issues/484)) ([fbe8082](https://github.com/imgix/react-imgix/commit/fbe8082))
+
+### Chore
+
+* chore(clean): remove all deprecatedProps and types ([#483](https://github.com/imgix/react-imgix/pull/483])) ([d036132](https://github.com/imgix/react-imgix/commit/d0361323e46152ff8698e8e1d3bb2a44f79342c4))
+
 ### [8.6.4](https://github.com/imgix/react-imgix/compare/v8.6.3...v8.6.4) (2019-08-08)
 
 
