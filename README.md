@@ -508,6 +508,33 @@ The warnings available are:
 
 ## Upgrade Guides
 
+### 8.x to 9.0
+
+This release brings the react-imgix API more in-line with that of imgix's rendering service.
+
+The largest change users will notice is that this project's component will no longer generate a default `fit=crop` parameter. The original intention behind this was that generated images would maintain aspect ratio when at least one of the dimensions were specified. However, the default imgix API behavior [sets `fit=clip`](https://docs.imgix.com/apis/url/size/fit#clip), which is now reflected in this project.
+Although this may not cause breaking changes for all users, it can result in unusual rendered image behavior in some cases. As such, we would rather err on the side of caution and provide users the ability to opt in to these changes via a major release.
+
+If you are currently relying on the default generation of `fit=crop` when rendering images, you will now have to manually specify it when invoking the component:
+
+```jsx
+<Imgix
+	src="https://assets.imgix.net/examples/pione.jpg"
+  sizes="100vw"
+  imgixParams={{ fit: "crop" }}
+/>
+```
+
+The other major change relates to how the component determines an image's aspect ratio. Instead of appending a calculated height `h=` value based on specified dimensions, the URL string will now be built using the [imgix aspect ratio parameter](https://blog.imgix.com/2019/07/17/aspect-ratio-parameter-makes-cropping-even-easier) `ar=`. Luckily, the interface for specifying an aspect ratio is no different from before. However, users will have to pass in the `fit=crop` parameter in order for it to take effect:
+
+```jsx
+<Imgix
+  src="http://assets.imgix.net/examples/pione.jpg"
+  width={400}
+	imgixParams={{ ar: "2:1", fit: "crop" }}
+/>
+```
+
 ### 7.x to 8.0
 
 This is a very large update to this library with a lot of breaking changes. We apologise for any issues this may cause, and we have tried to reduce the number of breaking changes. We have also worked to batch up all these changes into one release to reduce its impacts. We do not plan on making breaking changes for a while after this, and will be focussed on adding features.
