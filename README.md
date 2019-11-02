@@ -32,6 +32,22 @@ A [React](https://facebook.github.io/react/) component that renders images using
 - [Upgrade Guides](#upgrade-guides)
 - [Meta](#meta)
 
+## Contributors ✨
+
+Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/docs/en/emoji-key)):
+
+<!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
+<!-- prettier-ignore -->
+<table>
+  <tr>
+    <td align="center"><a href="https://github.com/baldurh"><img src="https://avatars1.githubusercontent.com/u/1823617?v=4" width="100px;" alt="Baldur Helgason"/><br /><sub><b>Baldur Helgason</b></sub></a><br /><a href="https://github.com/imgix/react-imgix/commits?author=baldurh" title="Code">💻</a></td>
+  </tr>
+</table>
+
+<!-- ALL-CONTRIBUTORS-LIST:END -->
+
+This project follows the [all-contributors](https://github.com/all-contributors/all-contributors) specification. Contributions of any kind welcome!
+
 ## Overview / Resources
 
 **Before you get started with react-imgix**, it's _highly recommended_ that you read Eric Portis' [seminal article on `srcset` and `sizes`](https://ericportis.com/posts/2014/srcset-sizes/). This article explains the history of responsive images in responsive design, why they're necessary, and how all these technologies work together to save bandwidth and provide a better experience for users. The primary goal of react-imgix is to make these tools easier for developers to implement, so having an understanding of how they work will significantly improve your react-imgix experience.
@@ -553,18 +569,3 @@ This browser support is made possible by the great support from [BrowserStack](h
 
 React-imgix was originally created by [Frederick Fogerty](http://twitter.com/fredfogerty). It's licensed under the ISC license (see the [license file](./LICENSE) for more info). Any contribution is absolutely welcome, but please review the [contribution guidelines](./CONTRIBUTING.md) before getting started.
 
-## Contributors ✨
-
-Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/docs/en/emoji-key)):
-
-<!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
-<!-- prettier-ignore -->
-<table>
-  <tr>
-    <td align="center"><a href="https://github.com/baldurh"><img src="https://avatars1.githubusercontent.com/u/1823617?v=4" width="100px;" alt="Baldur Helgason"/><br /><sub><b>Baldur Helgason</b></sub></a><br /><a href="https://github.com/imgix/react-imgix/commits?author=baldurh" title="Code">💻</a></td>
-  </tr>
-</table>
-
-<!-- ALL-CONTRIBUTORS-LIST:END -->
-
-This project follows the [all-contributors](https://github.com/all-contributors/all-contributors) specification. Contributions of any kind welcome!
