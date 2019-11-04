@@ -9,6 +9,7 @@
 [![Dependencies Status](https://david-dm.org/imgix/react-imgix.svg)](https://david-dm.org/imgix/react-imgix)
 [![Code Climate](https://codeclimate.com/github/imgix/react-imgix/badges/gpa.svg)](https://codeclimate.com/github/imgix/react-imgix)
 [![styled with prettier](https://img.shields.io/badge/styled_with-prettier-ff69b4.svg)](https://github.com/prettier/prettier)
+[![All Contributors](https://img.shields.io/badge/all_contributors-1-orange.svg?style=flat-square)](#contributors)
 
 A [React](https://facebook.github.io/react/) component that renders images using [imgix](https://www.imgix.com/). It uses the smallest images possible, and renders well on the server.
 
@@ -30,6 +31,22 @@ A [React](https://facebook.github.io/react/) component that renders images using
 - [Browser Support](#browser-support)
 - [Upgrade Guides](#upgrade-guides)
 - [Meta](#meta)
+
+## Contributors ✨
+
+Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/docs/en/emoji-key)):
+
+<!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
+<!-- prettier-ignore -->
+<table>
+  <tr>
+    <td align="center"><a href="https://github.com/baldurh"><img src="https://avatars1.githubusercontent.com/u/1823617?v=4" width="100px;" alt="Baldur Helgason"/><br /><sub><b>Baldur Helgason</b></sub></a><br /><a href="https://github.com/imgix/react-imgix/commits?author=baldurh" title="Code">💻</a></td>
+  </tr>
+</table>
+
+<!-- ALL-CONTRIBUTORS-LIST:END -->
+
+This project follows the [all-contributors](https://github.com/all-contributors/all-contributors) specification. Contributions of any kind welcome!
 
 ## Overview / Resources
 
