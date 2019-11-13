@@ -220,14 +220,20 @@ class ReactImgix extends Component {
       defaultAttributeMap,
       this.props.attributeConfig
     );
-    const childProps = Object.assign({}, this.props.htmlAttributes, {
-      [attributeConfig.sizes]: this.props.sizes,
-      className: this.props.className,
-      width: width <= 1 ? null : width,
-      height: height <= 1 ? null : height,
-      [attributeConfig.src]: src,
-      ref: el => (this.imgRef = el)
-    });
+    const childProps = Object.assign(
+      {},
+      {
+        [attributeConfig.sizes]: this.props.sizes,
+        className: this.props.className,
+        width: width <= 1 ? null : width,
+        height: height <= 1 ? null : height,
+        [attributeConfig.src]: src,
+        ref: el => {
+          this.imgRef = el;
+        }
+      },
+      this.props.htmlAttributes
+    );
     if (!disableSrcSet) {
       childProps[attributeConfig.srcSet] = srcSet;
     }
@@ -331,13 +337,17 @@ class SourceImpl extends Component {
       defaultAttributeMap,
       this.props.attributeConfig
     );
-    const childProps = Object.assign({}, this.props.htmlAttributes, {
-      [attributeConfig.sizes]: this.props.sizes,
-      className: this.props.className,
-      width: width <= 1 ? null : width,
-      height: height <= 1 ? null : height,
-      ref: el => (this.sourceRef = el)
-    });
+    const childProps = Object.assign(
+      {},
+      {
+        [attributeConfig.sizes]: this.props.sizes,
+        className: this.props.className,
+        width: width <= 1 ? null : width,
+        height: height <= 1 ? null : height,
+        ref: el => (this.sourceRef = el)
+      },
+      this.props.htmlAttributes
+    );
 
     // inside of a <picture> element a <source> element ignores its src
     // attribute in favor of srcSet so we set that with either an actual

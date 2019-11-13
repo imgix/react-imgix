@@ -166,6 +166,7 @@ describe("When in image mode", () => {
       />
     );
 
+    expect(onMountedSpy.called);
     expect(onMountedSpy.callCount).toEqual(1);
     const onMountArg = onMountedSpy.lastCall.args[0];
     expect(onMountArg).toBeInstanceOf(HTMLImageElement);
@@ -308,6 +309,56 @@ describe("When in <source> mode", () => {
     expect(onMountedSpy.callCount).toEqual(1);
     const onMountArg = onMountedSpy.lastCall.args[0];
     expect(onMountArg).toBeInstanceOf(HTMLSourceElement);
+  });
+
+  describe("using the htmlAttributes prop", () => {
+    it("assigns an alt attribute given htmlAttributes.alt", async () => {
+      const htmlAttributes = {
+        alt: "Example alt attribute"
+      };
+
+      sut = mount(
+        <Source
+          src={"https://mysource.imgix.net/demo.png"}
+          sizes="100vw"
+          htmlAttributes={htmlAttributes}
+        />
+      );
+
+      expect(sut.props()["htmlAttributes"].alt).toEqual(htmlAttributes.alt);
+    });
+
+    it("passes any attributes via htmlAttributes to the rendered element", () => {
+      const htmlAttributes = {
+        "data-src": "https://mysource.imgix.net/demo.png"
+      };
+      sut = mount(
+        <Source
+          src={"https://mysource.imgix.net/demo.png"}
+          sizes="100vw"
+          htmlAttributes={htmlAttributes}
+        />
+      );
+
+      expect(sut.props()["htmlAttributes"]["data-src"]).toEqual(
+        htmlAttributes["data-src"]
+      );
+    });
+
+    it("attaches a ref via htmlAttributes", () => {
+      const callback = sinon.spy();
+
+      sut = mount(
+        <Source
+          src={"https://mysource.imgix.net/demo.png"}
+          sizes="100vw"
+          htmlAttributes={{ ref: callback }}
+        />
+      );
+
+      expect(callback.called).toBeTruthy();
+      expect(callback.callCount).toEqual(1);
+    });
   });
 });
 
@@ -706,33 +757,50 @@ describe("When using the component", () => {
     });
   });
 
-  it("an alt attribute should be set given htmlAttributes.alt", async () => {
-    const htmlAttributes = {
-      alt: "Example alt attribute"
-    };
-    sut = shallow(
-      <Imgix
-        src={"https://mysource.imgix.net/demo.png"}
-        sizes="100vw"
-        htmlAttributes={htmlAttributes}
-      />
-    );
-    expect(sut.props().alt).toEqual(htmlAttributes.alt);
-  });
+  describe("using the htmlAttributes prop", () => {
+    it("assigns an alt attribute given htmlAttributes.alt", async () => {
+      const htmlAttributes = {
+        alt: "Example alt attribute"
+      };
+      sut = shallow(
+        <Imgix
+          src={"https://mysource.imgix.net/demo.png"}
+          sizes="100vw"
+          htmlAttributes={htmlAttributes}
+        />
+      );
+      expect(sut.props().alt).toEqual(htmlAttributes.alt);
+    });
 
-  it("any attributes passed via htmlAttributes should be added to the rendered element", () => {
-    const htmlAttributes = {
-      "data-src": "https://mysource.imgix.net/demo.png"
-    };
-    sut = shallow(
-      <Imgix
-        src={"https://mysource.imgix.net/demo.png"}
-        sizes="100vw"
-        htmlAttributes={htmlAttributes}
-      />
-    );
+    it("passes any attributes via htmlAttributes to the rendered element", () => {
+      const htmlAttributes = {
+        "data-src": "https://mysource.imgix.net/demo.png"
+      };
+      sut = shallow(
+        <Imgix
+          src={"https://mysource.imgix.net/demo.png"}
+          sizes="100vw"
+          htmlAttributes={htmlAttributes}
+        />
+      );
 
-    expect(sut.props()["data-src"]).toEqual(htmlAttributes["data-src"]);
+      expect(sut.props()["data-src"]).toEqual(htmlAttributes["data-src"]);
+    });
+
+    it("attaches a ref via htmlAttributes", () => {
+      const callback = sinon.spy();
+
+      sut = mount(
+        <Imgix
+          src={"https://mysource.imgix.net/demo.png"}
+          sizes="100vw"
+          htmlAttributes={{ ref: callback }}
+        />
+      );
+
+      expect(callback.called).toBeTruthy();
+      expect(callback.callCount).toEqual(1);
+    });
   });
 
   it("an ixlib parameter should be included by default in the computed src and srcSet", () => {
