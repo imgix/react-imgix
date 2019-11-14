@@ -60,6 +60,19 @@ function aspectRatioIsValid(aspectRatio) {
   return /^\d+(\.\d+)?:\d+(\.\d+)?$/.test(aspectRatio);
 }
 
+const setParentRef = (parentRef, el) =>{
+  if (!parentRef) {
+    return;
+  }
+
+  // assign ref based on if it's a callback vs object
+  if (typeof parentRef === "function") {
+    parentRef(el);
+  } else {
+    parentRef.current = el;
+  }
+}
+
 const buildSrcSetPairWithFixedHeight = (url, targetWidth, fixedHeight, _) =>
   url + "&h=" + fixedHeight + "&w=" + targetWidth + " " + targetWidth + "w";
 
@@ -220,18 +233,6 @@ class ReactImgix extends Component {
       defaultAttributeMap,
       this.props.attributeConfig
     );
-    const setParentRef = ref => {
-      if (!ref) {
-        return;
-      }
-
-      // assign ref based on if it's a callback vs object
-      if (typeof ref === "function") {
-        ref(this.imgRef);
-      } else {
-        ref.current = this.imgRef;
-      }
-    };
     const childProps = Object.assign({}, this.props.htmlAttributes, {
       [attributeConfig.sizes]: this.props.sizes,
       className: this.props.className,
@@ -244,7 +245,7 @@ class ReactImgix extends Component {
           this.props.htmlAttributes !== undefined &&
           "ref" in this.props.htmlAttributes
         ) {
-          setParentRef(this.props.htmlAttributes.ref);
+          setParentRef(this.props.htmlAttributes.ref, this.imgRef);
         }
       }
     });
@@ -351,18 +352,6 @@ class SourceImpl extends Component {
       defaultAttributeMap,
       this.props.attributeConfig
     );
-    const setParentRef = ref => {
-      if (!ref) {
-        return;
-      }
-
-      // assign ref based on if it's a callback vs object
-      if (typeof ref === "function") {
-        ref(this.sourceRef);
-      } else {
-        ref.current = this.sourceRef;
-      }
-    };
     const childProps = Object.assign({}, this.props.htmlAttributes, {
       [attributeConfig.sizes]: this.props.sizes,
       className: this.props.className,
@@ -374,7 +363,7 @@ class SourceImpl extends Component {
           this.props.htmlAttributes !== undefined &&
           "ref" in this.props.htmlAttributes
         ) {
-          setParentRef(this.props.htmlAttributes.ref);
+          setParentRef(this.props.htmlAttributes.ref, this.sourceRef);
         }
       }
     });

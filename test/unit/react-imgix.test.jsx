@@ -355,7 +355,6 @@ describe("When in <source> mode", () => {
         />
       );
 
-      expect(callback.called).toBeTruthy();
       expect(callback.callCount).toEqual(1);
     });
 
@@ -372,9 +371,7 @@ describe("When in <source> mode", () => {
         />
       );
 
-      expect(htmlAttrCallback.called).toBeTruthy();
       expect(htmlAttrCallback.callCount).toEqual(1);
-      expect(onMountedCallback.called).toBeTruthy();
       expect(onMountedCallback.callCount).toEqual(1);
     });
   });
@@ -816,7 +813,6 @@ describe("When using the component", () => {
         />
       );
 
-      expect(callback.called).toBeTruthy();
       expect(callback.callCount).toEqual(1);
     });
 
@@ -833,9 +829,7 @@ describe("When using the component", () => {
         />
       );
 
-      expect(htmlAttrCallback.called).toBeTruthy();
       expect(htmlAttrCallback.callCount).toEqual(1);
-      expect(onMountedCallback.called).toBeTruthy();
       expect(onMountedCallback.callCount).toEqual(1);
     });
   });
