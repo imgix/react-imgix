@@ -220,20 +220,34 @@ class ReactImgix extends Component {
       defaultAttributeMap,
       this.props.attributeConfig
     );
-    const childProps = Object.assign(
-      {},
-      {
-        [attributeConfig.sizes]: this.props.sizes,
-        className: this.props.className,
-        width: width <= 1 ? null : width,
-        height: height <= 1 ? null : height,
-        [attributeConfig.src]: src,
-        ref: el => {
-          this.imgRef = el;
+    const setParentRef = ref => {
+      if (!ref) {
+        return;
+      }
+
+      // assign ref based on if it's a callback vs object
+      if (typeof ref === "function") {
+        ref(this.imgRef);
+      } else {
+        ref.current = this.imgRef;
+      }
+    };
+    const childProps = Object.assign({}, this.props.htmlAttributes, {
+      [attributeConfig.sizes]: this.props.sizes,
+      className: this.props.className,
+      width: width <= 1 ? null : width,
+      height: height <= 1 ? null : height,
+      [attributeConfig.src]: src,
+      ref: el => {
+        this.imgRef = el;
+        if (
+          this.props.htmlAttributes !== undefined &&
+          "ref" in this.props.htmlAttributes
+        ) {
+          setParentRef(this.props.htmlAttributes.ref);
         }
-      },
-      this.props.htmlAttributes
-    );
+      }
+    });
     if (!disableSrcSet) {
       childProps[attributeConfig.srcSet] = srcSet;
     }
@@ -337,17 +351,33 @@ class SourceImpl extends Component {
       defaultAttributeMap,
       this.props.attributeConfig
     );
-    const childProps = Object.assign(
-      {},
-      {
-        [attributeConfig.sizes]: this.props.sizes,
-        className: this.props.className,
-        width: width <= 1 ? null : width,
-        height: height <= 1 ? null : height,
-        ref: el => (this.sourceRef = el)
-      },
-      this.props.htmlAttributes
-    );
+    const setParentRef = ref => {
+      if (!ref) {
+        return;
+      }
+
+      // assign ref based on if it's a callback vs object
+      if (typeof ref === "function") {
+        ref(this.sourceRef);
+      } else {
+        ref.current = this.sourceRef;
+      }
+    };
+    const childProps = Object.assign({}, this.props.htmlAttributes, {
+      [attributeConfig.sizes]: this.props.sizes,
+      className: this.props.className,
+      width: width <= 1 ? null : width,
+      height: height <= 1 ? null : height,
+      ref: el => {
+        this.sourceRef = el;
+        if (
+          this.props.htmlAttributes !== undefined &&
+          "ref" in this.props.htmlAttributes
+        ) {
+          setParentRef(this.props.htmlAttributes.ref);
+        }
+      }
+    });
 
     // inside of a <picture> element a <source> element ignores its src
     // attribute in favor of srcSet so we set that with either an actual

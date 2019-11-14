@@ -166,7 +166,6 @@ describe("When in image mode", () => {
       />
     );
 
-    expect(onMountedSpy.called);
     expect(onMountedSpy.callCount).toEqual(1);
     const onMountArg = onMountedSpy.lastCall.args[0];
     expect(onMountArg).toBeInstanceOf(HTMLImageElement);
@@ -358,6 +357,25 @@ describe("When in <source> mode", () => {
 
       expect(callback.called).toBeTruthy();
       expect(callback.callCount).toEqual(1);
+    });
+
+    it("stills calls onMounted if a ref is passed via htmlAttributes", () => {
+      const htmlAttrCallback = sinon.spy();
+      const onMountedCallback = sinon.spy();
+
+      sut = mount(
+        <Source
+          src={"https://mysource.imgix.net/demo.png"}
+          sizes="100vw"
+          onMounted={onMountedCallback}
+          htmlAttributes={{ ref: htmlAttrCallback }}
+        />
+      );
+
+      expect(htmlAttrCallback.called).toBeTruthy();
+      expect(htmlAttrCallback.callCount).toEqual(1);
+      expect(onMountedCallback.called).toBeTruthy();
+      expect(onMountedCallback.callCount).toEqual(1);
     });
   });
 });
@@ -800,6 +818,25 @@ describe("When using the component", () => {
 
       expect(callback.called).toBeTruthy();
       expect(callback.callCount).toEqual(1);
+    });
+
+    it("stills calls onMounted if a ref is passed via htmlAttributes", () => {
+      const htmlAttrCallback = sinon.spy();
+      const onMountedCallback = sinon.spy();
+
+      sut = mount(
+        <Imgix
+          src={"https://mysource.imgix.net/demo.png"}
+          sizes="100vw"
+          onMounted={onMountedCallback}
+          htmlAttributes={{ ref: htmlAttrCallback }}
+        />
+      );
+
+      expect(htmlAttrCallback.called).toBeTruthy();
+      expect(htmlAttrCallback.callCount).toEqual(1);
+      expect(onMountedCallback.called).toBeTruthy();
+      expect(onMountedCallback.callCount).toEqual(1);
     });
   });
 
