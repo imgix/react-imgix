@@ -55,10 +55,7 @@ describe("helpers", () => {
     });
 
     it("lets you unwrap a component two levels", () => {
-      const Example = compose(
-        wrapper(),
-        wrapper()
-      )(ExampleBase);
+      const Example = compose(wrapper(), wrapper())(ExampleBase);
 
       const root = shallowUntilTarget(<Example />, ExampleBase);
       expect(root.text()).toEqual("Example component");
@@ -84,11 +81,7 @@ describe("helpers", () => {
     });
 
     it("gives up trying to unwrap component after maxTries", () => {
-      const Example = compose(
-        wrapper(),
-        wrapper(),
-        wrapper()
-      )(ExampleBase);
+      const Example = compose(wrapper(), wrapper(), wrapper())(ExampleBase);
 
       expect(() => {
         shallowUntilTarget(<Example />, ExampleBase, {

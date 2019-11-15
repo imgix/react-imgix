@@ -60,6 +60,19 @@ function aspectRatioIsValid(aspectRatio) {
   return /^\d+(\.\d+)?:\d+(\.\d+)?$/.test(aspectRatio);
 }
 
+const setParentRef = (parentRef, el) =>{
+  if (!parentRef) {
+    return;
+  }
+
+  // assign ref based on if it's a callback vs object
+  if (typeof parentRef === "function") {
+    parentRef(el);
+  } else {
+    parentRef.current = el;
+  }
+}
+
 const buildSrcSetPairWithFixedHeight = (url, targetWidth, fixedHeight, _) =>
   url + "&h=" + fixedHeight + "&w=" + targetWidth + " " + targetWidth + "w";
 
@@ -226,7 +239,15 @@ class ReactImgix extends Component {
       width: width <= 1 ? null : width,
       height: height <= 1 ? null : height,
       [attributeConfig.src]: src,
-      ref: el => (this.imgRef = el)
+      ref: el => {
+        this.imgRef = el;
+        if (
+          this.props.htmlAttributes !== undefined &&
+          "ref" in this.props.htmlAttributes
+        ) {
+          setParentRef(this.props.htmlAttributes.ref, this.imgRef);
+        }
+      }
     });
     if (!disableSrcSet) {
       childProps[attributeConfig.srcSet] = srcSet;
@@ -336,7 +357,15 @@ class SourceImpl extends Component {
       className: this.props.className,
       width: width <= 1 ? null : width,
       height: height <= 1 ? null : height,
-      ref: el => (this.sourceRef = el)
+      ref: el => {
+        this.sourceRef = el;
+        if (
+          this.props.htmlAttributes !== undefined &&
+          "ref" in this.props.htmlAttributes
+        ) {
+          setParentRef(this.props.htmlAttributes.ref, this.sourceRef);
+        }
+      }
     });
 
     // inside of a <picture> element a <source> element ignores its src
