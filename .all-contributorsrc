@@ -178,6 +178,15 @@
       "contributions": [
         "code"
       ]
+    },
+    {
+      "login": "danielfarrell",
+      "name": "Daniel Farrell",
+      "avatar_url": "https://avatars2.githubusercontent.com/u/13850?v=4",
+      "profile": "http://danielfarrell.com/",
+      "contributions": [
+        "doc"
+      ]
     }
   ],
   "contributorsPerLine": 7,
