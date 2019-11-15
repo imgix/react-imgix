@@ -76,6 +76,16 @@
       "contributions": [
         "code"
       ]
+    },
+    {
+      "login": "rbliss",
+      "name": "Richard Bliss",
+      "avatar_url": "https://avatars2.githubusercontent.com/u/108509?v=4",
+      "profile": "https://github.com/rbliss",
+      "contributions": [
+        "code",
+        "test"
+      ]
     }
   ],
   "contributorsPerLine": 7,
