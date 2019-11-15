@@ -106,6 +106,15 @@
         "code",
         "bug"
       ]
+    },
+    {
+      "login": "samuelgiles",
+      "name": "Samuel Giles",
+      "avatar_url": "https://avatars1.githubusercontent.com/u/2643026?v=4",
+      "profile": "http://samuelgil.es",
+      "contributions": [
+        "doc"
+      ]
     }
   ],
   "contributorsPerLine": 7,
