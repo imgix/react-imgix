@@ -9,7 +9,7 @@
 [![Dependencies Status](https://david-dm.org/imgix/react-imgix.svg)](https://david-dm.org/imgix/react-imgix)
 [![Code Climate](https://codeclimate.com/github/imgix/react-imgix/badges/gpa.svg)](https://codeclimate.com/github/imgix/react-imgix)
 [![styled with prettier](https://img.shields.io/badge/styled_with-prettier-ff69b4.svg)](https://github.com/prettier/prettier)
-[![All Contributors](https://img.shields.io/badge/all_contributors-12-orange.svg?style=flat-square)](#contributors)
+[![All Contributors](https://img.shields.io/badge/all_contributors-13-orange.svg?style=flat-square)](#contributors)
 
 A [React](https://facebook.github.io/react/) component that renders images using [imgix](https://www.imgix.com/). It uses the smallest images possible, and renders well on the server.
 
@@ -54,6 +54,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
     <td align="center"><a href="https://github.com/tstirrat15"><img src="https://avatars0.githubusercontent.com/u/2581423?v=4" width="100px;" alt="Tanner Stirrat"/><br /><sub><b>Tanner Stirrat</b></sub></a><br /><a href="https://github.com/imgix/react-imgix/commits?author=tstirrat15" title="Code">💻</a> <a href="https://github.com/imgix/react-imgix/issues?q=author%3Atstirrat15" title="Bug reports">🐛</a></td>
     <td align="center"><a href="http://samuelgil.es"><img src="https://avatars1.githubusercontent.com/u/2643026?v=4" width="100px;" alt="Samuel Giles"/><br /><sub><b>Samuel Giles</b></sub></a><br /><a href="https://github.com/imgix/react-imgix/commits?author=samuelgiles" title="Documentation">📖</a></td>
     <td align="center"><a href="https://espen.codes/"><img src="https://avatars2.githubusercontent.com/u/48200?v=4" width="100px;" alt="Espen Hovlandsdal"/><br /><sub><b>Espen Hovlandsdal</b></sub></a><br /><a href="https://github.com/imgix/react-imgix/commits?author=rexxars" title="Documentation">📖</a></td>
+    <td align="center"><a href="https://github.com/nickhavenly"><img src="https://avatars0.githubusercontent.com/u/25750763?v=4" width="100px;" alt="Nicholas Suski"/><br /><sub><b>Nicholas Suski</b></sub></a><br /><a href="https://github.com/imgix/react-imgix/commits?author=nickhavenly" title="Code">💻</a></td>
   </tr>
 </table>
 
