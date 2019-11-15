@@ -160,6 +160,15 @@
       "contributions": [
         "maintenance"
       ]
+    },
+    {
+      "login": "enagorny",
+      "name": "Eugene Nagorny",
+      "avatar_url": "https://avatars0.githubusercontent.com/u/1202150?v=4",
+      "profile": "https://github.com/enagorny",
+      "contributions": [
+        "doc"
+      ]
     }
   ],
   "contributorsPerLine": 7,
