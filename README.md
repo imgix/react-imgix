@@ -9,7 +9,7 @@
 [![Dependencies Status](https://david-dm.org/imgix/react-imgix.svg)](https://david-dm.org/imgix/react-imgix)
 [![Code Climate](https://codeclimate.com/github/imgix/react-imgix/badges/gpa.svg)](https://codeclimate.com/github/imgix/react-imgix)
 [![styled with prettier](https://img.shields.io/badge/styled_with-prettier-ff69b4.svg)](https://github.com/prettier/prettier)
-[![All Contributors](https://img.shields.io/badge/all_contributors-19-orange.svg?style=flat-square)](#contributors)
+[![All Contributors](https://img.shields.io/badge/all_contributors-20-orange.svg?style=flat-square)](#contributors)
 
 A [React](https://facebook.github.io/react/) component that renders images using [imgix](https://www.imgix.com/). It uses the smallest images possible, and renders well on the server.
 
@@ -63,6 +63,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
     <td align="center"><a href="https://github.com/enagorny"><img src="https://avatars0.githubusercontent.com/u/1202150?v=4" width="100px;" alt="Eugene Nagorny"/><br /><sub><b>Eugene Nagorny</b></sub></a><br /><a href="https://github.com/imgix/react-imgix/commits?author=enagorny" title="Documentation">📖</a></td>
     <td align="center"><a href="https://github.com/dennisschaaf"><img src="https://avatars1.githubusercontent.com/u/116382?v=4" width="100px;" alt="Dennis Schaaf"/><br /><sub><b>Dennis Schaaf</b></sub></a><br /><a href="https://github.com/imgix/react-imgix/commits?author=dennisschaaf" title="Code">💻</a></td>
     <td align="center"><a href="http://danielfarrell.com/"><img src="https://avatars2.githubusercontent.com/u/13850?v=4" width="100px;" alt="Daniel Farrell"/><br /><sub><b>Daniel Farrell</b></sub></a><br /><a href="https://github.com/imgix/react-imgix/commits?author=danielfarrell" title="Documentation">📖</a></td>
+    <td align="center"><a href="http://adkent.com"><img src="https://avatars3.githubusercontent.com/u/614?v=4" width="100px;" alt="Andy Kent"/><br /><sub><b>Andy Kent</b></sub></a><br /><a href="https://github.com/imgix/react-imgix/commits?author=andykent" title="Code">💻</a></td>
   </tr>
 </table>
 
