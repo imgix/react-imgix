@@ -9,7 +9,7 @@
 [![Dependencies Status](https://david-dm.org/imgix/react-imgix.svg)](https://david-dm.org/imgix/react-imgix)
 [![Code Climate](https://codeclimate.com/github/imgix/react-imgix/badges/gpa.svg)](https://codeclimate.com/github/imgix/react-imgix)
 [![styled with prettier](https://img.shields.io/badge/styled_with-prettier-ff69b4.svg)](https://github.com/prettier/prettier)
-[![All Contributors](https://img.shields.io/badge/all_contributors-4-orange.svg?style=flat-square)](#contributors)
+[![All Contributors](https://img.shields.io/badge/all_contributors-5-orange.svg?style=flat-square)](#contributors)
 
 A [React](https://facebook.github.io/react/) component that renders images using [imgix](https://www.imgix.com/). It uses the smallest images possible, and renders well on the server.
 
@@ -44,6 +44,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
     <td align="center"><a href="https://github.com/sherwinski"><img src="https://avatars3.githubusercontent.com/u/15919091?v=4" width="100px;" alt="sherwinski"/><br /><sub><b>sherwinski</b></sub></a><br /><a href="https://github.com/imgix/react-imgix/commits?author=sherwinski" title="Code">💻</a> <a href="https://github.com/imgix/react-imgix/commits?author=sherwinski" title="Documentation">📖</a> <a href="#maintenance-sherwinski" title="Maintenance">🚧</a> <a href="#question-sherwinski" title="Answering Questions">💬</a></td>
     <td align="center"><a href="https://github.com/frederickfogerty"><img src="https://avatars0.githubusercontent.com/u/615334?v=4" width="100px;" alt="Frederick Fogerty"/><br /><sub><b>Frederick Fogerty</b></sub></a><br /><a href="https://github.com/imgix/react-imgix/commits?author=frederickfogerty" title="Code">💻</a> <a href="https://github.com/imgix/react-imgix/commits?author=frederickfogerty" title="Documentation">📖</a> <a href="#maintenance-frederickfogerty" title="Maintenance">🚧</a> <a href="#question-frederickfogerty" title="Answering Questions">💬</a></td>
     <td align="center"><a href="http://jayeb.com"><img src="https://avatars2.githubusercontent.com/u/609840?v=4" width="100px;" alt="Jason Eberle"/><br /><sub><b>Jason Eberle</b></sub></a><br /><a href="https://github.com/imgix/react-imgix/commits?author=jayeb" title="Code">💻</a> <a href="https://github.com/imgix/react-imgix/commits?author=jayeb" title="Documentation">📖</a> <a href="#maintenance-jayeb" title="Maintenance">🚧</a> <a href="#question-jayeb" title="Answering Questions">💬</a></td>
+    <td align="center"><a href="https://github.com/modosc"><img src="https://avatars3.githubusercontent.com/u/2231664?v=4" width="100px;" alt="jonathan schatz"/><br /><sub><b>jonathan schatz</b></sub></a><br /><a href="https://github.com/imgix/react-imgix/commits?author=modosc" title="Code">💻</a></td>
   </tr>
 </table>
 
