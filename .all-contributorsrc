@@ -13,6 +13,18 @@
       "contributions": [
         "code"
       ]
+    },
+    {
+      "login": "sherwinski",
+      "name": "sherwinski",
+      "avatar_url": "https://avatars3.githubusercontent.com/u/15919091?v=4",
+      "profile": "https://github.com/sherwinski",
+      "contributions": [
+        "code",
+        "doc",
+        "maintenance",
+        "question"
+      ]
     }
   ],
   "contributorsPerLine": 7,
