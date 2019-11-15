@@ -86,6 +86,16 @@
         "code",
         "test"
       ]
+    },
+    {
+      "login": "ekosz",
+      "name": "Eric Koslow",
+      "avatar_url": "https://avatars1.githubusercontent.com/u/212829?v=4",
+      "profile": "https://github.com/ekosz",
+      "contributions": [
+        "code",
+        "doc"
+      ]
     }
   ],
   "contributorsPerLine": 7,
