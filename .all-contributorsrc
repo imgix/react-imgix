@@ -37,6 +37,18 @@
         "maintenance",
         "question"
       ]
+    },
+    {
+      "login": "jayeb",
+      "name": "Jason Eberle",
+      "avatar_url": "https://avatars2.githubusercontent.com/u/609840?v=4",
+      "profile": "http://jayeb.com",
+      "contributions": [
+        "code",
+        "doc",
+        "maintenance",
+        "question"
+      ]
     }
   ],
   "contributorsPerLine": 7,
