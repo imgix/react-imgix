@@ -124,6 +124,15 @@
       "contributions": [
         "doc"
       ]
+    },
+    {
+      "login": "nickhavenly",
+      "name": "Nicholas Suski",
+      "avatar_url": "https://avatars0.githubusercontent.com/u/25750763?v=4",
+      "profile": "https://github.com/nickhavenly",
+      "contributions": [
+        "code"
+      ]
     }
   ],
   "contributorsPerLine": 7,
