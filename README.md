@@ -9,7 +9,7 @@
 [![Dependencies Status](https://david-dm.org/imgix/react-imgix.svg)](https://david-dm.org/imgix/react-imgix)
 [![Code Climate](https://codeclimate.com/github/imgix/react-imgix/badges/gpa.svg)](https://codeclimate.com/github/imgix/react-imgix)
 [![styled with prettier](https://img.shields.io/badge/styled_with-prettier-ff69b4.svg)](https://github.com/prettier/prettier)
-[![All Contributors](https://img.shields.io/badge/all_contributors-16-orange.svg?style=flat-square)](#contributors)
+[![All Contributors](https://img.shields.io/badge/all_contributors-17-orange.svg?style=flat-square)](#contributors)
 
 A [React](https://facebook.github.io/react/) component that renders images using [imgix](https://www.imgix.com/). It uses the smallest images possible, and renders well on the server.
 
@@ -60,6 +60,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
   <tr>
     <td align="center"><a href="https://github.com/kochis"><img src="https://avatars3.githubusercontent.com/u/814934?v=4" width="100px;" alt="Craig Kochis"/><br /><sub><b>Craig Kochis</b></sub></a><br /><a href="https://github.com/imgix/react-imgix/commits?author=kochis" title="Code">💻</a></td>
     <td align="center"><a href="https://kellysutton.com"><img src="https://avatars3.githubusercontent.com/u/47004?v=4" width="100px;" alt="Kelly Sutton"/><br /><sub><b>Kelly Sutton</b></sub></a><br /><a href="#maintenance-kellysutton" title="Maintenance">🚧</a></td>
+    <td align="center"><a href="https://github.com/enagorny"><img src="https://avatars0.githubusercontent.com/u/1202150?v=4" width="100px;" alt="Eugene Nagorny"/><br /><sub><b>Eugene Nagorny</b></sub></a><br /><a href="https://github.com/imgix/react-imgix/commits?author=enagorny" title="Documentation">📖</a></td>
   </tr>
 </table>
 
