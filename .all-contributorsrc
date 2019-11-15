@@ -151,6 +151,15 @@
       "contributions": [
         "code"
       ]
+    },
+    {
+      "login": "kellysutton",
+      "name": "Kelly Sutton",
+      "avatar_url": "https://avatars3.githubusercontent.com/u/47004?v=4",
+      "profile": "https://kellysutton.com",
+      "contributions": [
+        "maintenance"
+      ]
     }
   ],
   "contributorsPerLine": 7,
