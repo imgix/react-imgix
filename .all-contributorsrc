@@ -58,6 +58,15 @@
       "contributions": [
         "code"
       ]
+    },
+    {
+      "login": "paulstraw",
+      "name": "Paul Straw",
+      "avatar_url": "https://avatars2.githubusercontent.com/u/117288?v=4",
+      "profile": "https://paulstraw.com",
+      "contributions": [
+        "maintenance"
+      ]
     }
   ],
   "contributorsPerLine": 7,
