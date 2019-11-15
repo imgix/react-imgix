@@ -187,6 +187,15 @@
       "contributions": [
         "doc"
       ]
+    },
+    {
+      "login": "andykent",
+      "name": "Andy Kent",
+      "avatar_url": "https://avatars3.githubusercontent.com/u/614?v=4",
+      "profile": "http://adkent.com",
+      "contributions": [
+        "code"
+      ]
     }
   ],
   "contributorsPerLine": 7,
