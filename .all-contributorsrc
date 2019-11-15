@@ -96,6 +96,16 @@
         "code",
         "doc"
       ]
+    },
+    {
+      "login": "tstirrat15",
+      "name": "Tanner Stirrat",
+      "avatar_url": "https://avatars0.githubusercontent.com/u/2581423?v=4",
+      "profile": "https://github.com/tstirrat15",
+      "contributions": [
+        "code",
+        "bug"
+      ]
     }
   ],
   "contributorsPerLine": 7,
