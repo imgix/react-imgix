@@ -67,6 +67,15 @@
       "contributions": [
         "maintenance"
       ]
+    },
+    {
+      "login": "theolampert",
+      "name": "Theo",
+      "avatar_url": "https://avatars3.githubusercontent.com/u/4714866?v=4",
+      "profile": "http://theo.sh",
+      "contributions": [
+        "code"
+      ]
     }
   ],
   "contributorsPerLine": 7,
