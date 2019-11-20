@@ -309,7 +309,7 @@ import Imgix, { Picture, Source } from "react-imgix";
     width={200}
     htmlAttributes={{ media: "(min-width: 320px)" }}
   />
-  <Imgix src={src} width={100} />
+  <Imgix src={src} imgixParams={{ w: 100 }} />
 </Picture>;
 ```
 
