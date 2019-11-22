@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [9.0.1](https://github.com/imgix/react-imgix/compare/v9.0.0...v9.0.1) (2019-11-22)
+
+
+### Bug Fixes
+
+* prevent overwriting htmlAttributes.ref ([#496](https://github.com/imgix/react-imgix/issues/496)) ([e15e1b2](https://github.com/imgix/react-imgix/commit/e15e1b2))
+
 # [9.0.0](https://github.com/imgix/react-imgix/compare/v8.6.3...v9.0.0) (2019-11-01)
 
 This release brings the react-imgix API more in-line with that of imgix's rendering service.
