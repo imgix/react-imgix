@@ -9,7 +9,7 @@
 [![Dependencies Status](https://david-dm.org/imgix/react-imgix.svg)](https://david-dm.org/imgix/react-imgix)
 [![Code Climate](https://codeclimate.com/github/imgix/react-imgix/badges/gpa.svg)](https://codeclimate.com/github/imgix/react-imgix)
 [![styled with prettier](https://img.shields.io/badge/styled_with-prettier-ff69b4.svg)](https://github.com/prettier/prettier)
-[![All Contributors](https://img.shields.io/badge/all_contributors-21-orange.svg?style=flat-square)](#contributors)
+[![All Contributors](https://img.shields.io/badge/all_contributors-22-orange.svg?style=flat-square)](#contributors)
 
 A [React](https://facebook.github.io/react/) component that renders images using [imgix](https://www.imgix.com/). It uses the smallest images possible, and renders well on the server.
 
@@ -30,47 +30,8 @@ A [React](https://facebook.github.io/react/) component that renders images using
   - [Warnings](#warnings)
 - [Browser Support](#browser-support)
 - [Upgrade Guides](#upgrade-guides)
+- [Contributors](#contributors-✨)
 - [Meta](#meta)
-
-## Contributors ✨
-
-Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/docs/en/emoji-key)):
-
-<!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
-<!-- prettier-ignore -->
-<table>
-  <tr>
-    <td align="center"><a href="https://github.com/frederickfogerty"><img src="https://avatars0.githubusercontent.com/u/615334?v=4" width="100px;" alt="Frederick Fogerty"/><br /><sub><b>Frederick Fogerty</b></sub></a><br /><a href="https://github.com/imgix/react-imgix/commits?author=frederickfogerty" title="Code">💻</a> <a href="https://github.com/imgix/react-imgix/commits?author=frederickfogerty" title="Documentation">📖</a> <a href="#maintenance-frederickfogerty" title="Maintenance">🚧</a> <a href="#question-frederickfogerty" title="Answering Questions">💬</a></td>
-    <td align="center"><a href="https://github.com/sherwinski"><img src="https://avatars3.githubusercontent.com/u/15919091?v=4" width="100px;" alt="sherwinski"/><br /><sub><b>sherwinski</b></sub></a><br /><a href="https://github.com/imgix/react-imgix/commits?author=sherwinski" title="Code">💻</a> <a href="https://github.com/imgix/react-imgix/commits?author=sherwinski" title="Documentation">📖</a> <a href="#maintenance-sherwinski" title="Maintenance">🚧</a> <a href="#question-sherwinski" title="Answering Questions">💬</a></td>
-    <td align="center"><a href="http://jayeb.com"><img src="https://avatars2.githubusercontent.com/u/609840?v=4" width="100px;" alt="Jason Eberle"/><br /><sub><b>Jason Eberle</b></sub></a><br /><a href="https://github.com/imgix/react-imgix/commits?author=jayeb" title="Code">💻</a> <a href="https://github.com/imgix/react-imgix/commits?author=jayeb" title="Documentation">📖</a> <a href="#maintenance-jayeb" title="Maintenance">🚧</a> <a href="#question-jayeb" title="Answering Questions">💬</a></td>
-    <td align="center"><a href="https://paulstraw.com"><img src="https://avatars2.githubusercontent.com/u/117288?v=4" width="100px;" alt="Paul Straw"/><br /><sub><b>Paul Straw</b></sub></a><br /><a href="#maintenance-paulstraw" title="Maintenance">🚧</a></td>
-    <td align="center"><a href="https://kellysutton.com"><img src="https://avatars3.githubusercontent.com/u/47004?v=4" width="100px;" alt="Kelly Sutton"/><br /><sub><b>Kelly Sutton</b></sub></a><br /><a href="#maintenance-kellysutton" title="Maintenance">🚧</a></td>    
-    <td align="center"><a href="https://github.com/rbliss"><img src="https://avatars2.githubusercontent.com/u/108509?v=4" width="100px;" alt="Richard Bliss"/><br /><sub><b>Richard Bliss</b></sub></a><br /><a href="https://github.com/imgix/react-imgix/commits?author=rbliss" title="Code">💻</a> <a href="https://github.com/imgix/react-imgix/commits?author=rbliss" title="Tests">⚠️</a></td>
-    <td align="center"><a href="https://github.com/ekosz"><img src="https://avatars1.githubusercontent.com/u/212829?v=4" width="100px;" alt="Eric Koslow"/><br /><sub><b>Eric Koslow</b></sub></a><br /><a href="https://github.com/imgix/react-imgix/commits?author=ekosz" title="Code">💻</a> <a href="https://github.com/imgix/react-imgix/commits?author=ekosz" title="Documentation">📖</a></td>
-  </tr>
-  <tr>
-    <td align="center"><a href="https://github.com/baldurh"><img src="https://avatars1.githubusercontent.com/u/1823617?v=4" width="100px;" alt="Baldur Helgason"/><br /><sub><b>Baldur Helgason</b></sub></a><br /><a href="https://github.com/imgix/react-imgix/commits?author=baldurh" title="Code">💻</a></td>
-    <td align="center"><a href="https://github.com/modosc"><img src="https://avatars3.githubusercontent.com/u/2231664?v=4" width="100px;" alt="jonathan schatz"/><br /><sub><b>jonathan schatz</b></sub></a><br /><a href="https://github.com/imgix/react-imgix/commits?author=modosc" title="Code">💻</a></td>
-    <td align="center"><a href="http://theo.sh"><img src="https://avatars3.githubusercontent.com/u/4714866?v=4" width="100px;" alt="Theo"/><br /><sub><b>Theo</b></sub></a><br /><a href="https://github.com/imgix/react-imgix/commits?author=theolampert" title="Code">💻</a></td>
-    <td align="center"><a href="https://github.com/tstirrat15"><img src="https://avatars0.githubusercontent.com/u/2581423?v=4" width="100px;" alt="Tanner Stirrat"/><br /><sub><b>Tanner Stirrat</b></sub></a><br /><a href="https://github.com/imgix/react-imgix/commits?author=tstirrat15" title="Code">💻</a> <a href="https://github.com/imgix/react-imgix/issues?q=author%3Atstirrat15" title="Bug reports">🐛</a></td>
-    <td align="center"><a href="https://github.com/nickhavenly"><img src="https://avatars0.githubusercontent.com/u/25750763?v=4" width="100px;" alt="Nicholas Suski"/><br /><sub><b>Nicholas Suski</b></sub></a><br /><a href="https://github.com/imgix/react-imgix/commits?author=nickhavenly" title="Code">💻</a></td>
-    <td align="center"><a href="https://github.com/minfawang"><img src="https://avatars1.githubusercontent.com/u/8814693?v=4" width="100px;" alt="voiceup"/><br /><sub><b>voiceup</b></sub></a><br /><a href="https://github.com/imgix/react-imgix/commits?author=minfawang" title="Code">💻</a></td>
-    <td align="center"><a href="https://github.com/kochis"><img src="https://avatars3.githubusercontent.com/u/814934?v=4" width="100px;" alt="Craig Kochis"/><br /><sub><b>Craig Kochis</b></sub></a><br /><a href="https://github.com/imgix/react-imgix/commits?author=kochis" title="Code">💻</a></td>
-  </tr>
-  <tr>
-    <td align="center"><a href="https://github.com/dennisschaaf"><img src="https://avatars1.githubusercontent.com/u/116382?v=4" width="100px;" alt="Dennis Schaaf"/><br /><sub><b>Dennis Schaaf</b></sub></a><br /><a href="https://github.com/imgix/react-imgix/commits?author=dennisschaaf" title="Code">💻</a></td>
-    <td align="center"><a href="http://adkent.com"><img src="https://avatars3.githubusercontent.com/u/614?v=4" width="100px;" alt="Andy Kent"/><br /><sub><b>Andy Kent</b></sub></a><br /><a href="https://github.com/imgix/react-imgix/commits?author=andykent" title="Code">💻</a></td>
-    <td align="center"><a href="https://github.com/GLosch"><img src="https://avatars2.githubusercontent.com/u/5502159?v=4" width="100px;" alt="Gabby Losch"/><br /><sub><b>Gabby Losch</b></sub></a><br /><a href="https://github.com/imgix/react-imgix/commits?author=GLosch" title="Code">💻</a></td>
-    <td align="center"><a href="https://github.com/enagorny"><img src="https://avatars0.githubusercontent.com/u/1202150?v=4" width="100px;" alt="Eugene Nagorny"/><br /><sub><b>Eugene Nagorny</b></sub></a><br /><a href="https://github.com/imgix/react-imgix/commits?author=enagorny" title="Documentation">📖</a></td>    
-    <td align="center"><a href="http://samuelgil.es"><img src="https://avatars1.githubusercontent.com/u/2643026?v=4" width="100px;" alt="Samuel Giles"/><br /><sub><b>Samuel Giles</b></sub></a><br /><a href="https://github.com/imgix/react-imgix/commits?author=samuelgiles" title="Documentation">📖</a></td>
-    <td align="center"><a href="https://espen.codes/"><img src="https://avatars2.githubusercontent.com/u/48200?v=4" width="100px;" alt="Espen Hovlandsdal"/><br /><sub><b>Espen Hovlandsdal</b></sub></a><br /><a href="https://github.com/imgix/react-imgix/commits?author=rexxars" title="Documentation">📖</a></td>
-    <td align="center"><a href="http://danielfarrell.com/"><img src="https://avatars2.githubusercontent.com/u/13850?v=4" width="100px;" alt="Daniel Farrell"/><br /><sub><b>Daniel Farrell</b></sub></a><br /><a href="https://github.com/imgix/react-imgix/commits?author=danielfarrell" title="Documentation">📖</a></td>
-  </tr>
-</table>
-
-<!-- ALL-CONTRIBUTORS-LIST:END -->
-
-This project follows the [all-contributors](https://github.com/all-contributors/all-contributors) specification. Contributions of any kind welcome!
 
 ## Overview / Resources
 
@@ -616,6 +577,49 @@ This browser support is made possible by the great support from [BrowserStack](h
 
 <img src="docs/images/Browserstack-logo@2x.png" width="300">
 
+## Contributors ✨
+
+Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/docs/en/emoji-key)):
+
+<!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
+<!-- prettier-ignore -->
+<table>
+  <tr>
+    <td align="center"><a href="https://github.com/frederickfogerty"><img src="https://avatars0.githubusercontent.com/u/615334?v=4" width="100px;" alt="Frederick Fogerty"/><br /><sub><b>Frederick Fogerty</b></sub></a><br /><a href="https://github.com/imgix/react-imgix/commits?author=frederickfogerty" title="Code">💻</a> <a href="https://github.com/imgix/react-imgix/commits?author=frederickfogerty" title="Documentation">📖</a> <a href="#maintenance-frederickfogerty" title="Maintenance">🚧</a> <a href="#question-frederickfogerty" title="Answering Questions">💬</a></td>
+    <td align="center"><a href="https://github.com/sherwinski"><img src="https://avatars3.githubusercontent.com/u/15919091?v=4" width="100px;" alt="sherwinski"/><br /><sub><b>sherwinski</b></sub></a><br /><a href="https://github.com/imgix/react-imgix/commits?author=sherwinski" title="Code">💻</a> <a href="https://github.com/imgix/react-imgix/commits?author=sherwinski" title="Documentation">📖</a> <a href="#maintenance-sherwinski" title="Maintenance">🚧</a> <a href="#question-sherwinski" title="Answering Questions">💬</a></td>
+    <td align="center"><a href="http://jayeb.com"><img src="https://avatars2.githubusercontent.com/u/609840?v=4" width="100px;" alt="Jason Eberle"/><br /><sub><b>Jason Eberle</b></sub></a><br /><a href="https://github.com/imgix/react-imgix/commits?author=jayeb" title="Code">💻</a> <a href="https://github.com/imgix/react-imgix/commits?author=jayeb" title="Documentation">📖</a> <a href="#maintenance-jayeb" title="Maintenance">🚧</a> <a href="#question-jayeb" title="Answering Questions">💬</a></td>
+    <td align="center"><a href="https://paulstraw.com"><img src="https://avatars2.githubusercontent.com/u/117288?v=4" width="100px;" alt="Paul Straw"/><br /><sub><b>Paul Straw</b></sub></a><br /><a href="#maintenance-paulstraw" title="Maintenance">🚧</a></td>
+    <td align="center"><a href="https://kellysutton.com"><img src="https://avatars3.githubusercontent.com/u/47004?v=4" width="100px;" alt="Kelly Sutton"/><br /><sub><b>Kelly Sutton</b></sub></a><br /><a href="#maintenance-kellysutton" title="Maintenance">🚧</a></td>    
+    <td align="center"><a href="https://github.com/rbliss"><img src="https://avatars2.githubusercontent.com/u/108509?v=4" width="100px;" alt="Richard Bliss"/><br /><sub><b>Richard Bliss</b></sub></a><br /><a href="https://github.com/imgix/react-imgix/commits?author=rbliss" title="Code">💻</a> <a href="https://github.com/imgix/react-imgix/commits?author=rbliss" title="Tests">⚠️</a></td>
+    <td align="center"><a href="https://github.com/ekosz"><img src="https://avatars1.githubusercontent.com/u/212829?v=4" width="100px;" alt="Eric Koslow"/><br /><sub><b>Eric Koslow</b></sub></a><br /><a href="https://github.com/imgix/react-imgix/commits?author=ekosz" title="Code">💻</a> <a href="https://github.com/imgix/react-imgix/commits?author=ekosz" title="Documentation">📖</a></td>
+  </tr>
+  <tr>
+    <td align="center"><a href="https://github.com/baldurh"><img src="https://avatars1.githubusercontent.com/u/1823617?v=4" width="100px;" alt="Baldur Helgason"/><br /><sub><b>Baldur Helgason</b></sub></a><br /><a href="https://github.com/imgix/react-imgix/commits?author=baldurh" title="Code">💻</a></td>
+    <td align="center"><a href="https://github.com/modosc"><img src="https://avatars3.githubusercontent.com/u/2231664?v=4" width="100px;" alt="jonathan schatz"/><br /><sub><b>jonathan schatz</b></sub></a><br /><a href="https://github.com/imgix/react-imgix/commits?author=modosc" title="Code">💻</a></td>
+    <td align="center"><a href="http://theo.sh"><img src="https://avatars3.githubusercontent.com/u/4714866?v=4" width="100px;" alt="Theo"/><br /><sub><b>Theo</b></sub></a><br /><a href="https://github.com/imgix/react-imgix/commits?author=theolampert" title="Code">💻</a></td>
+    <td align="center"><a href="https://github.com/tstirrat15"><img src="https://avatars0.githubusercontent.com/u/2581423?v=4" width="100px;" alt="Tanner Stirrat"/><br /><sub><b>Tanner Stirrat</b></sub></a><br /><a href="https://github.com/imgix/react-imgix/commits?author=tstirrat15" title="Code">💻</a> <a href="https://github.com/imgix/react-imgix/issues?q=author%3Atstirrat15" title="Bug reports">🐛</a></td>
+    <td align="center"><a href="https://github.com/nickhavenly"><img src="https://avatars0.githubusercontent.com/u/25750763?v=4" width="100px;" alt="Nicholas Suski"/><br /><sub><b>Nicholas Suski</b></sub></a><br /><a href="https://github.com/imgix/react-imgix/commits?author=nickhavenly" title="Code">💻</a></td>
+    <td align="center"><a href="https://github.com/minfawang"><img src="https://avatars1.githubusercontent.com/u/8814693?v=4" width="100px;" alt="voiceup"/><br /><sub><b>voiceup</b></sub></a><br /><a href="https://github.com/imgix/react-imgix/commits?author=minfawang" title="Code">💻</a></td>
+    <td align="center"><a href="https://github.com/kochis"><img src="https://avatars3.githubusercontent.com/u/814934?v=4" width="100px;" alt="Craig Kochis"/><br /><sub><b>Craig Kochis</b></sub></a><br /><a href="https://github.com/imgix/react-imgix/commits?author=kochis" title="Code">💻</a></td>
+  </tr>
+  <tr>
+    <td align="center"><a href="https://github.com/dennisschaaf"><img src="https://avatars1.githubusercontent.com/u/116382?v=4" width="100px;" alt="Dennis Schaaf"/><br /><sub><b>Dennis Schaaf</b></sub></a><br /><a href="https://github.com/imgix/react-imgix/commits?author=dennisschaaf" title="Code">💻</a></td>
+    <td align="center"><a href="http://adkent.com"><img src="https://avatars3.githubusercontent.com/u/614?v=4" width="100px;" alt="Andy Kent"/><br /><sub><b>Andy Kent</b></sub></a><br /><a href="https://github.com/imgix/react-imgix/commits?author=andykent" title="Code">💻</a></td>
+    <td align="center"><a href="https://github.com/GLosch"><img src="https://avatars2.githubusercontent.com/u/5502159?v=4" width="100px;" alt="Gabby Losch"/><br /><sub><b>Gabby Losch</b></sub></a><br /><a href="https://github.com/imgix/react-imgix/commits?author=GLosch" title="Code">💻</a></td>
+    <td align="center"><a href="https://github.com/enagorny"><img src="https://avatars0.githubusercontent.com/u/1202150?v=4" width="100px;" alt="Eugene Nagorny"/><br /><sub><b>Eugene Nagorny</b></sub></a><br /><a href="https://github.com/imgix/react-imgix/commits?author=enagorny" title="Documentation">📖</a></td>    
+    <td align="center"><a href="http://samuelgil.es"><img src="https://avatars1.githubusercontent.com/u/2643026?v=4" width="100px;" alt="Samuel Giles"/><br /><sub><b>Samuel Giles</b></sub></a><br /><a href="https://github.com/imgix/react-imgix/commits?author=samuelgiles" title="Documentation">📖</a></td>
+    <td align="center"><a href="https://espen.codes/"><img src="https://avatars2.githubusercontent.com/u/48200?v=4" width="100px;" alt="Espen Hovlandsdal"/><br /><sub><b>Espen Hovlandsdal</b></sub></a><br /><a href="https://github.com/imgix/react-imgix/commits?author=rexxars" title="Documentation">📖</a></td>
+    <td align="center"><a href="http://danielfarrell.com/"><img src="https://avatars2.githubusercontent.com/u/13850?v=4" width="100px;" alt="Daniel Farrell"/><br /><sub><b>Daniel Farrell</b></sub></a><br /><a href="https://github.com/imgix/react-imgix/commits?author=danielfarrell" title="Documentation">📖</a></td>
+  </tr>
+  <tr>
+    <td align="center"><a href="http://cieslak.dev"><img src="https://avatars0.githubusercontent.com/u/14146176?v=4" width="100px;" alt="Luiz Fernando da Silva Cieslak"/><br /><sub><b>Luiz Fernando da Silva Cieslak</b></sub></a><br /><a href="https://github.com/imgix/react-imgix/commits?author=luizcieslak" title="Documentation">📖</a></td>
+  </tr>
+</table>
+
+<!-- ALL-CONTRIBUTORS-LIST:END -->
+
+This project follows the [all-contributors](https://github.com/all-contributors/all-contributors) specification. Contributions of any kind welcome, but please review the [contribution guidelines](./CONTRIBUTING.md) before getting started!
+
 ## Meta
 
-React-imgix was originally created by [Frederick Fogerty](http://twitter.com/fredfogerty). It's licensed under the ISC license (see the [license file](./LICENSE) for more info). Any contribution is absolutely welcome, but please review the [contribution guidelines](./CONTRIBUTING.md) before getting started.
+React-imgix was originally created by [Frederick Fogerty](http://twitter.com/fredfogerty). It's licensed under the ISC license (see the [license file](./LICENSE) for more info).
