@@ -88,7 +88,7 @@
     "babel-loader": "8.0.6",
     "babel-plugin-inline-package-json": "2.0.0",
     "babel-plugin-transform-es2017-object-entries": "0.0.5",
-    "browserslist": "4.7.0",
+    "browserslist": "4.7.3",
     "common-tags": "1.8.0",
     "cross-env": "6.0.3",
     "enzyme": "3.10.0",
