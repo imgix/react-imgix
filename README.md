@@ -30,7 +30,7 @@ A [React](https://facebook.github.io/react/) component that renders images using
   - [Warnings](#warnings)
 - [Browser Support](#browser-support)
 - [Upgrade Guides](#upgrade-guides)
-- [Contributors](#contributors-✨)
+- [Contributors](#contributors-)
 - [Meta](#meta)
 
 ## Overview / Resources
