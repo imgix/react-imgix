@@ -1,7 +1,7 @@
 import Imgix from "react-imgix";
 import * as ReactDOM from "react-dom";
 import { Background } from "react-imgix-bg";
-import targetWidths from "targetWidths";
+import createTargetWidths from "createTargetWidths";
 import Uri from "jsuri";
 
 import React from "react";
@@ -14,6 +14,7 @@ const isIE = (() => {
 })();
 
 const src = "https://assets.imgix.net/examples/pione.jpg";
+const targetWidths = createTargetWidths();
 
 const DELAY = 70;
 const findClosestWidthFromTargetWidths = targetWidth =>

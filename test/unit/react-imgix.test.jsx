@@ -2,7 +2,7 @@ import sinon from "sinon";
 import React from "react";
 import { shallow as enzymeShallow, mount } from "enzyme";
 import { shallowUntilTarget } from "../helpers";
-import targetWidths from "targetWidths";
+import createTargetWidths from "createTargetWidths";
 import { DPR_QUALITY } from "../../src/constants";
 
 import Imgix, {
@@ -24,6 +24,7 @@ const shallowSource = element => shallow(element, __SourceImpl);
 const shallowPicture = element => shallow(element, __PictureImpl);
 
 const src = "http://domain.imgix.net/image.jpg";
+const targetWidths = createTargetWidths();
 let sut;
 let oldConsole, log;
 

@@ -2,14 +2,12 @@ import React from "react";
 import Measure, { withContentRect } from "react-measure";
 import constructUrl from "./constructUrl";
 import extractQueryParams from "./extractQueryParams";
-import targetWidths from "./targetWidths";
+import createTargetWidths from "./createTargetWidths";
 import findClosest from "./findClosest";
 
 const PACKAGE_VERSION = require("../package.json").version;
 
 const noop = () => {};
-
-const findNearestWidth = actualWidth => findClosest(actualWidth, targetWidths);
 
 const toFixed = (dp, value) => +value.toFixed(dp);
 
@@ -23,13 +21,17 @@ const BackgroundImpl = props => {
     disableLibraryParam,
     src,
     children,
-    className = ""
+    className = "",
+    targetMaxSize
   } = props;
   const { w: forcedWidth, h: forcedHeight } = imgixParams;
   const hasDOMDimensions = contentRect.bounds.top != null;
   const htmlAttributes = props.htmlAttributes || {};
   const dpr = toFixed(2, imgixParams.dpr || global.devicePixelRatio || 1);
   const ref = htmlAttributes.ref;
+  const targetWidths = createTargetWidths(targetMaxSize);
+  const findNearestWidth = actualWidth =>
+    findClosest(actualWidth, targetWidths);
   const onRef = el => {
     measureRef(el);
     if (typeof ref === "function") {

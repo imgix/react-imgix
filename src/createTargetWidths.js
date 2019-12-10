@@ -1,8 +1,9 @@
-function targetWidths() {
+const MAX_SIZE = 8192;
+
+function createTargetWidths(maxSize = MAX_SIZE) {
   const resolutions = [];
   let prev = 100;
   const INCREMENT_PERCENTAGE = 8;
-  const MAX_SIZE = 8192;
 
   const ensureEven = n => 2 * Math.round(n / 2);
 
@@ -15,4 +16,4 @@ function targetWidths() {
   return resolutions;
 }
 
-export default targetWidths();
+export default createTargetWidths;

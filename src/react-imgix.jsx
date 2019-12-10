@@ -3,7 +3,7 @@ import "./array-findindex";
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 
-import targetWidths from "./targetWidths";
+import createTargetWidths from "./createTargetWidths";
 import constructUrl from "./constructUrl";
 import extractQueryParams from "./extractQueryParams";
 import { ShouldComponentUpdateHOC } from "./HOCs";
@@ -45,7 +45,8 @@ const SHARED_IMGIX_AND_SOURCE_PROP_TYPES = Object.assign(
     sizes: PropTypes.string,
     width: PropTypes.number,
     height: PropTypes.number,
-    src: PropTypes.string.isRequired
+    src: PropTypes.string.isRequired,
+    targetMaxWidth: PropTypes.number
   }
 );
 
@@ -60,7 +61,7 @@ function aspectRatioIsValid(aspectRatio) {
   return /^\d+(\.\d+)?:\d+(\.\d+)?$/.test(aspectRatio);
 }
 
-const setParentRef = (parentRef, el) =>{
+const setParentRef = (parentRef, el) => {
   if (!parentRef) {
     return;
   }
@@ -71,7 +72,7 @@ const setParentRef = (parentRef, el) =>{
   } else {
     parentRef.current = el;
   }
-}
+};
 
 const buildSrcSetPairWithFixedHeight = (url, targetWidth, fixedHeight, _) =>
   url + "&h=" + fixedHeight + "&w=" + targetWidth + " " + targetWidth + "w";
@@ -98,9 +99,11 @@ function buildSrc({
   disableLibraryParam,
   disableSrcSet,
   imgixParams,
-  disableQualityByDPR
+  disableQualityByDPR,
+  targetMaxSize
 }) {
   const fixedSize = width != null || height != null;
+  const targetWidths = createTargetWidths(targetMaxSize);
 
   const [rawSrc, params] = extractQueryParams(inputSrc);
 
