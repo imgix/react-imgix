@@ -14,24 +14,51 @@
 ---
 <!-- /ix-docs-ignore -->
 
-- [Overview / Resources](#overview-resources)
+- [Overview / Resources](#overview--resources)
 - [Installation](#installation)
-- [Examples](#examples)
-  - [Basic Use Case](#basic-use-case)
-  - [Server-side rendering](#server-side-rendering)
-  - [Flexible image rendering](#flexible-image-rendering)
-  - [Fixed image rendering](#fixed-image-rendering-ie-non-flexible)
-  - [Lazy Loading](#lazy-loading)
-  - [Low Quality Image Placeholder Technique (LQIP)](#low-quality-image-placeholder-technique-lqip)
-  - [Picture support](#picture-support)
-  - [Background mode](#background-mode)
-  - [Custom URLS](#custom-urls)
-- [Props](#props)
-- [Global Configuration](#global-configuration)
-  - [Warnings](#warnings)
-- [Browser Support](#browser-support)
+- [Usage](#usage)
+  - [Examples](#examples)
+    - [Basic use case](#basic-use-case)
+    - [Server-side rendering](#server-side-rendering)
+    - [Flexible image rendering](#flexible-image-rendering)
+    - [Fixed image rendering (i.e. non-flexible)](#fixed-image-rendering-ie-non-flexible)
+    - [Lazy Loading](#lazy-loading)
+    - [Low Quality Image Placeholder Technique (LQIP)](#low-quality-image-placeholder-technique-lqip)
+    - [Picture support](#picture-support)
+    - [Attaching ref to `<img />`, etc.](#attaching-ref-to-img--etc)
+    - [Background mode](#background-mode)
+    - [Custom URLS](#custom-urls)
+  - [Props](#props)
+    - [Shared Props (Imgix, Source)](#shared-props-imgix-source)
+      - [src :: string, required](#src--string-required)
+      - [imgixParams :: object](#imgixparams--object)
+      - [sizes :: string](#sizes--string)
+      - [className :: string](#classname--string)
+      - [height :: number](#height--number)
+      - [width :: number](#width--number)
+      - [disableSrcSet :: bool, default = false](#disablesrcset--bool-default--false)
+      - [disableLibraryParam :: bool](#disablelibraryparam--bool)
+      - [htmlAttributes :: object](#htmlattributes--object)
+      - [onMounted :: func](#onmounted--func)
+      - [attributeConfig :: object](#attributeconfig--object)
+      - [disableQualityByDPR :: bool, default = false](#disablequalitybydpr--bool-default--false)
+    - [Picture Props](#picture-props)
+      - [className :: string](#classname--string-1)
+      - [onMounted :: func](#onmounted--func-1)
+      - [htmlAttributes :: object](#htmlattributes--object-1)
+    - [Background Props](#background-props)
+      - [src :: string, required](#src--string-required-1)
+      - [imgixParams :: object](#imgixparams--object-1)
+      - [className :: string](#classname--string-2)
+      - [disableLibraryParam :: bool](#disablelibraryparam--bool-1)
+      - [htmlAttributes :: object](#htmlattributes--object-2)
+  - [Global Configuration](#global-configuration)
+    - [Warnings](#warnings)
 - [Upgrade Guides](#upgrade-guides)
-- [Contributors](#contributors-)
+  - [8.x to 9.0](#8x-to-90)
+  - [7.x to 8.0](#7x-to-80)
+- [Browser Support](#browser-support)
+- [Contributors ✨](#contributors-%e2%9c%a8)
 - [Meta](#meta)
 
 ## Overview / Resources
@@ -549,17 +576,19 @@ To upgrade to version 8, the following changes should be made.
 - A `sizes` prop should be added to all usages of Imgix. If `sizes` is new to you (or even if it's not), Eric's [seminal article on `srcset` and `sizes`](https://ericportis.com/posts/2014/srcset-sizes/) is highly recommended.
 - Change all usages of `type='picture'` to `<Picture>` and `type='source'` to `<Source>`
 
-      // this...
-      <Imgix type='picture'>
+    ```html
+    // this...
+    <Imgix type='picture'>
         <Imgix type='source' src={src}>
         <Imgix type='source' src={src}>
-      </Imgix>
+    </Imgix>
 
-      // becomes...
-      <Picture>
+    // becomes...
+    <Picture>
         <Source src={src}>
         <Source src={src}>
-      </Picture>
+    </Picture>
+    ```
 
   See [Picture support](#picture-support) for more information.
 
@@ -579,6 +608,7 @@ This browser support is made possible by the great support from [BrowserStack](h
 <img src="docs/images/Browserstack-logo@2x.png" width="300">
 
 ## Contributors ✨
+<!-- ix-docs-ignore -->
 
 Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/docs/en/emoji-key)):
 
@@ -618,6 +648,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
 </table>
 
 <!-- ALL-CONTRIBUTORS-LIST:END -->
+<!-- /ix-docs-ignore -->
 
 This project follows the [all-contributors](https://github.com/all-contributors/all-contributors) specification. Contributions of any kind welcome, but please review the [contribution guidelines](./CONTRIBUTING.md) before getting started!
 
