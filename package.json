@@ -90,7 +90,7 @@
     "babel-plugin-transform-es2017-object-entries": "0.0.5",
     "browserslist": "4.7.0",
     "common-tags": "1.8.0",
-    "cross-env": "6.0.3",
+    "cross-env": "7.0.0",
     "enzyme": "3.11.0",
     "enzyme-adapter-react-16": "1.15.2",
     "expect": "25.1.0",
