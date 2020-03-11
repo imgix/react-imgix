@@ -38,7 +38,7 @@
   - [8.x to 9.0](#8x-to-90)
   - [7.x to 8.0](#7x-to-80)
 - [Browser Support](#browser-support)
-- [Contributors ✨](#contributors-%e2%9c%a8)
+- [Contributors ✨](#contributors-)
 - [Meta](#meta)
 
 ## Overview / Resources
