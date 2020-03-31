@@ -26,7 +26,8 @@ const BackgroundImpl = props => {
     className = ""
   } = props;
   const { w: forcedWidth, h: forcedHeight } = imgixParams;
-  const hasDOMDimensions = contentRect.bounds.top != null;
+  const hasDOMDimensions =
+    contentRect.bounds.width != null && contentRect.bounds.height != null;
   const htmlAttributes = props.htmlAttributes || {};
   const dpr = toFixed(2, imgixParams.dpr || global.devicePixelRatio || 1);
   const ref = htmlAttributes.ref;

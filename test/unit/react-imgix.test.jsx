@@ -12,6 +12,7 @@ import Imgix, {
   __SourceImpl,
   __PictureImpl
 } from "react-imgix";
+import { __BackgroundImpl } from "react-imgix-bg";
 
 function shallow(element, target = __ReactImgixImpl, shallowOptions) {
   return shallowUntilTarget(element, target, {
@@ -22,6 +23,14 @@ function shallow(element, target = __ReactImgixImpl, shallowOptions) {
 }
 const shallowSource = element => shallow(element, __SourceImpl);
 const shallowPicture = element => shallow(element, __PictureImpl);
+
+const makeBackgroundWithBounds = bounds => props => (
+  <__BackgroundImpl
+    measureRef={() => null}
+    contentRect={{ bounds }}
+    {...props}
+  />
+);
 
 const src = "http://domain.imgix.net/image.jpg";
 let sut;
@@ -501,6 +510,44 @@ describe("When in picture mode", () => {
     expect(onMountedSpy.callCount).toEqual(1);
     const onMountArg = onMountedSpy.lastCall.args[0];
     expect(onMountArg).toBeInstanceOf(HTMLPictureElement);
+  });
+});
+
+describe("When in background mode", () => {
+  it("should be loading when there is a width but no height", () => {
+    const Background = makeBackgroundWithBounds({ top: 10, width: 100 });
+
+    sut = mount(
+      <Background
+        src={`${src}`}
+        className="bg-img"
+        contentRect={{ bounds: { top: 10, width: 100 } }}
+      >
+        <div>Content</div>
+      </Background>
+    );
+
+    expect(sut.find("div.bg-img").hasClass("react-imgix-bg-loading")).toBe(
+      true
+    );
+  });
+
+  it("should not be loading when a width and height are available", () => {
+    const Background = makeBackgroundWithBounds({
+      top: 10,
+      width: 100,
+      height: 100
+    });
+
+    sut = mount(
+      <Background src={`${src}`} className="bg-img">
+        <div>Content</div>
+      </Background>
+    );
+
+    expect(sut.find("div.bg-img").hasClass("react-imgix-bg-loading")).toBe(
+      false
+    );
   });
 });
 
