@@ -214,11 +214,22 @@
       "contributions": [
         "doc"
       ]
+    },
+    {
+      "login": "stephencookdev",
+      "name": "Stephen Cook",
+      "avatar_url": "https://avatars1.githubusercontent.com/u/8496655?v=4",
+      "profile": "https://stephencookdev.co.uk/",
+      "contributions": [
+        "code",
+        "bug"
+      ]
     }
   ],
   "contributorsPerLine": 7,
   "projectName": "react-imgix",
   "projectOwner": "imgix",
   "repoType": "github",
-  "repoHost": "https://github.com"
+  "repoHost": "https://github.com",
+  "skipCi": true
 }
