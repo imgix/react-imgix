@@ -171,6 +171,16 @@
       ]
     },
     {
+      "login": "stephencookdev",
+      "name": "Stephen Cook",
+      "avatar_url": "https://avatars1.githubusercontent.com/u/8496655?v=4",
+      "profile": "https://stephencookdev.co.uk/",
+      "contributions": [
+        "code",
+        "bug"
+      ]
+    },
+    {
       "login": "enagorny",
       "name": "Eugene Nagorny",
       "avatar_url": "https://avatars0.githubusercontent.com/u/1202150?v=4",
@@ -220,5 +230,6 @@
   "projectName": "react-imgix",
   "projectOwner": "imgix",
   "repoType": "github",
-  "repoHost": "https://github.com"
+  "repoHost": "https://github.com",
+  "skipCi": true
 }
