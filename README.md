@@ -360,7 +360,7 @@ import { buildURL } from "react-imgix";
 buildURL("http://yourdomain.imgix.net/image.png", { w: 450, h: 100 }); // => http://yourdomain.imgix.net/image.png?auto=format&w=450&h=100&ixlib=react-x.x.x
 ```
 
-The base url may also contain query parameters. These will be overriden by any parameters passed in with the second parameter.
+The base URL may also contain query parameters. These will be overridden by any parameters passed in with the second parameter.
 
 This feature can be used to create your own custom `img` elements, or for use with other image components, such as [React-bootstrap's Image component](https://react-bootstrap.github.io/components/images/).
 
