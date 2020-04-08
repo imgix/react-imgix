@@ -18,6 +18,8 @@
 
 <!-- NB: Run `npx markdown-toc README.md -i` to generate TOC :) -->
 
+<!-- prettier-ignore-start -->
+
 <!-- toc -->
 
 - [Overview / Resources](#overview--resources)
@@ -70,6 +72,8 @@
 - [Meta](#meta)
 
 <!-- tocstop -->
+
+<!-- prettier-ignore-end -->
 
 ## Overview / Resources
 
@@ -350,7 +354,7 @@ If your desired feature falls outside this percentage, do not worry! You will pr
 
 This library exposes a pure function, `buildURL`, for generating full imgix urls given a base url and some parameters.
 
-```js
+```jsx
 import { buildURL } from "react-imgix";
 
 buildURL("http://yourdomain.imgix.net/image.png", { w: 450, h: 100 }); // => http://yourdomain.imgix.net/image.png?auto=format&w=450&h=100&ixlib=react-x.x.x
@@ -610,20 +614,24 @@ To upgrade to version 8, the following changes should be made.
 - A `sizes` prop should be added to all usages of Imgix. If `sizes` is new to you (or even if it's not), Eric's [seminal article on `srcset` and `sizes`](https://ericportis.com/posts/2014/srcset-sizes/) is highly recommended.
 - Change all usages of `type='picture'` to `<Picture>` and `type='source'` to `<Source>`
 
+  <!-- prettier-ignore-start -->
+
   ```html
   // this...
   <Imgix type="picture">
-    <Imgix type="source" src="{src}">
-      <Imgix type="source" src="{src}"> </Imgix>
+    <Imgix type="source" src="{src}" />
+    <Imgix type="source" src="{src}" />
+  </Imgix>
 
-      // becomes...
-      <picture>
-        <source src="{src}" />
-        <source src="{src}" /> </picture></Imgix
-  ></Imgix>
+  // becomes...
+  <Picture>
+    <Source src="{src}" />
+    <Source src="{src}" />
+  </Picture>
   ```
 
   See [Picture support](#picture-support) for more information.
+  <!-- prettier-ignore-end -->
 
 - Remove all usage of `type='bg'` as it is no longer supported. It was decided that it was too hard to implement this feature consistently. If you would still like to use this feature, please give this issue a thumbs up: [https://github.com/imgix/react-imgix/issues/160](https://github.com/imgix/react-imgix/issues/160) If we get enough requests for this, we will re-implement it.
 - Remove props `aggressiveLoad`, `component`, `fluid`, `precision` as they are no longer used.
