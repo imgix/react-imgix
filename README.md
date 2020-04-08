@@ -370,7 +370,7 @@ The `ixlib` parameter may be disabled by: `buildURL(<url>, <params>, { disableLi
 
 This library allows the developer to pass any attribute they like to the underlying DOM element with `htmlAttributes`.
 
-For example, if the the developer would like to attach a custom onLoad callback to an img component:
+For example, if the the developer would like to attach a custom `onLoad` callback to an `img` component:
 
 ```jsx
 <Imgix
