@@ -350,7 +350,7 @@ A warning is displayed when no fallback image is passed. This warning can be dis
 
 Although imgix is open to feature suggestions, we might not accept the feature if it is a very specific use case. The features below are examples of what we consider general advanced use cases. Our target here is to support 95% of all the usages of normal `img`, `picture`, and `source` elements.
 
-If your desired feature falls outside this percentage, do not worry! You will probably still be able to achieve your feature with react-imgix's more powerful api: `buildUrl`.
+If your desired feature falls outside this percentage, do not worry! You will probably still be able to achieve your feature with react-imgix's more powerful API: `buildURL`.
 
 This library exposes a pure function, `buildURL`, for generating full imgix urls given a base url and some parameters.
 
