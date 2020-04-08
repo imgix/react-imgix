@@ -143,6 +143,9 @@ const renderAndWaitForImageLoad = async element => {
       htmlAttributes: {
         ...(element.props.htmlAttributes || {}),
         onLoad: () => {
+          element.props.htmlAttributes &&
+            element.props.htmlAttributes.onLoad &&
+            element.props.htmlAttributes.onLoad();
           setImmediate(() => resolve(renderedEl));
         }
       }
@@ -164,6 +167,27 @@ describe("When in default mode", () => {
         .find("img")
         .props().src
     ).toContain(src);
+  });
+
+  context("htmlAttributes", () => {
+    it("'onLoad' calls the callback", async () => {
+      let onLoadCalled = false;
+
+      await renderAndWaitForImageLoad(
+        <Imgix
+          src={src}
+          w={10} // for speed
+          h={10} // for speed
+          htmlAttributes={{
+            onLoad: () => {
+              onLoadCalled = true;
+            },
+          }}
+        />
+      );
+
+      expect(onLoadCalled).toBe(true);
+    });
   });
 });
 
