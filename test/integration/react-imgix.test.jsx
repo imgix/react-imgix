@@ -147,8 +147,14 @@ const renderAndWaitForImageLoad = async element => {
             element.props.htmlAttributes.onLoad &&
             element.props.htmlAttributes.onLoad();
           setImmediate(() => resolve(renderedEl));
-        }
-      }
+        },
+        onError: () => {
+          element.props.htmlAttributes &&
+            element.props.htmlAttributes.onError &&
+            element.props.htmlAttributes.onError();
+          setImmediate(() => resolve(renderedEl));
+        },
+      },
     });
     renderedEl = renderIntoContainer(elementWithOnMounted);
   });
@@ -188,13 +194,31 @@ describe("When in default mode", () => {
 
       expect(onLoadCalled).toBe(true);
     });
+    it("'onError' calls the callback", async () => {
+      let onErrorCalled = false;
+
+      await renderAndWaitForImageLoad(
+        <Imgix
+          src="https://badurlcom"
+          w={10} // for speed
+          h={10} // for speed
+          htmlAttributes={{
+            onError: () => {
+              onErrorCalled = true;
+            },
+          }}
+        />
+      );
+
+      expect(onErrorCalled).toBe(true);
+    });
   });
 });
 
 describe("Background Mode", () => {
   ///////////////////////
   // Common test cases
-  const shouldRenderNoBGImage = element => {
+  const shouldRenderNoBGImage = (element) => {
     const sut = renderIntoContainer(element);
 
     const container = sut.find(".bg-img").first();
