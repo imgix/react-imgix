@@ -619,14 +619,14 @@ To upgrade to version 8, the following changes should be made.
   ```html
   // this...
   <Imgix type="picture">
-    <Imgix type="source" src="{src}" />
-    <Imgix type="source" src="{src}" />
+    <Imgix type="source" src={src} />
+    <Imgix type="source" src={src} />
   </Imgix>
 
   // becomes...
   <Picture>
-    <Source src="{src}" />
-    <Source src="{src}" />
+    <Source src={src} />
+    <Source src={src} />
   </Picture>
   ```
 
