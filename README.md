@@ -529,7 +529,7 @@ If you are currently relying on the default generation of `fit=crop` when render
 
 ```jsx
 <Imgix
-	src="https://assets.imgix.net/examples/pione.jpg"
+  src="https://assets.imgix.net/examples/pione.jpg"
   sizes="100vw"
   imgixParams={{ fit: "crop" }}
 />
@@ -541,7 +541,7 @@ The other major change relates to how the component determines an image's aspect
 <Imgix
   src="http://assets.imgix.net/examples/pione.jpg"
   width={400}
-	imgixParams={{ ar: "2:1", fit: "crop" }}
+  imgixParams={{ ar: "2:1", fit: "crop" }}
 />
 ```
 
