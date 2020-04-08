@@ -352,7 +352,7 @@ Although imgix is open to feature suggestions, we might not accept the feature i
 
 If your desired feature falls outside this percentage, do not worry! You will probably still be able to achieve your feature with react-imgix's more powerful API: `buildURL`.
 
-This library exposes a pure function, `buildURL`, for generating full imgix urls given a base url and some parameters.
+This library exposes a pure function, `buildURL`, for generating full imgix URLs given a base URL and some parameters.
 
 ```jsx
 import { buildURL } from "react-imgix";
