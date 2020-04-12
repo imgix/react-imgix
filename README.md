@@ -16,7 +16,7 @@
 
 <!-- /ix-docs-ignore -->
 
-<!-- NB: Run `npx markdown-toc README.md -i` to generate TOC :) -->
+<!-- NB: Run `npx markdown-toc README.md -i --maxdepth 4` to generate TOC :) -->
 
 <!-- prettier-ignore-start -->
 
@@ -40,28 +40,8 @@
     + [Attaching ref to ``, etc.](#attaching-ref-to--etc)
   * [Props](#props)
     + [Shared Props (Imgix, Source)](#shared-props-imgix-source)
-      - [src :: string, required](#src--string-required)
-      - [imgixParams :: object](#imgixparams--object)
-      - [sizes :: string](#sizes--string)
-      - [className :: string](#classname--string)
-      - [height :: number](#height--number)
-      - [width :: number](#width--number)
-      - [disableSrcSet :: bool, default = false](#disablesrcset--bool-default--false)
-      - [disableLibraryParam :: bool](#disablelibraryparam--bool)
-      - [htmlAttributes :: object](#htmlattributes--object)
-      - [onMounted :: func](#onmounted--func)
-      - [attributeConfig :: object](#attributeconfig--object)
-      - [disableQualityByDPR :: bool, default = false](#disablequalitybydpr--bool-default--false)
     + [Picture Props](#picture-props)
-      - [className :: string](#classname--string-1)
-      - [onMounted :: func](#onmounted--func-1)
-      - [htmlAttributes :: object](#htmlattributes--object-1)
     + [Background Props](#background-props)
-      - [src :: string, required](#src--string-required-1)
-      - [imgixParams :: object](#imgixparams--object-1)
-      - [className :: string](#classname--string-2)
-      - [disableLibraryParam :: bool](#disablelibraryparam--bool-1)
-      - [htmlAttributes :: object](#htmlattributes--object-2)
   * [Global Configuration](#global-configuration)
     + [Warnings](#warnings)
 - [Upgrade Guides](#upgrade-guides)
