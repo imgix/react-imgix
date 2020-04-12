@@ -1,4 +1,5 @@
 <!-- ix-docs-ignore -->
+
 ![imgix logo](https://assets.imgix.net/sdk-imgix-logo.svg)
 
 `react-imgix` provides custom components for integrating [imgix](https://www.imgix.com/) into React sites and generating images server-side.
@@ -12,34 +13,47 @@
 [![All Contributors](https://img.shields.io/badge/all_contributors-22-orange.svg?style=flat-square)](#contributors-)
 
 ---
+
 <!-- /ix-docs-ignore -->
+
+<!-- NB: Run `npx markdown-toc README.md -i --maxdepth 4` to generate TOC :) -->
+
+<!-- prettier-ignore-start -->
+
+<!-- toc -->
 
 - [Overview / Resources](#overview--resources)
 - [Installation](#installation)
 - [Usage](#usage)
-  - [Examples](#examples)
-    - [Basic use case](#basic-use-case)
-    - [Server-side rendering](#server-side-rendering)
-    - [Flexible image rendering](#flexible-image-rendering)
-    - [Fixed image rendering (i.e. non-flexible)](#fixed-image-rendering-ie-non-flexible)
-    - [Lazy Loading](#lazy-loading)
-    - [Low Quality Image Placeholder Technique (LQIP)](#low-quality-image-placeholder-technique-lqip)
-    - [Picture support](#picture-support)
-    - [Attaching ref to `<img />`, etc.](#attaching-ref-to-img--etc)
-    - [Background mode](#background-mode)
-    - [Custom URLS](#custom-urls)
-  - [Props](#props)
-    - [Shared Props (Imgix, Source)](#shared-props-imgix-source)
-    - [Picture Props](#picture-props)
-    - [Background Props](#background-props)
-  - [Global Configuration](#global-configuration)
-    - [Warnings](#warnings)
+  * [Examples](#examples)
+    + [Basic Use Case](#basic-use-case)
+    + [Server-Side Rendering](#server-side-rendering)
+    + [Flexible Image Rendering](#flexible-image-rendering)
+    + [Fixed Image Rendering (i.e. non-flexible)](#fixed-image-rendering-ie-non-flexible)
+    + [Background Mode](#background-mode)
+    + [Picture Support](#picture-support)
+  * [Advanced Examples](#advanced-examples)
+    + [General Advanced Usage](#general-advanced-usage)
+    + [Passing Custom HTML Attributes](#passing-custom-html-attributes)
+    + [Lazy Loading](#lazy-loading)
+    + [Low Quality Image Placeholder Technique (LQIP)](#low-quality-image-placeholder-technique-lqip)
+    + [Attaching Ref to DOM Elements](#attaching-ref-to-dom-elements)
+  * [Props](#props)
+    + [Shared Props (Imgix, Source)](#shared-props-imgix-source)
+    + [Picture Props](#picture-props)
+    + [Background Props](#background-props)
+  * [Global Configuration](#global-configuration)
+    + [Warnings](#warnings)
 - [Upgrade Guides](#upgrade-guides)
-  - [8.x to 9.0](#8x-to-90)
-  - [7.x to 8.0](#7x-to-80)
+  * [8.x to 9.0](#8x-to-90)
+  * [7.x to 8.0](#7x-to-80)
 - [Browser Support](#browser-support)
-- [Contributors ✨](#contributors-)
+- [Contributors](#contributors)
 - [Meta](#meta)
+
+<!-- tocstop -->
+
+<!-- prettier-ignore-end -->
 
 ## Overview / Resources
 
@@ -68,7 +82,7 @@ import Imgix from "react-imgix";
 
 ### Examples
 
-#### Basic use case
+#### Basic Use Case
 
 For simply using as you would use an `<img>`, react-imgix can be used as follows:
 
@@ -112,7 +126,7 @@ import Imgix from "react-imgix";
 
 [![Edit xp0348lv0z](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/charming-keller-kjnsq)
 
-#### Server-side rendering
+#### Server-Side Rendering
 
 React-imgix also works well on the server. Since react-imgix uses `srcset` and `sizes`, it allows the browser to render the correctly sized image immediately after the page has loaded.
 
@@ -134,7 +148,7 @@ import Imgix from "react-imgix";
 />;
 ```
 
-#### Flexible image rendering
+#### Flexible Image Rendering
 
 This component acts dynamically by default. The component will leverage `srcset` and `sizes` to render the right size image for its container. This is an example of this responsive behaviour.
 
@@ -184,7 +198,7 @@ generating srcsets to resize and crop your image as specified. For the `ar` para
 
 The aspect ratio is specified in the format `width:height`. Either dimension can be an integer or a float. All of the following are valid: 16:9, 5:1, 1.92:1, 1:1.67.
 
-#### Fixed image rendering (i.e. non-flexible)
+#### Fixed Image Rendering (i.e. non-flexible)
 
 If the fluid, dynamic nature explained above is not desired, the width and height can be set explicitly.
 
@@ -217,50 +231,48 @@ https://domain.imgix.net/image.jpg?q=20&w=100&dpr=5 5x
 
 [![Edit 4z1rzq04q7](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/adoring-monad-dbxht)
 
-#### Lazy Loading
+#### Background Mode
 
-If you'd like to lazy load images, we recommend using [lazysizes](https://github.com/aFarkas/lazysizes). In order to use react-imgix with lazysizes, you can simply tell it to generate lazysizes-compatible attributes instead of the standard `src`, `srcset`, and `sizes` by changing some configuration settings:
+Images can be rendered as a background behind children by using `<Background />`. The component will measure the natural size of the container as determined by the CSS on the page, and will render an optimal image for those dimensions.
 
-```jsx
-<Imgix
-  className="lazyload"
-  src="..."
-  sizes="..."
-  attributeConfig={{
-    src: "data-src",
-    srcSet: "data-srcset",
-    sizes: "data-sizes"
-  }}
-/>
-```
-
-The same configuration is available for `<Source />` components
-
-**NB:** It is recommended to use the [attribute change plugin](https://github.com/aFarkas/lazysizes/tree/gh-pages/plugins/attrchange) in order to capture changes in the data-\* attributes. Without this, changing the props to this library will have no effect on the rendered image.
-
-#### Low Quality Image Placeholder Technique (LQIP)
-
-If you'd like to use LQIP images, like before, we recommend using [lazysizes](https://github.com/aFarkas/lazysizes). In order to use react-imgix with lazysizes, you can simply tell it to generate lazysizes-compatible attributes instead of the standard `src`, `srcset`, and `sizes` by changing some configuration settings, and placing the fallback image src in the htmlAttributes:
+Example:
 
 ```jsx
-<Imgix
-  className="lazyload"
-  src="..."
-  sizes="..."
-  attributeConfig={{
-    src: "data-src",
-    srcSet: "data-srcset",
-    sizes: "data-sizes"
-  }}
-  htmlAttributes={{
-    src: "..." // low quality image here
-  }}
-/>
+// In CSS
+.blog-title {
+  width: 100vw;
+  height: calc(100vw - 100px);
+}
+
+// In Component (React)
+import { Background } from 'react-imgix'
+
+<Background src="https://.../image.png" className="blog-title">
+  <h2>Blog Title</h2>
+</Background>
 ```
 
-**NB:** If the props of the image are changed after the first load, the low quality image will replace the high quality image. In this case, the `src` attribute may have to be set by modifying the DOM directly, or the lazysizes API may have to be called manually after the props are changed. In any case, this behaviour is not supported by the library maintainers, so use at your own risk.
+This component shares a lot of props that are used in the main component, such as `imgixParams`, and `htmlAttributes`.
 
-#### Picture support
+As the component has to measure the element in the DOM, it will mount it first and then re-render with an image as the background image. Thus, this technique doesn't work very well with server rendering. If you'd like for this to work well with server rendering, you'll have to set a width and height manually.
+
+**Set width and height:**
+
+Setting the width and/or height explicitly is recommended if you already know these beforehand. This will save the component from having to do two render passes, and it will render a background image immediately.
+
+This is accomplished by passing `w` and `h` as props to imgixParams.
+
+```jsx
+<Background
+  src="https://.../image.png"
+  imgixParams={{ w: 1920, h: 500 }}
+  className="blog-title"
+>
+  <h2>Blog Title</h2>
+</Background>
+```
+
+#### Picture Support
 
 Using the [<picture> element](https://docs.imgix.com/tutorials/using-imgix-picture-element) you can create responsive images:
 
@@ -312,7 +324,88 @@ const commonProps = {
 
 A warning is displayed when no fallback image is passed. This warning can be disabled in special circumstances. To disable this warning, look in the [warnings section](#warnings).
 
-#### Attaching ref to `<img />`, etc.
+### Advanced Examples
+
+#### General Advanced Usage
+
+Although imgix is open to feature suggestions, we might not accept the feature if it is a very specific use case. The features below are examples of what we consider general advanced use cases. Our target here is to support 95% of all the usages of normal `img`, `picture`, and `source` elements.
+
+If your desired feature falls outside this percentage, do not worry! You will probably still be able to achieve your feature with react-imgix's more powerful API: `buildURL`.
+
+This library exposes a pure function, `buildURL`, for generating full imgix URLs given a base URL and some parameters.
+
+```jsx
+import { buildURL } from "react-imgix";
+
+buildURL("http://yourdomain.imgix.net/image.png", { w: 450, h: 100 }); // => http://yourdomain.imgix.net/image.png?auto=format&w=450&h=100&ixlib=react-x.x.x
+```
+
+The base URL may also contain query parameters. These will be overridden by any parameters passed in with the second parameter.
+
+This feature can be used to create your own custom `img` elements, or for use with other image components, such as [React-bootstrap's Image component](https://react-bootstrap.github.io/components/images/).
+
+The `ixlib` parameter may be disabled by: `buildURL(<url>, <params>, { disableLibraryParam: true })`
+
+#### Passing Custom HTML Attributes
+
+This library allows the developer to pass any attribute they like to the underlying DOM element with `htmlAttributes`.
+
+For example, if the the developer would like to attach a custom `onLoad` callback to an `img` component:
+
+```jsx
+<Imgix
+  src="..."
+  sizes="..."
+  htmlAttributes={{
+    onLoad: () => handleImgOnLoad,
+  }}
+/>
+```
+
+#### Lazy Loading
+
+If you'd like to lazy load images, we recommend using [lazysizes](https://github.com/aFarkas/lazysizes). In order to use react-imgix with lazysizes, you can simply tell it to generate lazysizes-compatible attributes instead of the standard `src`, `srcset`, and `sizes` by changing some configuration settings:
+
+```jsx
+<Imgix
+  className="lazyload"
+  src="..."
+  sizes="..."
+  attributeConfig={{
+    src: "data-src",
+    srcSet: "data-srcset",
+    sizes: "data-sizes",
+  }}
+/>
+```
+
+The same configuration is available for `<Source />` components
+
+**NB:** It is recommended to use the [attribute change plugin](https://github.com/aFarkas/lazysizes/tree/gh-pages/plugins/attrchange) in order to capture changes in the data-\* attributes. Without this, changing the props to this library will have no effect on the rendered image.
+
+#### Low Quality Image Placeholder Technique (LQIP)
+
+If you'd like to use LQIP images, like before, we recommend using [lazysizes](https://github.com/aFarkas/lazysizes). In order to use react-imgix with lazysizes, you can simply tell it to generate lazysizes-compatible attributes instead of the standard `src`, `srcset`, and `sizes` by changing some configuration settings, and placing the fallback image src in the htmlAttributes:
+
+```jsx
+<Imgix
+  className="lazyload"
+  src="..."
+  sizes="..."
+  attributeConfig={{
+    src: "data-src",
+    srcSet: "data-srcset",
+    sizes: "data-sizes",
+  }}
+  htmlAttributes={{
+    src: "...", // low quality image here
+  }}
+/>
+```
+
+**NB:** If the props of the image are changed after the first load, the low quality image will replace the high quality image. In this case, the `src` attribute may have to be set by modifying the DOM directly, or the lazysizes API may have to be called manually after the props are changed. In any case, this behaviour is not supported by the library maintainers, so use at your own risk.
+
+#### Attaching Ref to DOM Elements
 
 A `ref` passed to react-imgix using `<Imgix ref={handleRef}>` will attach the ref to the Imgix instance, rather than the DOM element. It is possible to attach a ref to the DOM element that is rendered using `htmlAttributes`:
 
@@ -321,61 +414,6 @@ A `ref` passed to react-imgix using `<Imgix ref={handleRef}>` will attach the re
 ```
 
 This works for Source and Picture elements as well.
-
-#### Background mode
-
-Images can be rendered as a background behind children by using `<Background />`. The component will measure the natural size of the container as determined by the CSS on the page, and will render an optimal image for those dimensions.
-
-Example:
-
-```jsx
-// In CSS
-.blog-title {
-  width: 100vw;
-  height: calc(100vw - 100px);
-}
-
-// In Component (React)
-import { Background } from 'react-imgix'
-
-<Background src="https://.../image.png" className="blog-title">
-  <h2>Blog Title</h2>
-</Background>
-```
-
-This component shares a lot of props that are used in the main component, such as `imgixParams`, and `htmlAttributes`.
-
-As the component has to measure the element in the DOM, it will mount it first and then re-render with an image as the background image. Thus, this technique doesn't work very well with server rendering. If you'd like for this to work well with server rendering, you'll have to set a width and height manually.
-
-**Set width and height:**
-
-Setting the width and/or height explicitly is recommended if you already know these beforehand. This will save the component from having to do two render passes, and it will render a background image immediately.
-
-This is accomplished by passing `w` and `h` as props to imgixParams.
-
-```jsx
-<Background
-  src="https://.../image.png"
-  imgixParams={{ w: 1920, h: 500 }}
-  className="blog-title"
->
-  <h2>Blog Title</h2>
-</Background>
-```
-
-#### Custom URLS
-
-This library exposes a pure function, `buildURL`, for generating full imgix urls given a base url and some parameters.
-
-```js
-import { buildURL } from "react-imgix";
-
-buildURL("http://yourdomain.imgix.net/image.png", { w: 450, h: 100 }); // => http://yourdomain.imgix.net/image.png?auto=format&w=450&h=100&ixlib=react-x.x.x
-```
-
-The base url may also contain query parameters. These will be overriden by any parameters passed in with the second parameter.
-
-The `ixlib` parameter may be disabled by: `buildURL(<url>, <params>, { disableLibraryParam: true })`
 
 ### Props
 
@@ -529,7 +567,7 @@ If you are currently relying on the default generation of `fit=crop` when render
 
 ```jsx
 <Imgix
-	src="https://assets.imgix.net/examples/pione.jpg"
+  src="https://assets.imgix.net/examples/pione.jpg"
   sizes="100vw"
   imgixParams={{ fit: "crop" }}
 />
@@ -541,7 +579,7 @@ The other major change relates to how the component determines an image's aspect
 <Imgix
   src="http://assets.imgix.net/examples/pione.jpg"
   width={400}
-	imgixParams={{ ar: "2:1", fit: "crop" }}
+  imgixParams={{ ar: "2:1", fit: "crop" }}
 />
 ```
 
@@ -555,6 +593,8 @@ To upgrade to version 8, the following changes should be made.
 
 - A `sizes` prop should be added to all usages of Imgix. If `sizes` is new to you (or even if it's not), Eric's [seminal article on `srcset` and `sizes`](https://ericportis.com/posts/2014/srcset-sizes/) is highly recommended.
 - Change all usages of `type='picture'` to `<Picture>` and `type='source'` to `<Source>`
+
+  <!-- prettier-ignore-start -->
 
     ```html
     // this...
@@ -571,6 +611,7 @@ To upgrade to version 8, the following changes should be made.
     ```
 
   See [Picture support](#picture-support) for more information.
+  <!-- prettier-ignore-end -->
 
 - Remove all usage of `type='bg'` as it is no longer supported. It was decided that it was too hard to implement this feature consistently. If you would still like to use this feature, please give this issue a thumbs up: [https://github.com/imgix/react-imgix/issues/160](https://github.com/imgix/react-imgix/issues/160) If we get enough requests for this, we will re-implement it.
 - Remove props `aggressiveLoad`, `component`, `fluid`, `precision` as they are no longer used.
@@ -587,7 +628,8 @@ This browser support is made possible by the great support from [BrowserStack](h
 
 <img src="docs/images/Browserstack-logo@2x.png" width="300">
 
-## Contributors ✨
+## Contributors
+
 <!-- ix-docs-ignore -->
 
 Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/docs/en/emoji-key)):
@@ -631,6 +673,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
 
 <!-- markdownlint-enable -->
 <!-- prettier-ignore-end -->
+
 <!-- ALL-CONTRIBUTORS-LIST:END -->
 <!-- /ix-docs-ignore -->
 
