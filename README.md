@@ -596,19 +596,19 @@ To upgrade to version 8, the following changes should be made.
 
   <!-- prettier-ignore-start -->
 
-  ```html
-  // this...
-  <Imgix type="picture">
-    <Imgix type="source" src={src} />
-    <Imgix type="source" src={src} />
-  </Imgix>
+    ```html
+    // this...
+    <Imgix type='picture'>
+        <Imgix type='source' src={src}>
+        <Imgix type='source' src={src}>
+    </Imgix>
 
-  // becomes...
-  <Picture>
-    <Source src={src} />
-    <Source src={src} />
-  </Picture>
-  ```
+    // becomes...
+    <Picture>
+        <Source src={src}>
+        <Source src={src}>
+    </Picture>
+    ```
 
   See [Picture support](#picture-support) for more information.
   <!-- prettier-ignore-end -->
