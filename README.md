@@ -26,18 +26,18 @@
 - [Installation](#installation)
 - [Usage](#usage)
   * [Examples](#examples)
-    + [Basic use case](#basic-use-case)
-    + [Server-side rendering](#server-side-rendering)
-    + [Flexible image rendering](#flexible-image-rendering)
-    + [Fixed image rendering (i.e. non-flexible)](#fixed-image-rendering-ie-non-flexible)
-    + [Background mode](#background-mode)
-    + [Picture support](#picture-support)
-  * [Advanced examples](#advanced-examples)
-    + [General advanced usage](#general-advanced-usage)
-    + [Passing custom html attributes](#passing-custom-html-attributes)
+    + [Basic Use Case](#basic-use-case)
+    + [Server-Side Rendering](#server-side-rendering)
+    + [Flexible Image Rendering](#flexible-image-rendering)
+    + [Fixed Image Rendering (i.e. non-flexible)](#fixed-image-rendering-ie-non-flexible)
+    + [Background Mode](#background-mode)
+    + [Picture Support](#picture-support)
+  * [Advanced Examples](#advanced-examples)
+    + [General Advanced Usage](#general-advanced-usage)
+    + [Passing Custom HTML Attributes](#passing-custom-html-attributes)
     + [Lazy Loading](#lazy-loading)
     + [Low Quality Image Placeholder Technique (LQIP)](#low-quality-image-placeholder-technique-lqip)
-    + [Attaching ref to ``, etc.](#attaching-ref-to--etc)
+    + [Attaching Ref to DOM Elements](#attaching-ref-to-dom-elements)
   * [Props](#props)
     + [Shared Props (Imgix, Source)](#shared-props-imgix-source)
     + [Picture Props](#picture-props)
@@ -48,7 +48,7 @@
   * [8.x to 9.0](#8x-to-90)
   * [7.x to 8.0](#7x-to-80)
 - [Browser Support](#browser-support)
-- [Contributors ✨](#contributors-%E2%9C%A8)
+- [Contributors](#contributors)
 - [Meta](#meta)
 
 <!-- tocstop -->
@@ -82,7 +82,7 @@ import Imgix from "react-imgix";
 
 ### Examples
 
-#### Basic use case
+#### Basic Use Case
 
 For simply using as you would use an `<img>`, react-imgix can be used as follows:
 
@@ -126,7 +126,7 @@ import Imgix from "react-imgix";
 
 [![Edit xp0348lv0z](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/charming-keller-kjnsq)
 
-#### Server-side rendering
+#### Server-Side Rendering
 
 React-imgix also works well on the server. Since react-imgix uses `srcset` and `sizes`, it allows the browser to render the correctly sized image immediately after the page has loaded.
 
@@ -148,7 +148,7 @@ import Imgix from "react-imgix";
 />;
 ```
 
-#### Flexible image rendering
+#### Flexible Image Rendering
 
 This component acts dynamically by default. The component will leverage `srcset` and `sizes` to render the right size image for its container. This is an example of this responsive behaviour.
 
@@ -198,7 +198,7 @@ generating srcsets to resize and crop your image as specified. For the `ar` para
 
 The aspect ratio is specified in the format `width:height`. Either dimension can be an integer or a float. All of the following are valid: 16:9, 5:1, 1.92:1, 1:1.67.
 
-#### Fixed image rendering (i.e. non-flexible)
+#### Fixed Image Rendering (i.e. non-flexible)
 
 If the fluid, dynamic nature explained above is not desired, the width and height can be set explicitly.
 
@@ -231,7 +231,7 @@ https://domain.imgix.net/image.jpg?q=20&w=100&dpr=5 5x
 
 [![Edit 4z1rzq04q7](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/adoring-monad-dbxht)
 
-#### Background mode
+#### Background Mode
 
 Images can be rendered as a background behind children by using `<Background />`. The component will measure the natural size of the container as determined by the CSS on the page, and will render an optimal image for those dimensions.
 
@@ -272,7 +272,7 @@ This is accomplished by passing `w` and `h` as props to imgixParams.
 </Background>
 ```
 
-#### Picture support
+#### Picture Support
 
 Using the [<picture> element](https://docs.imgix.com/tutorials/using-imgix-picture-element) you can create responsive images:
 
@@ -324,9 +324,9 @@ const commonProps = {
 
 A warning is displayed when no fallback image is passed. This warning can be disabled in special circumstances. To disable this warning, look in the [warnings section](#warnings).
 
-### Advanced examples
+### Advanced Examples
 
-#### General advanced usage
+#### General Advanced Usage
 
 Although imgix is open to feature suggestions, we might not accept the feature if it is a very specific use case. The features below are examples of what we consider general advanced use cases. Our target here is to support 95% of all the usages of normal `img`, `picture`, and `source` elements.
 
@@ -346,7 +346,7 @@ This feature can be used to create your own custom `img` elements, or for use wi
 
 The `ixlib` parameter may be disabled by: `buildURL(<url>, <params>, { disableLibraryParam: true })`
 
-#### Passing custom html attributes
+#### Passing Custom HTML Attributes
 
 This library allows the developer to pass any attribute they like to the underlying DOM element with `htmlAttributes`.
 
@@ -405,7 +405,7 @@ If you'd like to use LQIP images, like before, we recommend using [lazysizes](ht
 
 **NB:** If the props of the image are changed after the first load, the low quality image will replace the high quality image. In this case, the `src` attribute may have to be set by modifying the DOM directly, or the lazysizes API may have to be called manually after the props are changed. In any case, this behaviour is not supported by the library maintainers, so use at your own risk.
 
-#### Attaching ref to `<img />`, etc.
+#### Attaching Ref to DOM Elements
 
 A `ref` passed to react-imgix using `<Imgix ref={handleRef}>` will attach the ref to the Imgix instance, rather than the DOM element. It is possible to attach a ref to the DOM element that is rendered using `htmlAttributes`:
 
@@ -628,7 +628,7 @@ This browser support is made possible by the great support from [BrowserStack](h
 
 <img src="docs/images/Browserstack-logo@2x.png" width="300">
 
-## Contributors ✨
+## Contributors
 
 <!-- ix-docs-ignore -->
 
