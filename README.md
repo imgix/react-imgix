@@ -625,7 +625,7 @@ To upgrade to version 8, the following changes should be made.
 
 This browser support is made possible by the great support from [BrowserStack](https://www.browserstack.com/).
 
-<img src="docs/images/Browserstack-logo@2x.png" width="300">
+<img src="https://raw.githubusercontent.com/imgix/react-imgix/master/docs/images/Browserstack-logo%402x.png" width="300">
 
 ## Contributors
 
