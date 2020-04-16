@@ -143,9 +143,18 @@ const renderAndWaitForImageLoad = async element => {
       htmlAttributes: {
         ...(element.props.htmlAttributes || {}),
         onLoad: () => {
+          element.props.htmlAttributes &&
+            element.props.htmlAttributes.onLoad &&
+            element.props.htmlAttributes.onLoad();
           setImmediate(() => resolve(renderedEl));
-        }
-      }
+        },
+        onError: () => {
+          element.props.htmlAttributes &&
+            element.props.htmlAttributes.onError &&
+            element.props.htmlAttributes.onError();
+          setImmediate(() => resolve(renderedEl));
+        },
+      },
     });
     renderedEl = renderIntoContainer(elementWithOnMounted);
   });
@@ -165,12 +174,51 @@ describe("When in default mode", () => {
         .props().src
     ).toContain(src);
   });
+
+  context("htmlAttributes", () => {
+    it("'onLoad' calls the callback", async () => {
+      let onLoadCalled = false;
+
+      await renderAndWaitForImageLoad(
+        <Imgix
+          src={src}
+          w={10} // for speed
+          h={10} // for speed
+          htmlAttributes={{
+            onLoad: () => {
+              onLoadCalled = true;
+            },
+          }}
+        />
+      );
+
+      expect(onLoadCalled).toBe(true);
+    });
+    it("'onError' calls the callback", async () => {
+      let onErrorCalled = false;
+
+      await renderAndWaitForImageLoad(
+        <Imgix
+          src="https://badurlcom"
+          w={10} // for speed
+          h={10} // for speed
+          htmlAttributes={{
+            onError: () => {
+              onErrorCalled = true;
+            },
+          }}
+        />
+      );
+
+      expect(onErrorCalled).toBe(true);
+    });
+  });
 });
 
 describe("Background Mode", () => {
   ///////////////////////
   // Common test cases
-  const shouldRenderNoBGImage = element => {
+  const shouldRenderNoBGImage = (element) => {
     const sut = renderIntoContainer(element);
 
     const container = sut.find(".bg-img").first();
