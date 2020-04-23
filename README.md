@@ -216,7 +216,7 @@ Fixed image rendering will automatically append a variable `q` parameter mapped 
 This behavior will respect any overriding `q` value passed in via `imgixParams` and can be disabled altogether with the boolean property `disableQualityByDPR`.
 
 ```js
-<Imgix src="https://domain.imgix.net/image.jpg" width={100} />
+<Imgix src="https://domain.imgix.net/image.jpg" width={100} disableQualityByDPR />
 ```
 
 will generate the following srcset:
