@@ -274,7 +274,7 @@ This is accomplished by passing `w` and `h` as props to imgixParams.
 
 #### Picture Support
 
-Using the [<picture> element](https://docs.imgix.com/tutorials/using-imgix-picture-element) you can create responsive images:
+Using the [picture element](https://docs.imgix.com/tutorials/using-imgix-picture-element) you can create responsive images:
 
 ```js
 import Imgix, { Picture, Source } from "react-imgix";
