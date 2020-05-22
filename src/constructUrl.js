@@ -98,11 +98,11 @@ var PARAM_EXPANSION = Object.freeze({
 
   // Extra
   height: "h",
-  width: "w"
+  width: "w",
 });
 
 var DEFAULT_OPTIONS = Object.freeze({
-  auto: "format" // http://www.imgix.com/docs/reference/automatic#param-auto
+  auto: "format", // http://www.imgix.com/docs/reference/automatic#param-auto
 });
 
 /**

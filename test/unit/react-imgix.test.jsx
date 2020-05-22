@@ -10,21 +10,21 @@ import Imgix, {
   Picture,
   Source,
   __SourceImpl,
-  __PictureImpl
+  __PictureImpl,
 } from "react-imgix";
 import { __BackgroundImpl } from "react-imgix-bg";
 
 function shallow(element, target = __ReactImgixImpl, shallowOptions) {
   return shallowUntilTarget(element, target, {
     shallowOptions: shallowOptions || {
-      disableLifecycleMethods: true
-    }
+      disableLifecycleMethods: true,
+    },
   });
 }
-const shallowSource = element => shallow(element, __SourceImpl);
-const shallowPicture = element => shallow(element, __PictureImpl);
+const shallowSource = (element) => shallow(element, __SourceImpl);
+const shallowPicture = (element) => shallow(element, __PictureImpl);
 
-const makeBackgroundWithBounds = bounds => props => (
+const makeBackgroundWithBounds = (bounds) => (props) => (
   <__BackgroundImpl
     measureRef={() => null}
     contentRect={{ bounds }}
@@ -47,7 +47,7 @@ afterEach(() => {
 });
 
 function sleep(ms) {
-  return new Promise(resolve => {
+  return new Promise((resolve) => {
     setTimeout(resolve, ms);
   });
 }
@@ -68,7 +68,7 @@ describe("When in default mode", () => {
       const aWidthFromSrcSet = srcset.split(", ")[0].split(" ")[1];
       expect(aWidthFromSrcSet).toMatch(/^\d+w$/);
     });
-    it("returns the expected number of `url widthDescriptor` pairs", function() {
+    it("returns the expected number of `url widthDescriptor` pairs", function () {
       const sut = shallow(<Imgix src={src} sizes="100vw" />);
       const srcset = sut.props().srcSet;
 
@@ -81,8 +81,8 @@ describe("When in default mode", () => {
 
       const srcsetWidths = srcset
         .split(", ")
-        .map(srcset => srcset.split(" ")[1])
-        .map(width => width.slice(0, -1))
+        .map((srcset) => srcset.split(" ")[1])
+        .map((width) => width.slice(0, -1))
         .map(Number.parseFloat);
 
       const min = Math.min(...srcsetWidths);
@@ -101,8 +101,8 @@ describe("When in default mode", () => {
 
       const srcsetWidths = srcset
         .split(", ")
-        .map(srcset => srcset.split(" ")[1])
-        .map(width => width.slice(0, -1))
+        .map((srcset) => srcset.split(" ")[1])
+        .map((width) => width.slice(0, -1))
         .map(Number.parseFloat);
 
       let prev = srcsetWidths[0];
@@ -127,7 +127,7 @@ describe("When in default mode", () => {
       });
       it("allows q to dpr matching to be disabled", async () => {
         const sut = shallow(
-          <Imgix src={src} width={100} disableQualityByDPR={true} />
+          <Imgix src={src} width={100} disableQualityByDPR />
         );
         const srcset = sut.props().srcSet.split(", ");
 
@@ -186,9 +186,9 @@ describe("When in <source> mode", () => {
     "(max-width: 30em) 100vw, (max-width: 50em) 50vw, calc(33vw - 100px)";
   const htmlAttributes = {
     media: "(min-width: 1200px)",
-    type: "image/webp"
+    type: "image/webp",
   };
-  const shouldBehaveLikeSource = function(renderImage) {
+  const shouldBehaveLikeSource = function (renderImage) {
     it("a <source> component should be rendered", () => {
       expect(renderImage().type()).toBe("source");
     });
@@ -201,8 +201,8 @@ describe("When in <source> mode", () => {
       expect(renderImage().props().sizes).toEqual(sizes));
 
     Object.keys(htmlAttributes)
-      .filter(k => k !== "alt")
-      .forEach(k => {
+      .filter((k) => k !== "alt")
+      .forEach((k) => {
         it(`props.${k} should be defined and equal to the image's props`, () => {
           expect(renderImage().props()[k]).toBe(htmlAttributes[k]);
         });
@@ -211,7 +211,7 @@ describe("When in <source> mode", () => {
       renderImage()
         .props()
         .srcSet.split(",")
-        .forEach(srcSet => expectUrlToContainIxLibParam(srcSet));
+        .forEach((srcSet) => expectUrlToContainIxLibParam(srcSet));
     });
   };
 
@@ -237,7 +237,7 @@ describe("When in <source> mode", () => {
       expect(aWidthFromSrcSet).toMatch(/^\d+w$/);
     });
 
-    it("returns the expected number of `url widthDescriptor` pairs", function() {
+    it("returns the expected number of `url widthDescriptor` pairs", function () {
       const srcset = renderImage().props().srcSet;
 
       expect(srcset.split(",").length).toEqual(targetWidths.length);
@@ -248,8 +248,8 @@ describe("When in <source> mode", () => {
 
       const srcsetWidths = srcset
         .split(", ")
-        .map(srcset => srcset.split(" ")[1])
-        .map(width => width.slice(0, -1))
+        .map((srcset) => srcset.split(" ")[1])
+        .map((width) => width.slice(0, -1))
         .map(Number.parseFloat);
 
       const min = Math.min(...srcsetWidths);
@@ -277,7 +277,7 @@ describe("When in <source> mode", () => {
 
       const srcSets = srcSet.split(", ");
       expect(srcSets).toHaveLength(5);
-      srcSets.forEach(srcSet => {
+      srcSets.forEach((srcSet) => {
         expect(srcSet).toContain(src);
       });
       expect(srcSets[0].split(" ")[1]).toBe("1x");
@@ -322,7 +322,7 @@ describe("When in <source> mode", () => {
   describe("using the htmlAttributes prop", () => {
     it("assigns an alt attribute given htmlAttributes.alt", async () => {
       const htmlAttributes = {
-        alt: "Example alt attribute"
+        alt: "Example alt attribute",
       };
 
       sut = mount(
@@ -338,7 +338,7 @@ describe("When in <source> mode", () => {
 
     it("passes any attributes via htmlAttributes to the rendered element", () => {
       const htmlAttributes = {
-        "data-src": "https://mysource.imgix.net/demo.png"
+        "data-src": "https://mysource.imgix.net/demo.png",
       };
       sut = mount(
         <Source
@@ -391,9 +391,9 @@ describe("When in picture mode", () => {
   const parentAlt = "parent alt";
   const childAlt = "child alt";
 
-  const shouldBehaveLikePicture = function() {
+  const shouldBehaveLikePicture = function () {
     it("every child should have a key", () => {
-      expect(children.everyWhere(c => c.key() !== undefined)).toBe(true);
+      expect(children.everyWhere((c) => c.key() !== undefined)).toBe(true);
     });
 
     it("a picture should be rendered", () => {
@@ -406,11 +406,7 @@ describe("When in picture mode", () => {
 
     it("an <img> or a <Imgix> should be the last child", () => {
       // If the number of HOCs for ReactImgix is changed, there may need to be a change in the number of .first().shallow() calls
-      const lastChildElement = lastChild
-        .first()
-        .shallow()
-        .first()
-        .shallow(); // hack from https://github.com/airbnb/enzyme/issues/539#issuecomment-239497107 until a better solution is implemented
+      const lastChildElement = lastChild.first().shallow().first().shallow(); // hack from https://github.com/airbnb/enzyme/issues/539#issuecomment-239497107 until a better solution is implemented
       if (lastChildElement.type().hasOwnProperty("name")) {
         expect(lastChildElement.name()).toBe(__ReactImgixImpl.displayName);
         expect(
@@ -463,11 +459,11 @@ describe("When in picture mode", () => {
           .props()
       ).toMatchObject({
         imgixParams: {
-          crop: "faces"
+          crop: "faces",
         },
         htmlAttributes: {
-          alt: childAlt
-        }
+          alt: childAlt,
+        },
       });
     });
   });
@@ -494,7 +490,7 @@ describe("When in picture mode", () => {
     it("props should not be passed down to children", () => {
       const lastChildProps = lastChild.props();
       expect(lastChildProps).toMatchObject({
-        alt: childAlt
+        alt: childAlt,
       });
     });
   });
@@ -536,7 +532,7 @@ describe("When in background mode", () => {
     const Background = makeBackgroundWithBounds({
       top: 10,
       width: 100,
-      height: 100
+      height: 100,
     });
 
     sut = mount(
@@ -580,7 +576,7 @@ describe("When using the component", () => {
         src={"https://mysource.imgix.net/demo.png"}
         sizes="100vw"
         imgixParams={{
-          [helloWorldKey]: "interesting"
+          [helloWorldKey]: "interesting",
         }}
       />
     );
@@ -600,7 +596,7 @@ describe("When using the component", () => {
         src={"https://mysource.imgix.net/demo.png"}
         sizes="100vw"
         imgixParams={{
-          hello_world: helloWorldValue
+          hello_world: helloWorldValue,
         }}
       />
     );
@@ -619,7 +615,7 @@ describe("When using the component", () => {
         src={"https://mysource.imgix.net/~text"}
         sizes="100vw"
         imgixParams={{
-          txt64: txt64Value
+          txt64: txt64Value,
         }}
       />
     );
@@ -699,7 +695,7 @@ describe("When using the component", () => {
             if (!matched) return undefined;
             return matched[1];
           };
-          const removeFallbackSrcSet = srcSets => srcSets.slice(0, -1);
+          const removeFallbackSrcSet = (srcSets) => srcSets.slice(0, -1);
 
           sut = shallow(
             <Imgix
@@ -710,9 +706,9 @@ describe("When using the component", () => {
           );
 
           const srcSet = sut.props().srcSet;
-          const srcSets = srcSet.split(",").map(v => v.trim());
-          const srcSetUrls = srcSets.map(srcSet => srcSet.split(" ")[0]);
-          removeFallbackSrcSet(srcSetUrls).forEach(srcSetUrl => {
+          const srcSets = srcSet.split(",").map((v) => v.trim());
+          const srcSetUrls = srcSets.map((srcSet) => srcSet.split(" ")[0]);
+          removeFallbackSrcSet(srcSetUrls).forEach((srcSetUrl) => {
             const ar = parseParam(srcSetUrl, "ar");
             expect(ar).toBeTruthy();
           });
@@ -727,16 +723,16 @@ describe("When using the component", () => {
         ["1:1.12"],
         ["1.1:1.1"],
         ["1.123:1.123"],
-        ["11.123:11.123"]
+        ["11.123:11.123"],
       ].forEach(([validAR, validArDecimal]) =>
         testValidAR({
-          ar: validAR
+          ar: validAR,
         })
       );
     });
 
     describe("invalid AR", () => {
-      const testInvalidAR = ar => {
+      const testInvalidAR = (ar) => {
         it(`an invalid ar prop (${ar}) will still generate an ar query parameter`, () => {
           const oldConsole = global.console;
           global.console = { warn: jest.fn() };
@@ -746,7 +742,7 @@ describe("When using the component", () => {
             if (!matched) return undefined;
             return matched[1];
           };
-          const removeFallbackSrcSet = srcSets => srcSets.slice(0, -1);
+          const removeFallbackSrcSet = (srcSets) => srcSets.slice(0, -1);
 
           sut = shallow(
             <Imgix
@@ -757,9 +753,9 @@ describe("When using the component", () => {
           );
 
           const srcSet = sut.props().srcSet;
-          const srcSets = srcSet.split(",").map(v => v.trim());
-          const srcSetUrls = srcSets.map(srcSet => srcSet.split(" ")[0]);
-          removeFallbackSrcSet(srcSetUrls).forEach(srcSetUrl => {
+          const srcSets = srcSet.split(",").map((v) => v.trim());
+          const srcSetUrls = srcSets.map((srcSet) => srcSet.split(" ")[0]);
+          removeFallbackSrcSet(srcSetUrls).forEach((srcSetUrl) => {
             const w = parseParam(srcSetUrl, "w");
             const ar = parseParam(srcSetUrl, "ar");
 
@@ -781,8 +777,8 @@ describe("When using the component", () => {
         "1:1blah",
         "1:blah1",
         0.145,
-        true
-      ].forEach(invalidAR => testInvalidAR(invalidAR));
+        true,
+      ].forEach((invalidAR) => testInvalidAR(invalidAR));
     });
 
     it("srcsets should not have an ar parameter when aspectRatio is not set", () => {
@@ -793,14 +789,14 @@ describe("When using the component", () => {
         />
       );
       const srcSet = sut.props().srcSet;
-      const srcSets = srcSet.split(",").map(v => v.trim());
-      const srcSetUrls = srcSets.map(srcSet => srcSet.split(" ")[0]);
+      const srcSets = srcSet.split(",").map((v) => v.trim());
+      const srcSetUrls = srcSets.map((srcSet) => srcSet.split(" ")[0]);
       const parseParam = (str, param) => {
         const matched = str.match("[?&]" + param + "=([^&]+)");
         if (!matched) return null;
         return matched[1];
       };
-      srcSetUrls.forEach(srcSetUrl => {
+      srcSetUrls.forEach((srcSetUrl) => {
         const ar = parseParam(srcSetUrl, "ar");
         expect(ar).toBeFalsy();
       });
@@ -822,7 +818,7 @@ describe("When using the component", () => {
   describe("using the htmlAttributes prop", () => {
     it("assigns an alt attribute given htmlAttributes.alt", async () => {
       const htmlAttributes = {
-        alt: "Example alt attribute"
+        alt: "Example alt attribute",
       };
       sut = shallow(
         <Imgix
@@ -836,7 +832,7 @@ describe("When using the component", () => {
 
     it("passes any attributes via htmlAttributes to the rendered element", () => {
       const htmlAttributes = {
-        "data-src": "https://mysource.imgix.net/demo.png"
+        "data-src": "https://mysource.imgix.net/demo.png",
       };
       sut = shallow(
         <Imgix
@@ -903,14 +899,14 @@ describe("When using the component", () => {
 describe("Attribute config", () => {
   describe("<Imgix />", () => {
     const ATTRIBUTES = ["src", "srcSet", "sizes"];
-    ATTRIBUTES.forEach(ATTRIBUTE => {
+    ATTRIBUTES.forEach((ATTRIBUTE) => {
       it(`${ATTRIBUTE} can be configured to use data-${ATTRIBUTE}`, () => {
         sut = shallow(
           <Imgix
             src="https://mysource.imgix.net/demo.png"
             sizes="100vw"
             attributeConfig={{
-              [ATTRIBUTE]: `data-${ATTRIBUTE}`
+              [ATTRIBUTE]: `data-${ATTRIBUTE}`,
             }}
           />
         );
@@ -922,14 +918,14 @@ describe("Attribute config", () => {
   });
   describe("<Source />", () => {
     const ATTRIBUTES = ["srcSet", "sizes"];
-    ATTRIBUTES.forEach(ATTRIBUTE => {
+    ATTRIBUTES.forEach((ATTRIBUTE) => {
       it(`${ATTRIBUTE} can be configured to use data-${ATTRIBUTE}`, () => {
         sut = shallowSource(
           <Source
             src="https://mysource.imgix.net/demo.png"
             sizes="100vw"
             attributeConfig={{
-              [ATTRIBUTE]: `data-${ATTRIBUTE}`
+              [ATTRIBUTE]: `data-${ATTRIBUTE}`,
             }}
           />
         );
@@ -949,9 +945,9 @@ const expectSrcsTo = (sut, matcher) => {
   if (!srcSet) {
     fail("No srcSet");
   }
-  const srcSets = srcSet.split(",").map(v => v.trim());
-  const srcSetUrls = srcSets.map(srcSet => srcSet.split(" ")[0]);
-  srcSetUrls.forEach(srcSetUrl => {
+  const srcSets = srcSet.split(",").map((v) => v.trim());
+  const srcSetUrls = srcSets.map((srcSet) => srcSet.split(" ")[0]);
+  srcSetUrls.forEach((srcSetUrl) => {
     expect(srcSetUrl).toEqual(matcher);
   });
 };
@@ -959,7 +955,7 @@ const expectSrcsTo = (sut, matcher) => {
 const expectSrcsToContain = (sut, shouldContainString) =>
   expectSrcsTo(sut, expect.stringContaining(shouldContainString));
 
-const expectUrlToContainIxLibParam = url => {
+const expectUrlToContainIxLibParam = (url) => {
   expect(url).toEqual(createIxLibParamMatcher());
 };
 

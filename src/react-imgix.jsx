@@ -14,16 +14,16 @@ import { DPR_QUALITY_VALUES } from "./constants";
 const PACKAGE_VERSION = require("../package.json").version;
 const NODE_ENV = process.env.NODE_ENV;
 
-const buildKey = idx => `react-imgix-${idx}`;
+const buildKey = (idx) => `react-imgix-${idx}`;
 
 const defaultImgixParams = {
-  auto: ["format"]
+  auto: ["format"],
 };
 
 const defaultAttributeMap = {
   src: "src",
   srcSet: "srcSet",
-  sizes: "sizes"
+  sizes: "sizes",
 };
 
 const noop = () => {};
@@ -31,7 +31,7 @@ const noop = () => {};
 const COMMON_PROP_TYPES = {
   className: PropTypes.string,
   onMounted: PropTypes.func,
-  htmlAttributes: PropTypes.object
+  htmlAttributes: PropTypes.object,
 };
 
 const SHARED_IMGIX_AND_SOURCE_PROP_TYPES = Object.assign(
@@ -45,7 +45,7 @@ const SHARED_IMGIX_AND_SOURCE_PROP_TYPES = Object.assign(
     sizes: PropTypes.string,
     width: PropTypes.number,
     height: PropTypes.number,
-    src: PropTypes.string.isRequired
+    src: PropTypes.string.isRequired,
   }
 );
 
@@ -60,7 +60,7 @@ function aspectRatioIsValid(aspectRatio) {
   return /^\d+(\.\d+)?:\d+(\.\d+)?$/.test(aspectRatio);
 }
 
-const setParentRef = (parentRef, el) =>{
+const setParentRef = (parentRef, el) => {
   if (!parentRef) {
     return;
   }
@@ -71,7 +71,7 @@ const setParentRef = (parentRef, el) =>{
   } else {
     parentRef.current = el;
   }
-}
+};
 
 const buildSrcSetPairWithFixedHeight = (url, targetWidth, fixedHeight, _) =>
   url + "&h=" + fixedHeight + "&w=" + targetWidth + " " + targetWidth + "w";
@@ -98,7 +98,7 @@ function buildSrc({
   disableLibraryParam,
   disableSrcSet,
   imgixParams,
-  disableQualityByDPR
+  disableQualityByDPR,
 }) {
   const fixedSize = width != null || height != null;
 
@@ -173,7 +173,7 @@ function buildSrc({
 
   return {
     src,
-    srcSet
+    srcSet,
   };
 }
 
@@ -192,7 +192,7 @@ class ReactImgix extends Component {
   static propTypes = Object.assign({}, SHARED_IMGIX_AND_SOURCE_PROP_TYPES);
   static defaultProps = {
     disableSrcSet: false,
-    onMounted: noop
+    onMounted: noop,
   };
 
   constructor(props) {
@@ -224,7 +224,7 @@ class ReactImgix extends Component {
     const { src, srcSet } = buildSrc(
       Object.assign({}, this.props, {
         type: "img",
-        imgixParams: imgixParams(this.props)
+        imgixParams: imgixParams(this.props),
       })
     );
 
@@ -239,7 +239,7 @@ class ReactImgix extends Component {
       width: width <= 1 ? null : width,
       height: height <= 1 ? null : height,
       [attributeConfig.src]: src,
-      ref: el => {
+      ref: (el) => {
         this.imgRef = el;
         if (
           this.props.htmlAttributes !== undefined &&
@@ -247,7 +247,7 @@ class ReactImgix extends Component {
         ) {
           setParentRef(this.props.htmlAttributes.ref, this.imgRef);
         }
-      }
+      },
     });
     if (!disableSrcSet) {
       childProps[attributeConfig.srcSet] = srcSet;
@@ -263,10 +263,10 @@ ReactImgix.displayName = "ReactImgix";
  */
 class PictureImpl extends Component {
   static propTypes = Object.assign({}, COMMON_PROP_TYPES, {
-    children: PropTypes.any
+    children: PropTypes.any,
   });
   static defaultProps = {
-    onMounted: noop
+    onMounted: noop,
   };
 
   constructor(props) {
@@ -286,7 +286,7 @@ class PictureImpl extends Component {
       React.Children.map(children, (child, idx) =>
         React.cloneElement(child, {
           key: buildKey(idx),
-          _inPicture: true
+          _inPicture: true,
         })
       ) || [];
 
@@ -298,7 +298,7 @@ class PictureImpl extends Component {
 
     // look for an <img> or <ReactImgix type='img'> - at the bare minimum we have to have a single <img> element or else it will not work.
     let imgIdx = _children.findIndex(
-      c =>
+      (c) =>
         c.type === "img" ||
         c.type === ReactImgix ||
         c.type === ReactImgixWrapped
@@ -313,7 +313,9 @@ class PictureImpl extends Component {
       _children.push(_children.splice(imgIdx, 1)[0]);
     }
 
-    return <picture ref={el => (this.pictureRef = el)} children={_children} />;
+    return (
+      <picture ref={(el) => (this.pictureRef = el)} children={_children} />
+    );
   }
 }
 PictureImpl.displayName = "ReactImgixPicture";
@@ -325,7 +327,7 @@ class SourceImpl extends Component {
   static propTypes = Object.assign({}, SHARED_IMGIX_AND_SOURCE_PROP_TYPES);
   static defaultProps = {
     disableSrcSet: false,
-    onMounted: noop
+    onMounted: noop,
   };
 
   constructor(props) {
@@ -343,7 +345,7 @@ class SourceImpl extends Component {
     const { src, srcSet } = buildSrc(
       Object.assign({}, this.props, {
         type: "source",
-        imgixParams: imgixParams(this.props)
+        imgixParams: imgixParams(this.props),
       })
     );
 
@@ -357,7 +359,7 @@ class SourceImpl extends Component {
       className: this.props.className,
       width: width <= 1 ? null : width,
       height: height <= 1 ? null : height,
-      ref: el => {
+      ref: (el) => {
         this.sourceRef = el;
         if (
           this.props.htmlAttributes !== undefined &&
@@ -365,7 +367,7 @@ class SourceImpl extends Component {
         ) {
           setParentRef(this.props.htmlAttributes.ref, this.sourceRef);
         }
-      }
+      },
     });
 
     // inside of a <picture> element a <source> element ignores its src
@@ -396,5 +398,5 @@ export {
   Picture,
   Source,
   SourceImpl as __SourceImpl, // for testing
-  PictureImpl as __PictureImpl // for testing
+  PictureImpl as __PictureImpl, // for testing
 };

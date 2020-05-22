@@ -2,9 +2,9 @@ import React, { Component } from "react";
 
 import { warning, shallowEqual } from "../common";
 
-const ShouldComponentUpdateHOC = WrappedComponent => {
+const ShouldComponentUpdateHOC = (WrappedComponent) => {
   class ShouldComponentUpdateHOC extends Component {
-    shouldComponentUpdate = nextProps => {
+    shouldComponentUpdate = (nextProps) => {
       const props = this.props;
       warning(
         nextProps.onMounted == this.props.onMounted,

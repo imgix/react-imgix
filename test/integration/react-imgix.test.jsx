@@ -16,7 +16,7 @@ const isIE = (() => {
 const src = "https://assets.imgix.net/examples/pione.jpg";
 
 const DELAY = 70;
-const findClosestWidthFromTargetWidths = targetWidth =>
+const findClosestWidthFromTargetWidths = (targetWidth) =>
   targetWidths.reduce((acc, value, i) => {
     // <= ensures that the largest value is used
     if (Math.abs(value - targetWidth) <= Math.abs(acc - targetWidth)) {
@@ -24,7 +24,7 @@ const findClosestWidthFromTargetWidths = targetWidth =>
     }
     return acc;
   }, Number.MAX_VALUE);
-const findURIfromSUT = sut => {
+const findURIfromSUT = (sut) => {
   const container = sut.find(".bg-img").first();
 
   if (!container) {
@@ -52,7 +52,7 @@ const findURIfromSUT = sut => {
   return bgImageSrcURI;
 };
 
-const renderBGAndWaitUntilLoaded = async element => {
+const renderBGAndWaitUntilLoaded = async (element) => {
   return new Promise((resolve, reject) => {
     let running;
     let waitUntilHasStyle = (maxTimes = 20, delay = 10, n = 0) => {
@@ -79,21 +79,21 @@ const renderBGAndWaitUntilLoaded = async element => {
       }
       setTimeout(() => waitUntilHasStyle(maxTimes, delay, n + 1), delay);
     };
-    const onRef = ref => {
+    const onRef = (ref) => {
       if (running) {
         return;
       }
       running = true;
       setTimeout(waitUntilHasStyle, 10);
     };
-    const addRef = element =>
+    const addRef = (element) =>
       React.cloneElement(element, {
         ...element.props,
         htmlAttributes: {
           ...element.props.htmlAttributes,
-          ref: onRef
+          ref: onRef,
         },
-        className: "bg-img " + (element.props.className || "")
+        className: "bg-img " + (element.props.className || ""),
       });
     const isRootBackground = element.type === Background;
     const elementWithRef = (() => {
@@ -101,14 +101,14 @@ const renderBGAndWaitUntilLoaded = async element => {
         return addRef(element);
       }
       return React.cloneElement(element, {
-        children: React.Children.map(element.props.children, child => {
+        children: React.Children.map(element.props.children, (child) => {
           const isBackground = child.type === Background;
           if (!isBackground) {
             return child;
           }
 
           return addRef(child);
-        })
+        }),
       });
     })();
 
@@ -127,15 +127,15 @@ afterEach(() => {
   global.document.body.removeChild(containerDiv);
 });
 
-const fullRender = markup => {
+const fullRender = (markup) => {
   return ReactDOM.render(markup, containerDiv);
 };
 
-const renderIntoContainer = element => {
+const renderIntoContainer = (element) => {
   return mount(element, { attachTo: containerDiv });
 };
 
-const renderAndWaitForImageLoad = async element => {
+const renderAndWaitForImageLoad = async (element) => {
   return new Promise((resolve, reject) => {
     let renderedEl;
     const elementWithOnMounted = React.cloneElement(element, {
@@ -168,11 +168,7 @@ describe("When in default mode", () => {
     expect(renderImage().find("img")).toHaveLength(1);
   });
   it("the rendered element's src should be set", () => {
-    expect(
-      renderImage()
-        .find("img")
-        .props().src
-    ).toContain(src);
+    expect(renderImage().find("img").props().src).toContain(src);
   });
 
   context("htmlAttributes", () => {
@@ -227,18 +223,15 @@ describe("Background Mode", () => {
 
     expect(bgImage).toEqual(expect.not.stringContaining("url"));
   };
-  const shouldBehaveLikeBg = function(size = "cover") {
+  const shouldBehaveLikeBg = function (size = "cover") {
     it("the element should have backgroundImage and backgroundSize set", () => {
-      const style = sut
-        .find(".bg-img")
-        .first()
-        .getDOMNode().style;
+      const style = sut.find(".bg-img").first().getDOMNode().style;
       expect({
         backgroundImage: style.backgroundImage,
-        backgroundSize: style.backgroundSize
+        backgroundSize: style.backgroundSize,
       }).toMatchObject({
         backgroundImage: expect.stringContaining(src),
-        backgroundSize: size
+        backgroundSize: size,
       });
     });
   };
@@ -304,7 +297,7 @@ describe("Background Mode", () => {
           src={`${src}`}
           imgixParams={{
             w: 300,
-            h: 350
+            h: 350,
           }}
           className="bg-img"
         >
@@ -325,7 +318,7 @@ describe("Background Mode", () => {
             src={`${src}`}
             imgixParams={{
               w: 300,
-              h: 350
+              h: 350,
             }}
             className="bg-img"
           >
@@ -347,7 +340,7 @@ describe("Background Mode", () => {
         <Background
           src={`${src}`}
           imgixParams={{
-            w: 200
+            w: 200,
           }}
           className="bg-img"
         >
@@ -363,7 +356,7 @@ describe("Background Mode", () => {
           <Background
             src={`${src}`}
             imgixParams={{
-              w: 200
+              w: 200,
             }}
             className="bg-img"
           >
@@ -379,7 +372,7 @@ describe("Background Mode", () => {
         <Background
           src={`${src}`}
           imgixParams={{
-            h: 210
+            h: 210,
           }}
           className="bg-img"
         >
@@ -395,7 +388,7 @@ describe("Background Mode", () => {
           <Background
             src={`${src}`}
             imgixParams={{
-              h: 210
+              h: 210,
             }}
             className="bg-img"
           >
@@ -508,7 +501,7 @@ describe("Background Mode", () => {
         <Background
           src={`${src}`}
           imgixParams={{
-            dpr: 3
+            dpr: 3,
           }}
           htmlAttributes={{}}
           className="bg-img"
@@ -533,7 +526,7 @@ describe("Background Mode", () => {
         <Background
           src={`${src}`}
           imgixParams={{
-            dpr: 3.444
+            dpr: 3.444,
           }}
           htmlAttributes={{}}
           className="bg-img"
@@ -555,7 +548,7 @@ describe("Background Mode", () => {
         <Background
           src={`${src}`}
           imgixParams={{
-            h: 10
+            h: 10,
           }}
           className="bg-img"
         >
@@ -570,7 +563,7 @@ describe("Background Mode", () => {
     const BROWSER_WIDTH = 500;
     fakeWindowEl.style.width = BROWSER_WIDTH + "px";
 
-    await new Promise(resolve => {
+    await new Promise((resolve) => {
       setTimeout(resolve, 1000);
     });
 
@@ -582,7 +575,7 @@ describe("Background Mode", () => {
 
   it("can pass ref to component", async () => {
     let ref = false;
-    const onRef = el => {
+    const onRef = (el) => {
       ref = el;
     };
     const sut = await new Promise((resolve, reject) => {
@@ -665,7 +658,7 @@ describe("Lazysizes support", () => {
         attributeConfig={{
           src: "data-src",
           srcSet: "data-srcset",
-          sizes: "data-sizes"
+          sizes: "data-sizes",
         }}
       />
     );
@@ -673,7 +666,7 @@ describe("Lazysizes support", () => {
     const renderedImage = renderIntoContainer(component);
     const renderedImageElement = renderedImage.getDOMNode();
     lazySizes.loader.unveil(renderedImageElement);
-    await new Promise(resolve => setTimeout(resolve, 1)); // Timeout allows DOM to update
+    await new Promise((resolve) => setTimeout(resolve, 1)); // Timeout allows DOM to update
 
     const actualSrc = renderedImageElement.getAttribute("src");
     const actualSrcSet = renderedImageElement.getAttribute("srcset");
@@ -693,10 +686,10 @@ describe("Lazysizes support", () => {
         attributeConfig={{
           src: "data-src",
           srcSet: "data-srcset",
-          sizes: "data-sizes"
+          sizes: "data-sizes",
         }}
         htmlAttributes={{
-          src: lqipSrc
+          src: lqipSrc,
         }}
       />
     );
@@ -704,7 +697,7 @@ describe("Lazysizes support", () => {
     const renderedImage = renderIntoContainer(component);
     const renderedImageElement = renderedImage.getDOMNode();
     await new Promise((resolve, reject) => {
-      const mutationObserver = new MutationObserver(function(mutations) {
+      const mutationObserver = new MutationObserver(function (mutations) {
         actualSrc = renderedImageElement.getAttribute("src");
         const actualSrcSet = renderedImageElement.getAttribute("srcset");
 
@@ -714,7 +707,7 @@ describe("Lazysizes support", () => {
       });
 
       mutationObserver.observe(renderedImageElement, {
-        attributes: true
+        attributes: true,
       });
 
       let actualSrc = renderedImageElement.src;

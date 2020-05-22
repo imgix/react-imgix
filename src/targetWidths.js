@@ -4,7 +4,7 @@ function targetWidths() {
   const INCREMENT_PERCENTAGE = 8;
   const MAX_SIZE = 8192;
 
-  const ensureEven = n => 2 * Math.round(n / 2);
+  const ensureEven = (n) => 2 * Math.round(n / 2);
 
   while (prev <= MAX_SIZE) {
     resolutions.push(ensureEven(prev));

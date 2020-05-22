@@ -9,11 +9,12 @@ const PACKAGE_VERSION = require("../package.json").version;
 
 const noop = () => {};
 
-const findNearestWidth = actualWidth => findClosest(actualWidth, targetWidths);
+const findNearestWidth = (actualWidth) =>
+  findClosest(actualWidth, targetWidths);
 
 const toFixed = (dp, value) => +value.toFixed(dp);
 
-const BackgroundImpl = props => {
+const BackgroundImpl = (props) => {
   const {
     measureRef,
     measure,
@@ -23,7 +24,7 @@ const BackgroundImpl = props => {
     disableLibraryParam,
     src,
     children,
-    className = ""
+    className = "",
   } = props;
   const { w: forcedWidth, h: forcedHeight } = imgixParams;
   const hasDOMDimensions =
@@ -31,7 +32,7 @@ const BackgroundImpl = props => {
   const htmlAttributes = props.htmlAttributes || {};
   const dpr = toFixed(2, imgixParams.dpr || global.devicePixelRatio || 1);
   const ref = htmlAttributes.ref;
-  const onRef = el => {
+  const onRef = (el) => {
     measureRef(el);
     if (typeof ref === "function") {
       ref(el);
@@ -69,7 +70,7 @@ const BackgroundImpl = props => {
   const isReady = width != null && height != null;
 
   const commonProps = {
-    ...htmlAttributes
+    ...htmlAttributes,
   };
 
   if (!isReady) {
@@ -93,7 +94,7 @@ const BackgroundImpl = props => {
       ...(disableLibraryParam ? {} : { ixlib: `react-${PACKAGE_VERSION}` }),
       width,
       height,
-      dpr
+      dpr,
     };
 
     return constructUrl(rawSrc, srcOptions);
@@ -105,7 +106,7 @@ const BackgroundImpl = props => {
     backgroundSize:
       (htmlAttributes.style || {}).backgroundSize !== undefined
         ? htmlAttributes.style.backgroundSize
-        : "cover"
+        : "cover",
   };
 
   return (

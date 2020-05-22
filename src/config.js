@@ -2,8 +2,8 @@ const config = {
   warnings: {
     fallbackImage: true,
     sizesAttribute: true,
-    invalidARFormat: true
-  }
+    invalidARFormat: true,
+  },
 };
 
 const _setWarning = (name, value) => {

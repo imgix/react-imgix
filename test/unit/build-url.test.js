@@ -31,7 +31,7 @@ test("ixlib addition can be disabled with disableLibraryParam", () => {
 test("parameters that already exist in the url are overriden", () => {
   const actual = buildURL("https://demo.imgix.net/abc.png?w=50&h=50", {
     w: 100,
-    h: 100
+    h: 100,
   });
 
   const actualURL = new URL(actual);

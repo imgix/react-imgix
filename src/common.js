@@ -5,7 +5,7 @@ export { default as config } from "./config";
 // Taken from https://github.com/reduxjs/redux/blob/v4.0.0/src/compose.js
 export function compose(...funcs) {
   if (funcs.length === 0) {
-    return arg => arg;
+    return (arg) => arg;
   }
 
   if (funcs.length === 1) {
