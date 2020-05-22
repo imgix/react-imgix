@@ -85,7 +85,7 @@ describe("helpers", () => {
 
       expect(() => {
         shallowUntilTarget(<Example />, ExampleBase, {
-          maxTries: 2
+          maxTries: 2,
         });
       }).toThrow(/Could not find .*gave up after 2 tries/);
     });
@@ -96,12 +96,12 @@ describe("helpers", () => {
       const Example = compose(wrapper())(ExampleBase);
 
       const shallowOptions = {
-        lifecycleExperimental: true
+        lifecycleExperimental: true,
       };
       const instance = <Example />;
       shallowUntilTarget(instance, ExampleBase, {
         shallowOptions,
-        _shallow: shallowStub
+        _shallow: shallowStub,
       });
 
       sinon.assert.calledWith(shallowStub, instance, shallowOptions);
@@ -124,8 +124,8 @@ describe("helpers", () => {
 
       const root = shallowUntilTarget(<Example />, LifecyleExample, {
         shallowOptions: {
-          lifecycleExperimental: true
-        }
+          lifecycleExperimental: true,
+        },
       });
       root.setProps({ something: "else" });
 

@@ -1,7 +1,7 @@
 // from https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/findIndex#Polyfill
 if (!Array.prototype.findIndex) {
   Object.defineProperty(Array.prototype, "findIndex", {
-    value: function(predicate) {
+    value: function (predicate) {
       "use strict";
       if (this == null) {
         throw new TypeError(
@@ -26,7 +26,7 @@ if (!Array.prototype.findIndex) {
     },
     enumerable: false,
     configurable: false,
-    writable: false
+    writable: false,
   });
 }
 
