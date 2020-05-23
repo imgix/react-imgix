@@ -11,3 +11,6 @@ branches:
 
 node_js:
   - "9"
+
+script:
+  - travis_retry npm test
