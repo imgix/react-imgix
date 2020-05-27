@@ -668,6 +668,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
     <td align="center"><a href="http://danielfarrell.com/"><img src="https://avatars2.githubusercontent.com/u/13850?v=4" width="100px;" alt=""/><br /><sub><b>Daniel Farrell</b></sub></a><br /><a href="https://github.com/imgix/react-imgix/commits?author=danielfarrell" title="Documentation">📖</a></td>
     <td align="center"><a href="http://cieslak.dev"><img src="https://avatars0.githubusercontent.com/u/14146176?v=4" width="100px;" alt=""/><br /><sub><b>Luiz Fernando da Silva Cieslak</b></sub></a><br /><a href="https://github.com/imgix/react-imgix/commits?author=luizcieslak" title="Documentation">📖</a></td>
     <td align="center"><a href="https://github.com/worldsoup"><img src="https://avatars2.githubusercontent.com/u/1475986?v=4" width="100px;" alt=""/><br /><sub><b>Nick Gottlieb</b></sub></a><br /><a href="https://github.com/imgix/react-imgix/commits?author=worldsoup" title="Documentation">📖</a></td>
+    <td align="center"><a href="https://github.com/pgrimaud"><img src="https://avatars1.githubusercontent.com/u/1866496?v=4" width="100px;" alt=""/><br /><sub><b>Pierre Grimaud</b></sub></a><br /><a href="https://github.com/imgix/react-imgix/commits?author=pgrimaud" title="Documentation">📖</a></td>
   </tr>
 </table>
 
