@@ -587,7 +587,7 @@ The other major change relates to how the component determines an image's aspect
 
 This is a very large update to this library with a lot of breaking changes. We apologise for any issues this may cause, and we have tried to reduce the number of breaking changes. We have also worked to batch up all these changes into one release to reduce its impacts. We do not plan on making breaking changes for a while after this, and will be focussed on adding features.
 
-The largest change in this major version bump is the move to width-based `srcSet` and `sizes` for responsiveness. This has a host of benefits, including better server rendering, better responsiveness, less potential for bugs, and perfomance improvements. This does mean that the old fitting-to-container-size behaviour has been removed. If this is necessary, an example of how this can be achieved can be found [here](./examples/fit-to-size-of-container.md)
+The largest change in this major version bump is the move to width-based `srcSet` and `sizes` for responsiveness. This has a host of benefits, including better server rendering, better responsiveness, less potential for bugs, and performance improvements. This does mean that the old fitting-to-container-size behaviour has been removed. If this is necessary, an example of how this can be achieved can be found [here](./examples/fit-to-size-of-container.md)
 
 To upgrade to version 8, the following changes should be made.
 
