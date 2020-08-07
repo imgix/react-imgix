@@ -30,7 +30,7 @@ Guidelines for bug reports:
     reported.
 
 2.  **Check if the issue has been fixed** &mdash; try to reproduce it using the
-    latest `master` or development branch in the repository.
+    latest `main` or development branch in the repository.
 
 3.  **Isolate the problem** &mdash; create a [reduced test
     case](http://css-tricks.com/6263-reduced-test-cases/) and a live example.
@@ -182,5 +182,5 @@ Ensure all commits are correctly described using the [Conventional Commits Speci
 
 ```sh
 npm run release
-git push --follow-tags origin master; npm publish
+git push --follow-tags origin main; npm publish
 ```
