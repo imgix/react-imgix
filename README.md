@@ -5,9 +5,9 @@
 `react-imgix` provides custom components for integrating [imgix](https://www.imgix.com/) into React sites and generating images server-side.
 
 [![npm version](https://img.shields.io/npm/v/react-imgix.svg)](https://www.npmjs.com/package/react-imgix)
-[![Build Status](https://travis-ci.org/imgix/react-imgix.svg?branch=master)](https://travis-ci.org/imgix/react-imgix)
+[![Build Status](https://travis-ci.org/imgix/react-imgix.svg?branch=main)](https://travis-ci.org/imgix/react-imgix)
 [![Downloads](https://img.shields.io/npm/dm/react-imgix.svg)](https://www.npmjs.com/package/react-imgix)
-[![License](https://img.shields.io/npm/l/react-imgix)](https://github.com/imgix/react-imgix/blob/master/LICENSE)
+[![License](https://img.shields.io/npm/l/react-imgix)](https://github.com/imgix/react-imgix/blob/main/LICENSE)
 [![Dependencies Status](https://david-dm.org/imgix/react-imgix.svg)](https://david-dm.org/imgix/react-imgix)
 [![styled with prettier](https://img.shields.io/badge/styled_with-prettier-ff69b4.svg)](https://github.com/prettier/prettier)
 [![All Contributors](https://img.shields.io/badge/all_contributors-22-orange.svg?style=flat-square)](#contributors-)
@@ -625,7 +625,7 @@ To upgrade to version 8, the following changes should be made.
 
 This browser support is made possible by the great support from [BrowserStack](https://www.browserstack.com/).
 
-<img src="https://raw.githubusercontent.com/imgix/react-imgix/master/docs/images/Browserstack-logo%402x.png" width="300">
+<img src="https://raw.githubusercontent.com/imgix/react-imgix/main/docs/images/Browserstack-logo%402x.png" width="300">
 
 ## Contributors
 

@@ -1,6 +1,6 @@
 /*
 Copyright © 2015 by Coursera
-Licensed under the Apache License 2.0, seen https://github.com/coursera/react-imgix/blob/master/LICENSE
+Licensed under the Apache License 2.0, seen https://github.com/coursera/react-imgix/blob/main/LICENSE
 
 Minor syntax modifications have been made
 */
