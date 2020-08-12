@@ -6,7 +6,7 @@ addons:
 
 branches:
   only:
-    - master
+    - main
     - /release.*/
 
 node_js:
