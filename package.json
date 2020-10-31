@@ -55,7 +55,7 @@
     "react-dom": ">=15"
   },
   "dependencies": {
-    "js-base64": "^2.3.2",
+    "js-base64": "~2.6.0",
     "react-measure": "^2.3.0",
     "shallowequal": "^1.1.0",
     "warning": "^4.0.1"
