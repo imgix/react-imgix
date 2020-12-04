@@ -10,7 +10,8 @@ branches:
     - /release.*/
 
 node_js:
-  - "9"
+  - lts/*
+  - stable
 
 script:
   - travis_retry npm test
