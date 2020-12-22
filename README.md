@@ -5,7 +5,7 @@
 `react-imgix` provides custom components for integrating [imgix](https://www.imgix.com/) into React sites and generating images server-side.
 
 [![npm version](https://img.shields.io/npm/v/react-imgix.svg)](https://www.npmjs.com/package/react-imgix)
-[![Build Status](https://travis-ci.org/imgix/react-imgix.svg?branch=main)](https://travis-ci.org/imgix/react-imgix)
+[![Build Status](https://travis-ci.com/imgix/react-imgix.svg?branch=main)](https://travis-ci.com/imgix/react-imgix)
 [![Downloads](https://img.shields.io/npm/dm/react-imgix.svg)](https://www.npmjs.com/package/react-imgix)
 [![License](https://img.shields.io/npm/l/react-imgix)](https://github.com/imgix/react-imgix/blob/main/LICENSE)
 [![Dependencies Status](https://david-dm.org/imgix/react-imgix.svg)](https://david-dm.org/imgix/react-imgix)
