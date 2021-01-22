@@ -83,6 +83,9 @@
     "@babel/polyfill": "7.12.1",
     "@babel/preset-env": "7.12.1",
     "@babel/preset-react": "7.12.5",
+    "@google/semantic-release-replace-plugin": "^1.0.2",
+    "@semantic-release/changelog": "^5.0.1",
+    "@semantic-release/git": "^9.0.0",
     "babel-core": "7.0.0-bridge.0",
     "babel-eslint": "10.1.0",
     "babel-jest": "25.5.1",
@@ -144,5 +147,63 @@
     "last 2 iOS versions",
     "last 2 Android versions",
     "not dead"
-  ]
+  ],
+  "release": {
+    "branches": [
+      "main",
+      {
+        "name": "next",
+        "prerelease": "rc"
+      },
+      {
+        "name": "beta",
+        "prerelease": true
+      },
+      {
+        "name": "alpha",
+        "prerelease": true
+      }
+    ],
+    "plugins": [
+      "@semantic-release/commit-analyzer",
+      "@semantic-release/release-notes-generator",
+      [
+        "@google/semantic-release-replace-plugin",
+        {
+          "replacements": [
+            {
+              "files": [
+                "src/constants.js"
+              ],
+              "from": "const VERSION = '.*'",
+              "to": "const VERSION = '${nextRelease.version}'",
+              "results": [
+                {
+                  "file": "src/constants.js",
+                  "hasChanged": true,
+                  "numMatches": 1,
+                  "numReplacements": 1
+                }
+              ],
+              "countMatches": true
+            }
+          ]
+        }
+      ],
+      "@semantic-release/changelog",
+      "@semantic-release/npm",
+      [
+        "@semantic-release/git",
+        {
+          "assets": [
+            "src/**",
+            "package.json",
+            "CHANGELOG.md"
+          ],
+          "message": "chore(release): ${nextRelease.version}\n\n${nextRelease.notes} [skip ci]"
+        }
+      ],
+      "@semantic-release/github"
+    ]
+  }
 }
