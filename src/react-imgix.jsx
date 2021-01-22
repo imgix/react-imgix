@@ -1,17 +1,13 @@
-import "./array-findindex";
-
-import React, { Component } from "react";
 import PropTypes from "prop-types";
-
-import targetWidths from "./targetWidths";
+import React, { Component } from "react";
+import "./array-findindex";
+import { compose, config } from "./common";
+import { DPR_QUALITY_VALUES, PACKAGE_VERSION } from "./constants";
 import constructUrl from "./constructUrl";
 import extractQueryParams from "./extractQueryParams";
 import { ShouldComponentUpdateHOC } from "./HOCs";
+import targetWidths from "./targetWidths";
 
-import { compose, config } from "./common";
-import { DPR_QUALITY_VALUES } from "./constants";
-
-const PACKAGE_VERSION = require("../package.json").version;
 const NODE_ENV = process.env.NODE_ENV;
 
 const buildKey = (idx) => `react-imgix-${idx}`;
