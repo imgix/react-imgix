@@ -15,3 +15,11 @@ node_js:
 
 script:
   - travis_retry npm test
+
+deploy:
+  provider: script
+  skip_cleanup: true
+  script:
+    - npx semantic-release
+  on:
+    all_branches: true # Or just branch: next if you only want to enable it for one branch for now
