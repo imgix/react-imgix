@@ -195,9 +195,7 @@ describe("When in default mode", () => {
 
       await renderAndWaitForImageLoad(
         <Imgix
-          src="https://badurlcom"
-          w={10} // for speed
-          h={10} // for speed
+          src="http://captive.apple.com"
           htmlAttributes={{
             onError: () => {
               onErrorCalled = true;
