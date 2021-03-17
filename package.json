@@ -84,7 +84,7 @@
     "@babel/preset-env": "7.12.1",
     "@babel/preset-react": "7.12.5",
     "@google/semantic-release-replace-plugin": "1.0.2",
-    "@imgix/browserslist-config": "^1.0.0",
+    "@imgix/browserslist-config": "1.0.0",
     "@semantic-release/changelog": "5.0.1",
     "@semantic-release/git": "9.0.0",
     "babel-core": "7.0.0-bridge.0",
