@@ -5,9 +5,9 @@ Licensed under the Apache License 2.0, seen https://github.com/coursera/react-im
 Minor syntax modifications have been made
 */
 
-var Base64 = require("js-base64").Base64;
-const PACKAGE_VERSION = require("../package.json").version;
+import ImgixClient from '@imgix/js-core';
 import extractQueryParams from "./extractQueryParams";
+const PACKAGE_VERSION = require("../package.json").version;
 
 // @see https://www.imgix.com/docs/reference
 var PARAM_EXPANSION = Object.freeze({
@@ -113,31 +113,27 @@ var DEFAULT_OPTIONS = Object.freeze({
  * @return {String}             URL of image src transformed by Imgix
  */
 function constructUrl(src, longOptions) {
-  if (!src) {
-    return "";
-  }
+  const params = {};
 
-  const keys = Object.keys(longOptions);
-  const keysLength = keys.length;
-  let url = src + "?";
-  for (let i = 0; i < keysLength; i++) {
-    let key = keys[i];
-    let val = longOptions[key];
-
-    if (PARAM_EXPANSION[key]) {
-      key = PARAM_EXPANSION[key];
+  for (const k in longOptions) {
+    if (PARAM_EXPANSION[k]) {
+      params[PARAM_EXPANSION[k]] = longOptions[k];
     } else {
-      key = encodeURIComponent(key);
+      params[k] = longOptions[k];
     }
-
-    if (key.substr(-2) === "64") {
-      val = Base64.encodeURI(val);
-    }
-
-    url += key + "=" + encodeURIComponent(val) + "&";
   }
 
-  return url.slice(0, -1);
+  const [scheme, rest] = src.split("://");
+  const [domain, ...pathComponents] = rest.split("/");
+  let useHTTPS = scheme == "https";
+
+  const client = new ImgixClient({
+    domain: domain,
+    useHTTPS: useHTTPS,
+    includeLibraryParam: false
+  });
+
+  return client.buildURL(pathComponents.join('/'), params);
 }
 
 function buildURLPublic(src, imgixParams = {}, options = {}) {
