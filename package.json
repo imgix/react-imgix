@@ -232,8 +232,8 @@
               "files": [
                 "src/constants.js"
               ],
-              "from": "const VERSION = '.*'",
-              "to": "const VERSION = '${nextRelease.version}'",
+              "from": "const PACKAGE_VERSION = '.*'",
+              "to": "const PACKAGE_VERSION = '${nextRelease.version}'",
               "results": [
                 {
                   "file": "src/constants.js",
