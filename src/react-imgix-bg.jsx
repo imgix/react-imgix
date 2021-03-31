@@ -1,5 +1,5 @@
 import React from "react";
-import { withContentRect } from "react-measure";
+import Measure, { withContentRect } from "react-measure";
 import { PACKAGE_VERSION } from './constants';
 import constructUrl from "./constructUrl";
 import extractQueryParams from "./extractQueryParams";
@@ -67,12 +67,12 @@ const BackgroundImpl = (props) => {
       return { width, height: forcedHeight };
     }
   })();
-  const isReady = width != null && height != null;
 
   const commonProps = {
     ...htmlAttributes,
   };
 
+  const isReady = width != null && height != null;
   if (!isReady) {
     return (
       <div
@@ -115,6 +115,82 @@ const BackgroundImpl = (props) => {
     </div>
   );
 };
-const Background = withContentRect("bounds")(BackgroundImpl);
 
-export { Background, BackgroundImpl as __BackgroundImpl };
+export class NewBackground extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      dimensions: {
+        width: 2,
+        height: 2,
+      },
+    };
+  }
+
+  shouldComponentUpdate(_nextProps, nextState) {
+    return this.state.dimensions.width !== nextState.dimensions.width;
+  }
+
+  render() {
+    if (!(this.props.width || (this.props.width && this.props.height))) {
+      return (
+        <div
+          {...this.props.htmlAttributes}
+          className={`${this.props.className} react-imgix-bg-loading`}
+        >
+          {this.props.children}
+        </div>
+      );
+    }
+
+    const { width, height } = this.state.dimensions;
+    const [rawSrc, params] = extractQueryParams(this.props.src);
+
+    /* Idk if we should be spreading arbitrary props... anywhere...?
+    ** For possible <noscript> reasons? */
+    const srcOptions = {
+      ...params,
+      fit: "crop",
+      ...this.props.imgixParams, /* !!! */
+      ...(this.props.disableLibraryParam ? {} : { ixlib: `react-${PACKAGE_VERSION}` }),
+      ...width, /* !!! */
+      ...height, /* !!! */
+    };
+
+    const imgURL = constructUrl(rawSrc, srcOptions);
+
+    const style = {
+      ...(this.htmlAttributes ? this.htmlAttributes.style : {}),
+      /* Apply border-box to make widths inclusive of padding, etc. */
+      boxSizing: "border-box",
+      /* Apply 2px border for debugging. */
+      border: "2px solid magenta",
+      backgroundImage: `url(${imgURL})`,
+    };
+
+    return (
+      <Measure
+        bounds
+        onResize={(contentRect) => {
+          this.setState({
+            dimensions: {
+              // Only care about `width` and `height` for now
+              width: contentRect.bounds.width,
+              height: contentRect.bounds.height,
+            },
+          });
+        }}
+      >
+        {({ measureRef }) => (
+          <div ref={measureRef} style={style} className={this.props.className}>
+            {width}, {height}
+            {this.props.children}
+          </div>
+        )}
+      </Measure>
+    );
+  }
+}
+const Background = withContentRect("bounds")(NewBackground);
+
+export { Background, NewBackground as __BackgroundImpl };

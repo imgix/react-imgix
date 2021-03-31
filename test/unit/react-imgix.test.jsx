@@ -536,7 +536,7 @@ describe("When in background mode", () => {
     });
 
     sut = mount(
-      <Background src={`${src}`} className="bg-img">
+      <Background width={100} height={100} src={`${src}`} className="bg-img">
         <div>Content</div>
       </Background>
     );
