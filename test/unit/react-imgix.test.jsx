@@ -62,10 +62,10 @@ describe("When in default mode", () => {
       const sut = shallow(<Imgix src={src} sizes="100vw" />);
       const srcset = sut.props().srcSet;
       expect(srcset).not.toBeUndefined();
-      expect(srcset.split(", ")[0].split(" ")).toHaveLength(2);
-      const aSrcFromSrcSet = srcset.split(", ")[0].split(" ")[0];
+      expect(srcset.split(",\n")[0].split(" ")).toHaveLength(2);
+      const aSrcFromSrcSet = srcset.split(",\n")[0].split(" ")[0];
       expect(aSrcFromSrcSet).toContain(src);
-      const aWidthFromSrcSet = srcset.split(", ")[0].split(" ")[1];
+      const aWidthFromSrcSet = srcset.split(",\n")[0].split(" ")[1];
       expect(aWidthFromSrcSet).toMatch(/^\d+w$/);
     });
     it("returns the expected number of `url widthDescriptor` pairs", function () {
@@ -117,48 +117,38 @@ describe("When in default mode", () => {
     describe("supports varying q to dpr matching when rendering a fixed-size image", () => {
       it("generates predefined q and dpr pairs", async () => {
         const sut = shallow(<Imgix src={src} width={100} />);
-        const srcset = sut.props().srcSet.split(", ");
+        const srcset = sut.props().srcSet.split(",\n");
 
-        expect(srcset[0].split(" ")[0]).toContain("q=" + DPR_QUALITY.q_dpr1);
-        expect(srcset[1].split(" ")[0]).toContain("q=" + DPR_QUALITY.q_dpr2);
-        expect(srcset[2].split(" ")[0]).toContain("q=" + DPR_QUALITY.q_dpr3);
-        expect(srcset[3].split(" ")[0]).toContain("q=" + DPR_QUALITY.q_dpr4);
-        expect(srcset[4].split(" ")[0]).toContain("q=" + DPR_QUALITY.q_dpr5);
+        expect(srcset[0]).toContain("q=" + DPR_QUALITY.q_dpr1);
+        expect(srcset[1]).toContain("q=" + DPR_QUALITY.q_dpr2);
+        expect(srcset[2]).toContain("q=" + DPR_QUALITY.q_dpr3);
+        expect(srcset[3]).toContain("q=" + DPR_QUALITY.q_dpr4);
+        expect(srcset[4]).toContain("q=" + DPR_QUALITY.q_dpr5);
       });
       it("allows q to dpr matching to be disabled", async () => {
         const sut = shallow(
           <Imgix src={src} width={100} disableQualityByDPR />
         );
-        const srcset = sut.props().srcSet.split(", ");
+        const srcset = sut.props().srcSet.split(",\n");
 
-        expect(srcset[0].split(" ")[0]).not.toContain(
-          "q=" + DPR_QUALITY.q_dpr1
-        );
-        expect(srcset[1].split(" ")[0]).not.toContain(
-          "q=" + DPR_QUALITY.q_dpr2
-        );
-        expect(srcset[2].split(" ")[0]).not.toContain(
-          "q=" + DPR_QUALITY.q_dpr3
-        );
-        expect(srcset[3].split(" ")[0]).not.toContain(
-          "q=" + DPR_QUALITY.q_dpr4
-        );
-        expect(srcset[4].split(" ")[0]).not.toContain(
-          "q=" + DPR_QUALITY.q_dpr5
-        );
+        expect(srcset[0]).not.toContain("q=" + DPR_QUALITY.q_dpr1);
+        expect(srcset[1]).not.toContain("q=" + DPR_QUALITY.q_dpr2);
+        expect(srcset[2]).not.toContain("q=" + DPR_QUALITY.q_dpr3);
+        expect(srcset[3]).not.toContain("q=" + DPR_QUALITY.q_dpr4);
+        expect(srcset[4]).not.toContain("q=" + DPR_QUALITY.q_dpr5);
       });
       it("allows the q parameter to be overriden when explicitly passed in", async () => {
         const q_override = 100;
         const sut = shallow(
           <Imgix src={src} width={100} imgixParams={{ q: q_override }} />
         );
-        const srcset = sut.props().srcSet.split(", ");
+        const srcset = sut.props().srcSet.split(",\n");
 
-        expect(srcset[0].split(" ")[0]).toContain("q=" + q_override);
-        expect(srcset[1].split(" ")[0]).toContain("q=" + q_override);
-        expect(srcset[2].split(" ")[0]).toContain("q=" + q_override);
-        expect(srcset[3].split(" ")[0]).toContain("q=" + q_override);
-        expect(srcset[4].split(" ")[0]).toContain("q=" + q_override);
+        expect(srcset[0]).toContain("q=" + q_override);
+        expect(srcset[1]).toContain("q=" + q_override);
+        expect(srcset[2]).toContain("q=" + q_override);
+        expect(srcset[3]).toContain("q=" + q_override);
+        expect(srcset[4]).toContain("q=" + q_override);
       });
     });
   });
@@ -230,10 +220,10 @@ describe("When in <source> mode", () => {
     it("should have a srcSet set correctly", async () => {
       const srcset = renderImage().props().srcSet;
       expect(srcset).not.toBeUndefined();
-      expect(srcset.split(", ")[0].split(" ")).toHaveLength(2);
-      const aSrcFromSrcSet = srcset.split(", ")[0].split(" ")[0];
+      expect(srcset.split(",\n")[0].split(" ")).toHaveLength(2);
+      const aSrcFromSrcSet = srcset.split(",\n")[0].split(" ")[0];
       expect(aSrcFromSrcSet).toContain(src);
-      const aWidthFromSrcSet = srcset.split(", ")[0].split(" ")[1];
+      const aWidthFromSrcSet = srcset.split(",\n")[0].split(" ")[1];
       expect(aWidthFromSrcSet).toMatch(/^\d+w$/);
     });
 
@@ -275,7 +265,7 @@ describe("When in <source> mode", () => {
     it("srcSet should be in the form src 1x, src 2x, src 3x, src 4x, src 5x", () => {
       const srcSet = renderImage().props().srcSet;
 
-      const srcSets = srcSet.split(", ");
+      const srcSets = srcSet.split(",\n");
       expect(srcSets).toHaveLength(5);
       srcSets.forEach((srcSet) => {
         expect(srcSet).toContain(src);
