@@ -4,11 +4,6 @@ addons:
   chrome: beta
   firefox: latest
 
-branches:
-  only:
-    - main
-    - /release.*/
-
 node_js:
   - lts/*
   - stable
