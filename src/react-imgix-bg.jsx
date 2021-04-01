@@ -84,16 +84,16 @@ const BackgroundImpl = (props) => {
     );
   }
 
+
   const renderedSrc = (() => {
     const [rawSrc, params] = extractQueryParams(src);
+    const allParams = {...params, ...imgixParams, dpr};
     const srcOptions = {
-      ...params,
       fit: "crop",
-      ...imgixParams,
       ...(disableLibraryParam ? {} : { ixlib: `react-${PACKAGE_VERSION}` }),
+      ...allParams,
       width,
       height,
-      dpr,
     };
 
     return constructUrl(rawSrc, srcOptions);
