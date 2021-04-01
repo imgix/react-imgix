@@ -364,6 +364,33 @@ describe("Background Mode", () => {
       );
     });
   });
+
+  describe("when both w and h provided", () => {
+    it("does not duplicate query params for height and width", () => {
+      const sut = renderIntoContainer(
+        <Background
+          src={`${src}`}
+          imgixParams={{
+            w: 300,
+            h: 350,
+          }}
+          className="bg-img"
+        >
+        </Background>
+      );
+
+      const bgImageSrcURL = findURIfromSUT(sut);
+      const seen = new Set();
+      for (const [k, _v] of bgImageSrcURL.queryPairs) {
+        if (seen.has(k)) {
+          throw new Error(`duplicate keys for '${k}' found in query parameters`);
+        } else {
+          seen.add(k)
+        }
+      }
+    });
+  });
+
   describe("when only height is passed", () => {
     it("renders nothing at first", () => {
       shouldRenderNoBGImage(
