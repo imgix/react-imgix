@@ -5,7 +5,7 @@ Licensed under the Apache License 2.0, seen https://github.com/coursera/react-im
 Minor syntax modifications have been made
 */
 
-import ImgixClient from '@imgix/js-core';
+import ImgixClient from "@imgix/js-core";
 import extractQueryParams from "./extractQueryParams";
 const PACKAGE_VERSION = require("../package.json").version;
 
@@ -130,10 +130,10 @@ function constructUrl(src, longOptions) {
   const client = new ImgixClient({
     domain: domain,
     useHTTPS: useHTTPS,
-    includeLibraryParam: false
+    includeLibraryParam: false,
   });
 
-  return client.buildURL(pathComponents.join('/'), params);
+  return client.buildURL(pathComponents.join("/"), params);
 }
 
 function buildURLPublic(src, imgixParams = {}, options = {}) {

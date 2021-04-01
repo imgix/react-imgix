@@ -1,11 +1,10 @@
 import React from "react";
 import { withContentRect } from "react-measure";
-import { PACKAGE_VERSION } from './constants';
+import { PACKAGE_VERSION } from "./constants";
 import constructUrl from "./constructUrl";
 import extractQueryParams from "./extractQueryParams";
 import findClosest from "./findClosest";
 import targetWidths from "./targetWidths";
-
 
 const noop = () => {};
 
