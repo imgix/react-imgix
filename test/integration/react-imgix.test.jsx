@@ -375,17 +375,18 @@ describe("Background Mode", () => {
             h: 350,
           }}
           className="bg-img"
-        >
-        </Background>
+        ></Background>
       );
 
       const bgImageSrcURL = findURIfromSUT(sut);
       const seen = new Set();
       for (const [k, _v] of bgImageSrcURL.queryPairs) {
         if (seen.has(k)) {
-          throw new Error(`duplicate keys for '${k}' found in query parameters`);
+          throw new Error(
+            `duplicate keys for '${k}' found in query parameters`
+          );
         } else {
-          seen.add(k)
+          seen.add(k);
         }
       }
     });
