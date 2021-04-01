@@ -154,4 +154,4 @@ function buildURLPublic(src, imgixParams = {}, options = {}) {
 
 export default constructUrl;
 
-export { buildURLPublic };
+export { buildURLPublic, PARAM_EXPANSION };

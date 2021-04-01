@@ -3,10 +3,11 @@ import React, { Component } from "react";
 import "./array-findindex";
 import { compose, config } from "./common";
 import { DPR_QUALITY_VALUES, PACKAGE_VERSION } from "./constants";
-import constructUrl from "./constructUrl";
+import constructUrl, { PARAM_EXPANSION } from "./constructUrl";
 import extractQueryParams from "./extractQueryParams";
 import { ShouldComponentUpdateHOC } from "./HOCs";
 import targetWidths from "./targetWidths";
+import ImgixClient from "@imgix/js-core";
 
 const NODE_ENV = process.env.NODE_ENV;
 
@@ -109,68 +110,97 @@ function buildSrc({
     fixedSize && width ? { width } : {}
   );
 
-  const src = constructUrl(rawSrc, srcOptions);
-
-  let srcSet;
-
   if (disableSrcSet) {
-    srcSet = src;
-  } else {
-    if (fixedSize) {
-      const { q, ...urlParams } = srcOptions;
-      const constructedUrl = constructUrl(rawSrc, urlParams);
-
-      let srcFn = buildDprSrcWithQualityByDpr;
-      if (q) {
-        srcFn = buildDprSrcWithQuality;
-      } else if (disableQualityByDPR) {
-        srcFn = buildDprSrcWithoutQuality;
-      }
-
-      srcSet = "";
-      const len = DPR_QUALITY_VALUES.length;
-      for (let i = 0; i < len; i++) {
-        const quality = DPR_QUALITY_VALUES[i];
-        srcSet += srcFn(constructedUrl, q || quality, i + 1) + ", ";
-      }
-      srcSet = srcSet.slice(0, -2);
-    } else {
-      const { width, w, height, ...urlParams } = srcOptions;
-      const constructedUrl = constructUrl(rawSrc, urlParams);
-
-      const aspectRatio = imgixParams.ar;
-      let showARWarning =
-        aspectRatio != null && aspectRatioIsValid(aspectRatio) === false;
-
-      let srcFn = buildSrcSetPairWithTargetWidth;
-      if (height) {
-        srcFn = buildSrcSetPairWithFixedHeight;
-      }
-
-      srcSet = "";
-      const len = targetWidths.length;
-      for (let i = 0; i < len; i++) {
-        const targetWidth = targetWidths[i];
-        srcSet += srcFn(constructedUrl, targetWidth, height) + ", ";
-      }
-      srcSet = srcSet.slice(0, -2);
-
-      if (
-        NODE_ENV !== "production" &&
-        showARWarning &&
-        config.warnings.invalidARFormat
-      ) {
-        console.warn(
-          `[Imgix] The aspect ratio passed ("${aspectRatio}") is not in the correct format. The correct format is "W:H".`
-        );
-      }
-    }
+    const src = constructUrl(rawSrc, srcOptions);
+    return { src, src };
   }
 
-  return {
-    src,
-    srcSet,
-  };
+  if (fixedSize) {
+    const { q, ...urlParams } = srcOptions;
+    const params = {};
+
+    for (const k in urlParams) {
+      if (PARAM_EXPANSION[k]) {
+        params[PARAM_EXPANSION[k]] = urlParams[k];
+      } else {
+        params[k] = urlParams[k];
+      }
+    }
+
+    if (width) {
+      params["w"] = width;
+    }
+
+    if (height) {
+      params["h"] = height;
+    }
+
+    const [scheme, rest] = rawSrc.split("://");
+    const [domain, ...pathComponents] = rest.split("/");
+    let useHTTPS = scheme == "https";
+
+    const client = new ImgixClient({
+      domain: domain,
+      useHTTPS: useHTTPS,
+      includeLibraryParam: false,
+    });
+
+    const srcSet = client.buildSrcSet(
+      pathComponents.join("/"),
+      { ...params, q },
+      {
+        disableVariableQuality: disableQualityByDPR,
+      }
+    );
+
+    const src = constructUrl(rawSrc, srcOptions);
+    return { src, srcSet };
+  } else {
+    const { width, w, height, h, ...urlParams } = srcOptions;
+    const params = {};
+
+    for (const k in urlParams) {
+      if (PARAM_EXPANSION[k]) {
+        params[PARAM_EXPANSION[k]] = urlParams[k];
+      } else {
+        params[k] = urlParams[k];
+      }
+    }
+
+    if (width) {
+      params["w"] = width ? width : w;
+    }
+
+    if (height) {
+      params["h"] = height || h;
+    }
+
+    const [scheme, rest] = rawSrc.split("://");
+    const [domain, ...pathComponents] = rest.split("/");
+    let useHTTPS = scheme == "https";
+
+    const client = new ImgixClient({
+      domain: domain,
+      useHTTPS: useHTTPS,
+      includeLibraryParam: false,
+    });
+    const srcSet = client.buildSrcSet(pathComponents.join("/"), { ...params });
+
+    const aspectRatio = imgixParams.ar;
+    let showARWarning =
+      aspectRatio != null && aspectRatioIsValid(aspectRatio) === false;
+    if (
+      NODE_ENV !== "production" &&
+      showARWarning &&
+      config.warnings.invalidARFormat
+    ) {
+      console.warn(
+        `[Imgix] The aspect ratio passed ("${aspectRatio}") is not in the correct format. The correct format is "W:H".`
+      );
+    }
+    const src = constructUrl(rawSrc, srcOptions);
+    return { src, srcSet };
+  }
 }
 
 /**
