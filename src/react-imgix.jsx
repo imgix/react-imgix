@@ -2,12 +2,10 @@ import PropTypes from "prop-types";
 import React, { Component } from "react";
 import "./array-findindex";
 import { compose, config } from "./common";
-import { DPR_QUALITY_VALUES, PACKAGE_VERSION } from "./constants";
-import constructUrl, { PARAM_EXPANSION } from "./constructUrl";
+import { PACKAGE_VERSION } from "./constants";
+import constructUrl, { buildSrcSet } from "./constructUrl";
 import extractQueryParams from "./extractQueryParams";
 import { ShouldComponentUpdateHOC } from "./HOCs";
-import targetWidths from "./targetWidths";
-import ImgixClient from "@imgix/js-core";
 
 const NODE_ENV = process.env.NODE_ENV;
 
@@ -94,9 +92,8 @@ function buildSrc({
   imgixParams,
   disableQualityByDPR,
 }) {
-  const fixedSize = width != null || height != null;
-
   const [rawSrc, params] = extractQueryParams(inputSrc);
+  const fixedSize = width != null || height != null;
 
   const srcOptions = {
     ...params,
@@ -112,75 +109,21 @@ function buildSrc({
   }
 
   if (fixedSize) {
-    const { q, ...urlParams } = srcOptions;
-    const params = {};
-
-    for (const k in urlParams) {
-      if (PARAM_EXPANSION[k]) {
-        params[PARAM_EXPANSION[k]] = urlParams[k];
-      } else {
-        params[k] = urlParams[k];
-      }
-    }
-
-    if (width) {
-      params["w"] = width;
-    }
-
-    if (height) {
-      params["h"] = height;
-    }
-
-    const [scheme, rest] = rawSrc.split("://");
-    const [domain, ...pathComponents] = rest.split("/");
-    let useHTTPS = scheme == "https";
-
-    const client = new ImgixClient({
-      domain: domain,
-      useHTTPS: useHTTPS,
-      includeLibraryParam: false,
-    });
-
-    const srcSet = client.buildSrcSet(
-      pathComponents.join("/"),
-      { ...params, q },
+    const srcSet = buildSrcSet(
+      rawSrc,
+      srcOptions,
       {
         disableVariableQuality: disableQualityByDPR,
-      }
+      },
+      width,
+      height
     );
 
     const src = constructUrl(rawSrc, srcOptions);
     return { src, srcSet };
   } else {
-    const { width, w, height, h, ...urlParams } = srcOptions;
-    const params = {};
-
-    for (const k in urlParams) {
-      if (PARAM_EXPANSION[k]) {
-        params[PARAM_EXPANSION[k]] = urlParams[k];
-      } else {
-        params[k] = urlParams[k];
-      }
-    }
-
-    if (width) {
-      params["w"] = width ? width : w;
-    }
-
-    if (height) {
-      params["h"] = height || h;
-    }
-
-    const [scheme, rest] = rawSrc.split("://");
-    const [domain, ...pathComponents] = rest.split("/");
-    let useHTTPS = scheme == "https";
-
-    const client = new ImgixClient({
-      domain: domain,
-      useHTTPS: useHTTPS,
-      includeLibraryParam: false,
-    });
-    const srcSet = client.buildSrcSet(pathComponents.join("/"), { ...params });
+    const { w, h, ...urlParams } = srcOptions;
+    const srcSet = buildSrcSet(rawSrc, { ...urlParams });
 
     const aspectRatio = imgixParams.ar;
     let showARWarning =

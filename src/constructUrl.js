@@ -113,16 +113,32 @@ var DEFAULT_OPTIONS = Object.freeze({
  * @return {String}             URL of image src transformed by Imgix
  */
 function constructUrl(src, longOptions) {
-  const params = {};
+  const params = compactParamKeys(longOptions);
+  const { client, pathComponents } = extractClientAndPathComponents(src);
+  return client.buildURL(pathComponents.join("/"), params);
+}
 
-  for (const k in longOptions) {
-    if (PARAM_EXPANSION[k]) {
-      params[PARAM_EXPANSION[k]] = longOptions[k];
+function compactParamKeys(longOptions, width, height) {
+  const params = Object.keys(longOptions).reduce((acc, key) => {
+    if (PARAM_EXPANSION[key]) {
+      acc[PARAM_EXPANSION[key]] = longOptions[key];
     } else {
-      params[k] = longOptions[k];
+      acc[key] = longOptions[key];
     }
+    return acc;
+  }, {});
+
+  if (width) {
+    params["w"] = width;
   }
 
+  if (height) {
+    params["h"] = height;
+  }
+  return params;
+}
+
+function extractClientAndPathComponents(src) {
   const [scheme, rest] = src.split("://");
   const [domain, ...pathComponents] = rest.split("/");
   let useHTTPS = scheme == "https";
@@ -133,7 +149,13 @@ function constructUrl(src, longOptions) {
     includeLibraryParam: false,
   });
 
-  return client.buildURL(pathComponents.join("/"), params);
+  return { client, pathComponents };
+}
+
+function buildSrcSet(rawSrc, params = {}, options = {}, width, height) {
+  const { client, pathComponents } = extractClientAndPathComponents(rawSrc);
+  const compactedParams = compactParamKeys(params, width, height);
+  return client.buildSrcSet(pathComponents.join("/"), compactedParams, options);
 }
 
 function buildURLPublic(src, imgixParams = {}, options = {}) {
@@ -154,4 +176,4 @@ function buildURLPublic(src, imgixParams = {}, options = {}) {
 
 export default constructUrl;
 
-export { buildURLPublic, PARAM_EXPANSION };
+export { buildURLPublic, buildSrcSet };
