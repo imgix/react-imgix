@@ -3,7 +3,7 @@ import React, { Component } from "react";
 import "./array-findindex";
 import { compose, config } from "./common";
 import { PACKAGE_VERSION } from "./constants";
-import constructUrl, { buildSrcSet } from "./constructUrl";
+import constructUrl, { buildSrc } from "./constructUrl";
 import extractQueryParams from "./extractQueryParams";
 import { ShouldComponentUpdateHOC } from "./HOCs";
 
@@ -79,68 +79,6 @@ const buildDprSrcWithoutQuality = (url, _, dpr) =>
 
 const buildDprSrcWithQualityByDpr = (url, quality, dpr) =>
   url + "&q=" + quality + "&dpr=" + dpr + " " + dpr + "x";
-
-/**
- * Build a imgix source url with parameters from a raw url
- */
-function buildSrc({
-  src: inputSrc,
-  width,
-  height,
-  disableLibraryParam,
-  disableSrcSet,
-  imgixParams,
-  disableQualityByDPR,
-}) {
-  const [rawSrc, params] = extractQueryParams(inputSrc);
-  const fixedSize = width != null || height != null;
-
-  const srcOptions = {
-    ...params,
-    ...imgixParams,
-    ...(disableLibraryParam ? {} : { ixlib: `react-${PACKAGE_VERSION}` }),
-    ...(fixedSize && height ? { height } : {}),
-    ...(fixedSize && width ? { width } : {}),
-  };
-
-  if (disableSrcSet) {
-    const src = constructUrl(rawSrc, srcOptions);
-    return { src, src };
-  }
-
-  if (fixedSize) {
-    const srcSet = buildSrcSet(
-      rawSrc,
-      srcOptions,
-      {
-        disableVariableQuality: disableQualityByDPR,
-      },
-      width,
-      height
-    );
-
-    const src = constructUrl(rawSrc, srcOptions);
-    return { src, srcSet };
-  } else {
-    const { w, h, ...urlParams } = srcOptions;
-    const srcSet = buildSrcSet(rawSrc, { ...urlParams });
-
-    const aspectRatio = imgixParams.ar;
-    let showARWarning =
-      aspectRatio != null && aspectRatioIsValid(aspectRatio) === false;
-    if (
-      NODE_ENV !== "production" &&
-      showARWarning &&
-      config.warnings.invalidARFormat
-    ) {
-      console.warn(
-        `[Imgix] The aspect ratio passed ("${aspectRatio}") is not in the correct format. The correct format is "W:H".`
-      );
-    }
-    const src = constructUrl(rawSrc, srcOptions);
-    return { src, srcSet };
-  }
-}
 
 /**
  * Combines default imgix params with custom imgix params to make a imgix params config object

@@ -7,6 +7,7 @@ Minor syntax modifications have been made
 
 import ImgixClient from "@imgix/js-core";
 import extractQueryParams from "./extractQueryParams";
+import { config } from "./common";
 const PACKAGE_VERSION = require("../package.json").version;
 
 // @see https://www.imgix.com/docs/reference
@@ -170,6 +171,85 @@ function buildURLPublic(src, imgixParams = {}, options = {}) {
   });
 }
 
+/**
+ * Validates that an aspect ratio is in the format w:h. If false is returned, the aspect ratio is in the wrong format.
+ */
+function aspectRatioIsValid(aspectRatio) {
+  if (typeof aspectRatio !== "string") {
+    return false;
+  }
+
+  return /^\d+(\.\d+)?:\d+(\.\d+)?$/.test(aspectRatio);
+}
+
+function warnInvalidAspectRatio(aspectRatio, config) {
+  const NODE_ENV = process.env.NODE_ENV;
+  const showARWarning =
+    aspectRatio != "" && aspectRatioIsValid(aspectRatio) === false;
+  if (
+    NODE_ENV !== "production" &&
+    showARWarning &&
+    config.warnings.invalidARFormat
+  ) {
+    console.warn(
+      `[Imgix] The aspect ratio passed ("${aspectRatio}") is not in the correct format. The correct format is "W:H".`
+    );
+  }
+}
+
+/**
+ * Build a imgix source url with parameters from a raw url
+ */
+function buildSrc({
+  src: inputSrc,
+  width,
+  height,
+  disableLibraryParam,
+  disableSrcSet,
+  imgixParams,
+  disableQualityByDPR,
+}) {
+  const [rawSrc, params] = extractQueryParams(inputSrc);
+  const fixedSize = width != null || height != null;
+
+  const srcOptions = {
+    ...params,
+    ...imgixParams,
+    ...(disableLibraryParam ? {} : { ixlib: `react-${PACKAGE_VERSION}` }),
+    ...(fixedSize && height ? { height } : {}),
+    ...(fixedSize && width ? { width } : {}),
+  };
+
+  if (disableSrcSet) {
+    const src = constructUrl(rawSrc, srcOptions);
+    return { src, src };
+  }
+
+  if (fixedSize) {
+    const srcSet = buildSrcSet(
+      rawSrc,
+      srcOptions,
+      {
+        disableVariableQuality: disableQualityByDPR,
+      },
+      width,
+      height
+    );
+
+    const src = constructUrl(rawSrc, srcOptions);
+
+    return { src, srcSet };
+  } else {
+    warnInvalidAspectRatio(imgixParams.ar || "", config);
+
+    const { w, h, ...urlParams } = srcOptions;
+    const src = constructUrl(rawSrc, srcOptions);
+    const srcSet = buildSrcSet(rawSrc, { ...urlParams });
+
+    return { src, srcSet };
+  }
+}
+
 export default constructUrl;
 
-export { buildURLPublic, buildSrcSet };
+export { buildURLPublic, buildSrc };
