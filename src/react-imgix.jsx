@@ -2,9 +2,7 @@ import PropTypes from "prop-types";
 import React, { Component } from "react";
 import "./array-findindex";
 import { compose, config } from "./common";
-import { PACKAGE_VERSION } from "./constants";
 import constructUrl, { buildSrc } from "./constructUrl";
-import extractQueryParams from "./extractQueryParams";
 import { ShouldComponentUpdateHOC } from "./HOCs";
 
 const NODE_ENV = process.env.NODE_ENV;
@@ -108,28 +106,18 @@ class ReactImgix extends Component {
       ...this.props.attributeConfig,
     };
 
-    const childProps = {
-      ...this.props.htmlAttributes,
-      [attributeConfig.sizes]: this.props.sizes,
-      className: this.props.className,
-      width: width <= 1 ? null : width,
-      height: height <= 1 ? null : height,
-      [attributeConfig.src]: src,
-      ref: (el) => {
-        this.imgRef = el;
-        if (
-          this.props.htmlAttributes !== undefined &&
-          "ref" in this.props.htmlAttributes
-        ) {
-          setParentRef(this.props.htmlAttributes.ref, this.imgRef);
-        }
-      },
-    };
+    const childProps = buildChildProps(
+      this,
+      src,
+      attributeConfig,
+      width,
+      height,
+      "imgRef"
+    );
 
     if (!disableSrcSet) {
       childProps[attributeConfig.srcSet] = srcSet;
     }
-
     return <img {...childProps} />;
   }
 }
@@ -226,22 +214,14 @@ class SourceImpl extends Component {
       ...this.props.attributeConfig,
     };
 
-    const childProps = {
-      ...this.props.htmlAttributes,
-      [attributeConfig.sizes]: this.props.sizes,
-      className: this.props.className,
-      width: width <= 1 ? null : width,
-      height: height <= 1 ? null : height,
-      ref: (el) => {
-        this.sourceRef = el;
-        if (
-          this.props.htmlAttributes !== undefined &&
-          "ref" in this.props.htmlAttributes
-        ) {
-          setParentRef(this.props.htmlAttributes.ref, this.sourceRef);
-        }
-      },
-    };
+    const childProps = buildChildProps(
+      this,
+      src,
+      attributeConfig,
+      width,
+      height,
+      "sourceRef"
+    );
 
     // inside of a <picture> element a <source> element ignores its src
     // attribute in favor of srcSet so we set that with either an actual
@@ -260,6 +240,27 @@ class SourceImpl extends Component {
   }
 }
 SourceImpl.displayName = "ReactImgixSource";
+
+function buildChildProps(obj, src, attributeConfig, width, height, refType) {
+  const childProps = {
+    ...obj.props.htmlAttributes,
+    [attributeConfig.sizes]: obj.props.sizes,
+    className: obj.props.className,
+    width: width <= 1 ? null : width,
+    height: height <= 1 ? null : height,
+    [attributeConfig.src]: src,
+    ref: (el) => {
+      obj[refType] = el;
+      if (
+        obj.props.htmlAttributes !== undefined &&
+        "ref" in obj.props.htmlAttributes
+      ) {
+        setParentRef(obj.props.htmlAttributes.ref, obj[refType]);
+      }
+    },
+  };
+  return childProps;
+}
 
 const ReactImgixWrapped = compose(ShouldComponentUpdateHOC)(ReactImgix);
 const Picture = compose(ShouldComponentUpdateHOC)(PictureImpl);
