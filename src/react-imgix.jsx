@@ -41,17 +41,6 @@ const SHARED_IMGIX_AND_SOURCE_PROP_TYPES = {
   src: PropTypes.string.isRequired,
 };
 
-/**
- * Validates that an aspect ratio is in the format w:h. If false is returned, the aspect ratio is in the wrong format.
- */
-function aspectRatioIsValid(aspectRatio) {
-  if (typeof aspectRatio !== "string") {
-    return false;
-  }
-
-  return /^\d+(\.\d+)?:\d+(\.\d+)?$/.test(aspectRatio);
-}
-
 const setParentRef = (parentRef, el) => {
   if (!parentRef) {
     return;
@@ -64,21 +53,6 @@ const setParentRef = (parentRef, el) => {
     parentRef.current = el;
   }
 };
-
-const buildSrcSetPairWithFixedHeight = (url, targetWidth, fixedHeight, _) =>
-  url + "&h=" + fixedHeight + "&w=" + targetWidth + " " + targetWidth + "w";
-
-const buildSrcSetPairWithTargetWidth = (url, targetWidth, _1, _2) =>
-  url + "&w=" + targetWidth + " " + targetWidth + "w";
-
-const buildDprSrcWithQuality = (url, quality, dpr) =>
-  url + "&q=" + quality + "&dpr=" + dpr + " " + dpr + "x";
-
-const buildDprSrcWithoutQuality = (url, _, dpr) =>
-  url + "&dpr=" + dpr + " " + dpr + "x";
-
-const buildDprSrcWithQualityByDpr = (url, quality, dpr) =>
-  url + "&q=" + quality + "&dpr=" + dpr + " " + dpr + "x";
 
 /**
  * Combines default imgix params with custom imgix params to make a imgix params config object
