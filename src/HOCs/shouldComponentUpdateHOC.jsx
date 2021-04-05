@@ -12,28 +12,26 @@ const ShouldComponentUpdateHOC = (WrappedComponent) => {
       );
 
       const customizer = (oldProp, newProp, key) => {
-        if (key === "children") {
-          return shallowEqual(oldProp, newProp);
-        }
-        if (key === "imgixParams") {
-          return shallowEqual(oldProp, newProp, (a, b) => {
-            if (Array.isArray(a)) {
-              return shallowEqual(a, b);
-            }
+        switch (key) {
+          case "children":
+          case "htmlAttributes":
+          case "attributeConfig":
+            return shallowEqual(oldProp, newProp);
+
+          case "imgixParams":
+            return shallowEqual(oldProp, newProp, (a, b) => {
+              return Array.isArray(a) ? shallowEqual(a, b) : undefined;
+            });
+
+          default:
             return undefined;
-          });
         }
-        if (key === "htmlAttributes") {
-          return shallowEqual(oldProp, newProp);
-        }
-        if (key === "attributeConfig") {
-          return shallowEqual(oldProp, newProp);
-        }
-        return undefined; // handled by shallowEqual
       };
+
       const propsAreEqual = shallowEqual(props, nextProps, customizer);
       return !propsAreEqual;
     };
+
     render() {
       return <WrappedComponent {...this.props} />;
     }
