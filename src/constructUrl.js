@@ -250,6 +250,40 @@ function buildSrc({
   }
 }
 
+const setParentRef = (parentRef, el) => {
+  if (!parentRef) {
+    return;
+  }
+
+  // assign ref based on if it's a callback vs object
+  if (typeof parentRef === "function") {
+    parentRef(el);
+  } else {
+    parentRef.current = el;
+  }
+};
+
+function buildChildProps(obj, src, attributeConfig, width, height, refType) {
+  const childProps = {
+    ...obj.props.htmlAttributes,
+    [attributeConfig.sizes]: obj.props.sizes,
+    className: obj.props.className,
+    width: width <= 1 ? null : width,
+    height: height <= 1 ? null : height,
+    [attributeConfig.src]: src,
+    ref: (el) => {
+      obj[refType] = el;
+      if (
+        obj.props.htmlAttributes !== undefined &&
+        "ref" in obj.props.htmlAttributes
+      ) {
+        setParentRef(obj.props.htmlAttributes.ref, obj[refType]);
+      }
+    },
+  };
+  return childProps;
+}
+
 export default constructUrl;
 
-export { buildURLPublic, buildSrc };
+export { buildURLPublic, buildSrc, buildChildProps };

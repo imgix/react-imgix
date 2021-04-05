@@ -2,7 +2,7 @@ import PropTypes from "prop-types";
 import React, { Component } from "react";
 import "./array-findindex";
 import { compose, config } from "./common";
-import constructUrl, { buildSrc } from "./constructUrl";
+import constructUrl, { buildSrc, buildChildProps } from "./constructUrl";
 import { ShouldComponentUpdateHOC } from "./HOCs";
 
 const NODE_ENV = process.env.NODE_ENV;
@@ -37,19 +37,6 @@ const SHARED_IMGIX_AND_SOURCE_PROP_TYPES = {
   width: PropTypes.number,
   height: PropTypes.number,
   src: PropTypes.string.isRequired,
-};
-
-const setParentRef = (parentRef, el) => {
-  if (!parentRef) {
-    return;
-  }
-
-  // assign ref based on if it's a callback vs object
-  if (typeof parentRef === "function") {
-    parentRef(el);
-  } else {
-    parentRef.current = el;
-  }
 };
 
 /**
@@ -241,26 +228,7 @@ class SourceImpl extends Component {
 }
 SourceImpl.displayName = "ReactImgixSource";
 
-function buildChildProps(obj, src, attributeConfig, width, height, refType) {
-  const childProps = {
-    ...obj.props.htmlAttributes,
-    [attributeConfig.sizes]: obj.props.sizes,
-    className: obj.props.className,
-    width: width <= 1 ? null : width,
-    height: height <= 1 ? null : height,
-    [attributeConfig.src]: src,
-    ref: (el) => {
-      obj[refType] = el;
-      if (
-        obj.props.htmlAttributes !== undefined &&
-        "ref" in obj.props.htmlAttributes
-      ) {
-        setParentRef(obj.props.htmlAttributes.ref, obj[refType]);
-      }
-    },
-  };
-  return childProps;
-}
+
 
 const ReactImgixWrapped = compose(ShouldComponentUpdateHOC)(ReactImgix);
 const Picture = compose(ShouldComponentUpdateHOC)(PictureImpl);
