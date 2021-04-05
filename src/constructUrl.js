@@ -153,12 +153,6 @@ function extractClientAndPathComponents(src) {
   return { client, pathComponents };
 }
 
-function buildSrcSet(rawSrc, params = {}, options = {}, width, height) {
-  const { client, pathComponents } = extractClientAndPathComponents(rawSrc);
-  const compactedParams = compactParamKeys(params, width, height);
-  return client.buildSrcSet(pathComponents.join("/"), compactedParams, options);
-}
-
 function buildURLPublic(src, imgixParams = {}, options = {}) {
   const { disableLibraryParam } = options;
 
@@ -169,32 +163,6 @@ function buildURLPublic(src, imgixParams = {}, options = {}) {
     ...imgixParams,
     ...(disableLibraryParam ? {} : { ixlib: `react-${PACKAGE_VERSION}` }),
   });
-}
-
-/**
- * Validates that an aspect ratio is in the format w:h. If false is returned, the aspect ratio is in the wrong format.
- */
-function aspectRatioIsValid(aspectRatio) {
-  if (typeof aspectRatio !== "string") {
-    return false;
-  }
-
-  return /^\d+(\.\d+)?:\d+(\.\d+)?$/.test(aspectRatio);
-}
-
-function warnInvalidAspectRatio(aspectRatio, config) {
-  const NODE_ENV = process.env.NODE_ENV;
-  const showARWarning =
-    aspectRatio != "" && aspectRatioIsValid(aspectRatio) === false;
-  if (
-    NODE_ENV !== "production" &&
-    showARWarning &&
-    config.warnings.invalidARFormat
-  ) {
-    console.warn(
-      `[Imgix] The aspect ratio passed ("${aspectRatio}") is not in the correct format. The correct format is "W:H".`
-    );
-  }
 }
 
 /**
@@ -250,18 +218,37 @@ function buildSrc({
   }
 }
 
-const setParentRef = (parentRef, el) => {
-  if (!parentRef) {
-    return;
+function buildSrcSet(rawSrc, params = {}, options = {}, width, height) {
+  const { client, pathComponents } = extractClientAndPathComponents(rawSrc);
+  const compactedParams = compactParamKeys(params, width, height);
+  return client.buildSrcSet(pathComponents.join("/"), compactedParams, options);
+}
+
+function warnInvalidAspectRatio(aspectRatio, config) {
+  const NODE_ENV = process.env.NODE_ENV;
+  const showARWarning =
+    aspectRatio != "" && aspectRatioIsValid(aspectRatio) === false;
+  if (
+    NODE_ENV !== "production" &&
+    showARWarning &&
+    config.warnings.invalidARFormat
+  ) {
+    console.warn(
+      `[Imgix] The aspect ratio passed ("${aspectRatio}") is not in the correct format. The correct format is "W:H".`
+    );
+  }
+}
+
+/**
+ * Validates that an aspect ratio is in the format w:h. If false is returned, the aspect ratio is in the wrong format.
+ */
+function aspectRatioIsValid(aspectRatio) {
+  if (typeof aspectRatio !== "string") {
+    return false;
   }
 
-  // assign ref based on if it's a callback vs object
-  if (typeof parentRef === "function") {
-    parentRef(el);
-  } else {
-    parentRef.current = el;
-  }
-};
+  return /^\d+(\.\d+)?:\d+(\.\d+)?$/.test(aspectRatio);
+}
 
 function buildChildProps(obj, src, attributeConfig, width, height, refType) {
   const childProps = {
@@ -283,6 +270,19 @@ function buildChildProps(obj, src, attributeConfig, width, height, refType) {
   };
   return childProps;
 }
+
+const setParentRef = (parentRef, el) => {
+  if (!parentRef) {
+    return;
+  }
+
+  // assign ref based on if it's a callback vs object
+  if (typeof parentRef === "function") {
+    parentRef(el);
+  } else {
+    parentRef.current = el;
+  }
+};
 
 export default constructUrl;
 
