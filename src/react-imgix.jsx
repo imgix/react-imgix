@@ -2,7 +2,7 @@ import PropTypes from "prop-types";
 import React, { Component } from "react";
 import "./array-findindex";
 import { compose, config } from "./common";
-import constructUrl, { buildSrc, buildChildProps } from "./constructUrl";
+import { buildSrc, buildChildProps } from "./constructUrl";
 import { ShouldComponentUpdateHOC } from "./HOCs";
 
 const NODE_ENV = process.env.NODE_ENV;
