@@ -1,7 +1,6 @@
 import sinon from "sinon";
 import React from "react";
-import { shallow as enzymeShallow, mount } from "enzyme";
-import { shallowUntilTarget } from "../helpers";
+import { shallow, mount } from "enzyme";
 import targetWidths from "targetWidths";
 import { DPR_QUALITY } from "../../src/constants";
 
@@ -14,13 +13,6 @@ import Imgix, {
 } from "react-imgix";
 import { __BackgroundImpl } from "react-imgix-bg";
 
-function shallow(element, target = __ReactImgixImpl, shallowOptions) {
-  return shallowUntilTarget(element, target, {
-    shallowOptions: shallowOptions || {
-      disableLifecycleMethods: true,
-    },
-  });
-}
 const shallowSource = (element) => shallow(element, __SourceImpl);
 const shallowPicture = (element) => shallow(element, __PictureImpl);
 

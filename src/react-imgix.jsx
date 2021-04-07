@@ -3,7 +3,6 @@ import React, { Component } from "react";
 import "./array-findindex";
 import { compose, config } from "./common";
 import { buildSrc, buildChildProps } from "./constructUrl";
-import { ShouldComponentUpdateHOC } from "./HOCs";
 
 const NODE_ENV = process.env.NODE_ENV;
 
@@ -230,9 +229,9 @@ SourceImpl.displayName = "ReactImgixSource";
 
 
 
-const ReactImgixWrapped = compose(ShouldComponentUpdateHOC)(ReactImgix);
-const Picture = compose(ShouldComponentUpdateHOC)(PictureImpl);
-const Source = compose(ShouldComponentUpdateHOC)(SourceImpl);
+const ReactImgixWrapped = ReactImgix;
+const Picture = PictureImpl;
+const Source = SourceImpl;
 
 export default ReactImgixWrapped;
 export {
