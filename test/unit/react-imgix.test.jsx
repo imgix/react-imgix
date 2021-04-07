@@ -38,12 +38,6 @@ afterEach(() => {
   global.console = oldConsole;
 });
 
-function sleep(ms) {
-  return new Promise((resolve) => {
-    setTimeout(resolve, ms);
-  });
-}
-
 describe("When in default mode", () => {
   it("the rendered element's type should be img", () => {
     const sut = shallow(<Imgix src={src} sizes="100vw" />);

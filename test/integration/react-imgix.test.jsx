@@ -1,11 +1,10 @@
 import Imgix from "react-imgix";
-import * as ReactDOM from "react-dom";
 import { Background } from "react-imgix-bg";
 import targetWidths from "targetWidths";
 import Uri from "jsuri";
 
 import React from "react";
-import { mount, shallow } from "enzyme";
+import { mount } from "enzyme";
 
 const isIE = (() => {
   const ua = window.navigator.userAgent;
@@ -126,10 +125,6 @@ beforeEach(() => {
 afterEach(() => {
   global.document.body.removeChild(containerDiv);
 });
-
-const fullRender = (markup) => {
-  return ReactDOM.render(markup, containerDiv);
-};
 
 const renderIntoContainer = (element) => {
   return mount(element, { attachTo: containerDiv });

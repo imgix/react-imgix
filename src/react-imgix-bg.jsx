@@ -6,8 +6,6 @@ import extractQueryParams from "./extractQueryParams";
 import findClosest from "./findClosest";
 import targetWidths from "./targetWidths";
 
-const noop = () => {};
-
 const findNearestWidth = (actualWidth) =>
   findClosest(actualWidth, targetWidths);
 
