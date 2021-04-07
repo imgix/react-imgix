@@ -1,7 +1,7 @@
 import PropTypes from "prop-types";
-import React, { Component } from "react";
+import React from "react";
 import "./array-findindex";
-import { compose, config } from "./common";
+import { config } from "./common";
 import { buildSrc, buildChildProps } from "./constructUrl";
 
 const NODE_ENV = process.env.NODE_ENV;
@@ -48,7 +48,7 @@ function imgixParams(props) {
 /**
  * React component used to render <img> elements with Imgix
  */
-class ReactImgix extends Component {
+class ReactImgix extends React.PureComponent {
   static propTypes = { ...SHARED_IMGIX_AND_SOURCE_PROP_TYPES };
   static defaultProps = {
     disableSrcSet: false,
@@ -112,7 +112,7 @@ ReactImgix.displayName = "ReactImgix";
 /**
  * React component used to render <picture> elements with Imgix
  */
-class PictureImpl extends Component {
+class PictureImpl extends React.PureComponent {
   static propTypes = { ...COMMON_PROP_TYPES, children: PropTypes.any };
   static defaultProps = { onMounted: noop };
 
@@ -170,7 +170,7 @@ PictureImpl.displayName = "ReactImgixPicture";
 /**
  * React component used to render <source> elements with Imgix
  */
-class SourceImpl extends Component {
+class SourceImpl extends React.PureComponent {
   static propTypes = { ...SHARED_IMGIX_AND_SOURCE_PROP_TYPES };
   static defaultProps = {
     disableSrcSet: false,
