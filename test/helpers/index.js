@@ -1,1 +1,0 @@
-export { shallowUntilTarget } from "./shallowUntilTarget";
