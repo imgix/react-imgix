@@ -168,31 +168,14 @@ function buildURLPublic(src, imgixParams = {}, options = {}) {
 /**
  * Build a imgix source url with parameters from a raw url
  */
-function buildSrc({
-  src: inputSrc,
+function buildSrc(
+  rawSrc,
+  srcOptions,
   width,
   height,
-  disableLibraryParam,
-  disableSrcSet,
-  imgixParams,
+  fixedSize,
   disableQualityByDPR,
-}) {
-  const [rawSrc, params] = extractQueryParams(inputSrc);
-  const fixedSize = width != null || height != null;
-
-  const srcOptions = {
-    ...params,
-    ...imgixParams,
-    ...(disableLibraryParam ? {} : { ixlib: `react-${PACKAGE_VERSION}` }),
-    ...(fixedSize && height ? { height } : {}),
-    ...(fixedSize && width ? { width } : {}),
-  };
-
-  if (disableSrcSet) {
-    const src = constructUrl(rawSrc, srcOptions);
-    return { src, src };
-  }
-
+) {
   if (fixedSize) {
     const srcSet = buildSrcSet(
       rawSrc,
@@ -204,17 +187,14 @@ function buildSrc({
       height
     );
 
-    const src = constructUrl(rawSrc, srcOptions);
-
-    return { src, srcSet };
+    return srcSet;
   } else {
-    warnInvalidAspectRatio(imgixParams.ar || "", config);
+    warnInvalidAspectRatio(srcOptions.ar || "", config);
 
     const { w, h, ...urlParams } = srcOptions;
-    const src = constructUrl(rawSrc, srcOptions);
     const srcSet = buildSrcSet(rawSrc, { ...urlParams });
 
-    return { src, srcSet };
+    return srcSet;
   }
 }
 
@@ -250,7 +230,48 @@ function aspectRatioIsValid(aspectRatio) {
   return /^\d+(\.\d+)?:\d+(\.\d+)?$/.test(aspectRatio);
 }
 
-function buildChildProps(obj, src, attributeConfig, width, height, refType) {
+function buildChildProps(obj, attributeConfig, refType) {
+  const {
+    src: inputSrc,
+    type,
+    width,
+    height,
+    disableLibraryParam,
+    disableSrcSet,
+    imgixParams,
+    disableQualityByDPR } = obj.props;
+
+  const [rawSrc, params] = extractQueryParams(inputSrc);
+
+  const fixedSize = width != null || height != null;
+  const srcOptions = {
+    ...params,
+    ...{ auto: ["format"], ...imgixParams },
+    ...(disableLibraryParam ? {} : { ixlib: `react-${PACKAGE_VERSION}` }),
+    ...(fixedSize && height ? { height } : {}),
+    ...(fixedSize && width ? { width } : {}),
+  };
+
+  const src = constructUrl(rawSrc, srcOptions);
+  const childProps = buildChildSrcProps(obj, src, attributeConfig, width, height, refType);
+
+  if (refType === "img" && !disableSrcSet) {
+    const srcSet = buildSrc(rawSrc, srcOptions, width, height, fixedSize, disableQualityByDPR);
+    childProps[attributeConfig.srcSet] = srcSet;
+  }
+
+
+  if (refType === "source" && disableSrcSet) {
+      childProps[attributeConfig.srcSet] = src;
+  } else if (refType == "source") {
+      const srcSet = buildSrc(rawSrc, srcOptions, width, height, fixedSize, disableQualityByDPR);
+      childProps[attributeConfig.srcSet] = `${srcSet}`;
+  }
+
+  return childProps;
+}
+
+function buildChildSrcProps(obj, src, attributeConfig, width, height, refType) {
   const childProps = {
     ...obj.props.htmlAttributes,
     [attributeConfig.sizes]: obj.props.sizes,
@@ -259,7 +280,7 @@ function buildChildProps(obj, src, attributeConfig, width, height, refType) {
     height: height <= 1 ? null : height,
     [attributeConfig.src]: src,
     ref: (el) => {
-      obj[refType] = el;
+      obj[`${refType}Ref`] = el;
       if (
         obj.props.htmlAttributes !== undefined &&
         "ref" in obj.props.htmlAttributes

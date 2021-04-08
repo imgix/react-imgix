@@ -65,8 +65,6 @@ class ReactImgix extends React.PureComponent {
   }
 
   render() {
-    const { disableSrcSet, type, width, height } = this.props;
-
     // Pre-render checks
     if (NODE_ENV !== "production" && config.warnings.sizesAttribute) {
       if (
@@ -81,12 +79,6 @@ class ReactImgix extends React.PureComponent {
       }
     }
 
-    const { src, srcSet } = buildSrc({
-      ...this.props,
-      type: "img",
-      imgixParams: imgixParams(this.props),
-    });
-
     const attributeConfig = {
       ...defaultAttributeMap,
       ...this.props.attributeConfig,
@@ -94,16 +86,10 @@ class ReactImgix extends React.PureComponent {
 
     const childProps = buildChildProps(
       this,
-      src,
       attributeConfig,
-      width,
-      height,
-      "imgRef"
+      "img"
     );
 
-    if (!disableSrcSet) {
-      childProps[attributeConfig.srcSet] = srcSet;
-    }
     return <img {...childProps} />;
   }
 }
@@ -187,13 +173,6 @@ class SourceImpl extends React.PureComponent {
   }
 
   render() {
-    const { disableSrcSet, width, height } = this.props;
-
-    const { src, srcSet } = buildSrc({
-      ...this.props,
-      type: "source",
-      imgixParams: imgixParams(this.props),
-    });
 
     const attributeConfig = {
       ...defaultAttributeMap,
@@ -202,21 +181,10 @@ class SourceImpl extends React.PureComponent {
 
     const childProps = buildChildProps(
       this,
-      src,
       attributeConfig,
-      width,
-      height,
-      "sourceRef"
+      "source"
     );
 
-    // inside of a <picture> element a <source> element ignores its src
-    // attribute in favor of srcSet so we set that with either an actual
-    // srcSet or a single src
-    if (disableSrcSet) {
-      childProps[attributeConfig.srcSet] = src;
-    } else {
-      childProps[attributeConfig.srcSet] = `${srcSet}`;
-    }
     // for now we'll take media from htmlAttributes which isn't ideal because
     //   a) this isn't an <img>
     //   b) passing objects as props means that react will always rerender
