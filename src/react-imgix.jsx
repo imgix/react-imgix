@@ -26,17 +26,20 @@ const COMMON_PROP_TYPES = {
   htmlAttributes: PropTypes.object,
 };
 
-const SHARED_IMGIX_AND_SOURCE_PROP_TYPES = {
-  ...COMMON_PROP_TYPES,
-  disableQualityByDPR: PropTypes.bool,
-  disableSrcSet: PropTypes.bool,
-  disableLibraryParam: PropTypes.bool,
-  imgixParams: PropTypes.object,
-  sizes: PropTypes.string,
-  width: PropTypes.number,
-  height: PropTypes.number,
-  src: PropTypes.string.isRequired,
-};
+const SHARED_IMGIX_AND_SOURCE_PROP_TYPES = Object.assign(
+  {},
+  COMMON_PROP_TYPES,
+  {
+    disableQualityByDPR: PropTypes.bool,
+    disableSrcSet: PropTypes.bool,
+    disableLibraryParam: PropTypes.bool,
+    imgixParams: PropTypes.object,
+    sizes: PropTypes.string,
+    width: PropTypes.number,
+    height: PropTypes.number,
+    src: PropTypes.string.isRequired,
+  }
+);
 
 /**
  * Combines default imgix params with custom imgix params to make a imgix params config object
@@ -49,7 +52,7 @@ function imgixParams(props) {
  * React component used to render <img> elements with Imgix
  */
 class ReactImgix extends React.PureComponent {
-  static propTypes = { ...SHARED_IMGIX_AND_SOURCE_PROP_TYPES };
+  static propTypes = Object.assign({}, SHARED_IMGIX_AND_SOURCE_PROP_TYPES);
   static defaultProps = {
     disableSrcSet: false,
     onMounted: noop,
@@ -79,16 +82,13 @@ class ReactImgix extends React.PureComponent {
       }
     }
 
-    const attributeConfig = {
-      ...defaultAttributeMap,
-      ...this.props.attributeConfig,
-    };
-
-    const childProps = buildChildProps(
-      this,
-      attributeConfig,
-      "img"
+    const attributeConfig = Object.assign(
+      {},
+      defaultAttributeMap,
+      this.props.attributeConfig
     );
+
+    const childProps = buildChildProps(this, attributeConfig, "img");
 
     return <img {...childProps} />;
   }
@@ -99,7 +99,9 @@ ReactImgix.displayName = "ReactImgix";
  * React component used to render <picture> elements with Imgix
  */
 class PictureImpl extends React.PureComponent {
-  static propTypes = { ...COMMON_PROP_TYPES, children: PropTypes.any };
+  static propTypes = Object.assign({}, COMMON_PROP_TYPES, {
+    children: PropTypes.any,
+  });
   static defaultProps = { onMounted: noop };
 
   constructor(props) {
@@ -157,7 +159,7 @@ PictureImpl.displayName = "ReactImgixPicture";
  * React component used to render <source> elements with Imgix
  */
 class SourceImpl extends React.PureComponent {
-  static propTypes = { ...SHARED_IMGIX_AND_SOURCE_PROP_TYPES };
+  static propTypes = Object.assign({}, SHARED_IMGIX_AND_SOURCE_PROP_TYPES);
   static defaultProps = {
     disableSrcSet: false,
     onMounted: noop,
@@ -173,17 +175,13 @@ class SourceImpl extends React.PureComponent {
   }
 
   render() {
-
-    const attributeConfig = {
-      ...defaultAttributeMap,
-      ...this.props.attributeConfig,
-    };
-
-    const childProps = buildChildProps(
-      this,
-      attributeConfig,
-      "source"
+    const attributeConfig = Object.assign(
+      {},
+      defaultAttributeMap,
+      this.props.attributeConfig
     );
+
+    const childProps = buildChildProps(this, attributeConfig, "source");
 
     // for now we'll take media from htmlAttributes which isn't ideal because
     //   a) this isn't an <img>
@@ -194,8 +192,6 @@ class SourceImpl extends React.PureComponent {
   }
 }
 SourceImpl.displayName = "ReactImgixSource";
-
-
 
 const ReactImgixWrapped = ReactImgix;
 const Picture = PictureImpl;

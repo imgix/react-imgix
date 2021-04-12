@@ -10,6 +10,10 @@ import extractQueryParams from "./extractQueryParams";
 import { config } from "./common";
 const PACKAGE_VERSION = require("../package.json").version;
 
+const defaultImgixParams = {
+  auto: ["format"],
+};
+
 // @see https://www.imgix.com/docs/reference
 var PARAM_EXPANSION = Object.freeze({
   // Adjustment
@@ -158,11 +162,15 @@ function buildURLPublic(src, imgixParams = {}, options = {}) {
 
   const [rawSrc, params] = extractQueryParams(src);
 
-  return constructUrl(rawSrc, {
-    ...params,
-    ...imgixParams,
-    ...(disableLibraryParam ? {} : { ixlib: `react-${PACKAGE_VERSION}` }),
-  });
+  return constructUrl(
+    rawSrc,
+    Object.assign(
+      {},
+      params,
+      imgixParams,
+      disableLibraryParam ? {} : { ixlib: `react-${PACKAGE_VERSION}` }
+    )
+  );
 }
 
 /**
@@ -174,7 +182,7 @@ function buildSrc(
   width,
   height,
   fixedSize,
-  disableQualityByDPR,
+  disableQualityByDPR
 ) {
   if (fixedSize) {
     const srcSet = buildSrcSet(
@@ -192,7 +200,7 @@ function buildSrc(
     warnInvalidAspectRatio(srcOptions.ar || "", config);
 
     const { w, h, ...urlParams } = srcOptions;
-    const srcSet = buildSrcSet(rawSrc, { ...urlParams });
+    const srcSet = buildSrcSet(rawSrc, Object.assign({}, urlParams));
 
     return srcSet;
   }
@@ -239,41 +247,62 @@ function buildChildProps(obj, attributeConfig, refType) {
     disableLibraryParam,
     disableSrcSet,
     imgixParams,
-    disableQualityByDPR } = obj.props;
+    disableQualityByDPR,
+  } = obj.props;
 
   const [rawSrc, params] = extractQueryParams(inputSrc);
 
   const fixedSize = width != null || height != null;
-  const srcOptions = {
-    ...params,
-    ...{ auto: ["format"], ...imgixParams },
-    ...(disableLibraryParam ? {} : { ixlib: `react-${PACKAGE_VERSION}` }),
-    ...(fixedSize && height ? { height } : {}),
-    ...(fixedSize && width ? { width } : {}),
-  };
+  const srcOptions = Object.assign(
+    {},
+    params,
+    Object.assign({}, defaultImgixParams, imgixParams),
+    disableLibraryParam ? {} : { ixlib: `react-${PACKAGE_VERSION}` },
+    fixedSize && height ? { height } : {},
+    fixedSize && width ? { width } : {}
+  );
 
   const src = constructUrl(rawSrc, srcOptions);
-  const childProps = buildChildSrcProps(obj, src, attributeConfig, width, height, refType);
+  const childProps = buildChildSrcProps(
+    obj,
+    src,
+    attributeConfig,
+    width,
+    height,
+    refType
+  );
 
   if (refType === "img" && !disableSrcSet) {
-    const srcSet = buildSrc(rawSrc, srcOptions, width, height, fixedSize, disableQualityByDPR);
+    const srcSet = buildSrc(
+      rawSrc,
+      srcOptions,
+      width,
+      height,
+      fixedSize,
+      disableQualityByDPR
+    );
     childProps[attributeConfig.srcSet] = srcSet;
   }
 
-
   if (refType === "source" && disableSrcSet) {
-      childProps[attributeConfig.srcSet] = src;
+    childProps[attributeConfig.srcSet] = src;
   } else if (refType == "source") {
-      const srcSet = buildSrc(rawSrc, srcOptions, width, height, fixedSize, disableQualityByDPR);
-      childProps[attributeConfig.srcSet] = `${srcSet}`;
+    const srcSet = buildSrc(
+      rawSrc,
+      srcOptions,
+      width,
+      height,
+      fixedSize,
+      disableQualityByDPR
+    );
+    childProps[attributeConfig.srcSet] = `${srcSet}`;
   }
 
   return childProps;
 }
 
 function buildChildSrcProps(obj, src, attributeConfig, width, height, refType) {
-  const childProps = {
-    ...obj.props.htmlAttributes,
+  const childProps = Object.assign({}, obj.props.htmlAttributes, {
     [attributeConfig.sizes]: obj.props.sizes,
     className: obj.props.className,
     width: width <= 1 ? null : width,
@@ -288,7 +317,7 @@ function buildChildSrcProps(obj, src, attributeConfig, width, height, refType) {
         setParentRef(obj.props.htmlAttributes.ref, obj[refType]);
       }
     },
-  };
+  });
   return childProps;
 }
 
