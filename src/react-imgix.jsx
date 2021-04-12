@@ -100,14 +100,13 @@ function buildSrc({
 
   const [rawSrc, params] = extractQueryParams(inputSrc);
 
-  const srcOptions = Object.assign(
-    {},
-    params,
-    imgixParams,
-    disableLibraryParam ? {} : { ixlib: `react-${PACKAGE_VERSION}` },
-    fixedSize && height ? { height } : {},
-    fixedSize && width ? { width } : {}
-  );
+  const srcOptions = {
+    ...params,
+    ...imgixParams,
+    ...(disableLibraryParam ? {} : { ixlib: `react-${PACKAGE_VERSION}` }),
+    ...(fixedSize && height ? { height } : {}),
+    ...(fixedSize && width ? { width } : {})
+  };
 
   const src = constructUrl(rawSrc, srcOptions);
 
