@@ -6,6 +6,6 @@ export const DPR_QUALITY = {
   q_dpr5: 20,
 };
 
-export const PACKAGE_VERSION = "9.0.3";
+export const PACKAGE_VERSION = "9.0.4";
 
 export const DPR_QUALITY_VALUES = Object.values(DPR_QUALITY);
