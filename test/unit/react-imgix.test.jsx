@@ -3,7 +3,6 @@ import React from "react";
 import { shallow as enzymeShallow, mount } from "enzyme";
 import { shallowUntilTarget } from "../helpers";
 import targetWidths from "targetWidths";
-import { DPR_QUALITY } from "../../src/constants";
 
 import Imgix, {
   __ReactImgixImpl,
@@ -13,6 +12,15 @@ import Imgix, {
   __PictureImpl,
 } from "react-imgix";
 import { __BackgroundImpl } from "react-imgix-bg";
+
+const DPR_QUALITY = {
+  q_dpr1: 75,
+  q_dpr2: 50,
+  q_dpr3: 35,
+  q_dpr4: 23,
+  q_dpr5: 20,
+};
+
 
 function shallow(element, target = __ReactImgixImpl, shallowOptions) {
   return shallowUntilTarget(element, target, {

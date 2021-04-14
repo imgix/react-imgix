@@ -5,7 +5,6 @@ Licensed under the Apache License 2.0, seen https://github.com/coursera/react-im
 Minor syntax modifications have been made
 */
 
-var Base64 = require("js-base64").Base64;
 const PACKAGE_VERSION = require("../package.json").version;
 import extractQueryParams from "./extractQueryParams";
 import ImgixClient from "@imgix/js-core";

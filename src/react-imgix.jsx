@@ -2,12 +2,10 @@ import PropTypes from "prop-types";
 import React, { Component } from "react";
 import "./array-findindex";
 import { compose, config } from "./common";
-import { DPR_QUALITY_VALUES, PACKAGE_VERSION } from "./constants";
+import { PACKAGE_VERSION } from "./constants";
 import constructUrl, {compactParamKeys, extractClientAndPathComponents } from "./constructUrl";
 import extractQueryParams from "./extractQueryParams";
 import { ShouldComponentUpdateHOC } from "./HOCs";
-import targetWidths from "./targetWidths";
-import ImgixClient from "@imgix/js-core"
 
 const NODE_ENV = process.env.NODE_ENV;
 
