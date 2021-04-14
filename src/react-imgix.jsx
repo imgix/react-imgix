@@ -3,7 +3,10 @@ import React, { Component } from "react";
 import "./array-findindex";
 import { compose, config } from "./common";
 import { PACKAGE_VERSION } from "./constants";
-import constructUrl, {compactParamKeys, extractClientAndPathComponents } from "./constructUrl";
+import constructUrl, {
+  compactParamKeys,
+  extractClientAndPathComponents,
+} from "./constructUrl";
 import extractQueryParams from "./extractQueryParams";
 import { ShouldComponentUpdateHOC } from "./HOCs";
 
@@ -21,7 +24,7 @@ const defaultAttributeMap = {
   sizes: "sizes",
 };
 
-const noop = () => { };
+const noop = () => {};
 
 const COMMON_PROP_TYPES = {
   className: PropTypes.string,
@@ -68,12 +71,11 @@ const setParentRef = (parentRef, el) => {
   }
 };
 
-function buildSrcSet(rawSrc, params = {}, options = {}, width, height) {
+function buildSrcSet(rawSrc, params = {}, options = {}) {
   const { client, pathComponents } = extractClientAndPathComponents(rawSrc);
-  const compactedParams = compactParamKeys(params, width, height);
+  const compactedParams = compactParamKeys(params);
   return client.buildSrcSet(pathComponents.join("/"), compactedParams, options);
 }
-
 
 /**
  * Build a imgix source url with parameters from a raw url
@@ -109,22 +111,27 @@ function buildSrc({
     srcSet = src;
   } else {
     if (fixedSize) {
-      const { q, ...urlParams } = srcOptions;
+      const { width, w, height, h, q, ...urlParams } = srcOptions;
       if (q) {
         urlParams["q"] = q;
       }
 
-      srcSet = buildSrcSet(
-      rawSrc,
-      urlParams,
-      {
+      const finalWidth = width || w;
+      const finalHeight = height || h;
+
+      if (finalWidth) {
+        urlParams["w"] = finalWidth;
+      }
+
+      if (finalHeight) {
+        urlParams["h"] = finalHeight;
+      }
+
+      srcSet = buildSrcSet(rawSrc, urlParams, {
         disableVariableQuality: disableQualityByDPR,
-      },
-      width,
-      height
-    );
+      });
     } else {
-      const { width, w, height, h, ...urlParams} = srcOptions;
+      const { width, w, height, h, ...urlParams } = srcOptions;
 
       const aspectRatio = imgixParams.ar;
       let showARWarning =

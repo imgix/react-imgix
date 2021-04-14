@@ -121,7 +121,7 @@ function constructUrl(src, longOptions) {
   return client.buildURL(pathComponents.join("/"), params);
 }
 
-function compactParamKeys(longOptions, width, height) {
+function compactParamKeys(longOptions) {
   const keys = Object.keys(longOptions);
   const keysLength = keys.length;
   const params = {};
@@ -134,13 +134,6 @@ function compactParamKeys(longOptions, width, height) {
     }
   }
 
-  if (width) {
-    params["w"] = width;
-  }
-
-  if (height) {
-    params["h"] = height;
-  }
   return params;
 }
 

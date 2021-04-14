@@ -21,7 +21,6 @@ const DPR_QUALITY = {
   q_dpr5: 20,
 };
 
-
 function shallow(element, target = __ReactImgixImpl, shallowOptions) {
   return shallowUntilTarget(element, target, {
     shallowOptions: shallowOptions || {
