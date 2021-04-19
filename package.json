@@ -51,8 +51,8 @@
   },
   "peerDependencies": {
     "prop-types": ">=15.5.6",
-    "react": "15.x || 16.x || 17.x",
-    "react-dom": "15.x || 16.x || 17.x"
+    "react": "15.x || 16.x || 17.x || 17.x",
+    "react-dom": "15.x || 16.x || 17.x || 17.x"
   },
   "dependencies": {
     "js-base64": "~2.6.0",
@@ -114,10 +114,10 @@
     "mocha": "8.3.2",
     "prettier": "2.2.1",
     "puppeteer": "8.0.0",
-    "react": "16.14.0",
+    "react": "17.0.2",
     "react-addons-test-utils": "15.6.2",
-    "react-dom": "16.14.0",
-    "react-test-renderer": "16.14.0",
+    "react-dom": "17.0.2",
+    "react-test-renderer": "17.0.2",
     "read-pkg-up": "5.0.0",
     "rimraf": "3.0.2",
     "sinon": "10.0.0",
