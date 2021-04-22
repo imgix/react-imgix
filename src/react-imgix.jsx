@@ -88,7 +88,6 @@ function buildSrc({
   disableSrcSet,
   imgixParams,
   disableQualityByDPR,
-  sizes,
 }) {
   const fixedSize = width != null || height != null;
 
@@ -136,17 +135,6 @@ function buildSrc({
       const aspectRatio = imgixParams.ar;
       let showARWarning =
         aspectRatio != null && aspectRatioIsValid(aspectRatio) === false;
-
-      const finalWidth = width || w;
-      const finalHeight = height || h;
-
-      if (finalWidth && !sizes) {
-        urlParams["w"] = finalWidth;
-      }
-
-      if (finalHeight && !sizes) {
-        urlParams["h"] = finalHeight;
-      }
 
       srcSet = buildSrcSet(rawSrc, urlParams);
 
