@@ -5,6 +5,7 @@ import constructUrl from "./constructUrl";
 import extractQueryParams from "./extractQueryParams";
 import findClosest from "./findClosest";
 import targetWidths from "./targetWidths";
+import { shallowEqual } from "./common";
 
 const noop = () => {};
 
@@ -46,7 +47,17 @@ class BackgroundImpl extends React.Component {
       return true;
     }
 
-    return false;
+    // If we made it here, we need to check if the "top-level"
+    // props have changed (e.g. disableLibraryParam).
+    const shallowPropsEqual = shallowEqual(this.props, nextProps);
+
+    // We also need to check the imgixParams.
+    const shallowParamsEqual = shallowEqual(
+      this.props.imgixParams,
+      nextProps.imgixParams
+    );
+
+    return shallowPropsEqual && shallowParamsEqual;
   }
 
   render() {
