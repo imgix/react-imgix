@@ -1,3 +1,10 @@
+## [9.1.0](https://github.com/imgix/react-imgix/compare/v9.0.4...v9.1.0) (2021-04-23)
+
+
+### Features
+
+* integrate @imgix/js-core into react-imgix ([#780](https://github.com/imgix/react-imgix/issues/780)) ([690e7b6](https://github.com/imgix/react-imgix/commit/690e7b6279aba5aaef797230fdf59e17ae388c5e)), closes [#763](https://github.com/imgix/react-imgix/issues/763)
+
 ### [9.0.4](https://github.com/imgix/react-imgix/compare/v9.0.3...v9.0.4) (2021-04-14)
 
 # Changelog
