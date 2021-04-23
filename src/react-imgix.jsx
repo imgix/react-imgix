@@ -2,11 +2,13 @@ import PropTypes from "prop-types";
 import React, { Component } from "react";
 import "./array-findindex";
 import { compose, config } from "./common";
-import { DPR_QUALITY_VALUES, PACKAGE_VERSION } from "./constants";
-import constructUrl from "./constructUrl";
+import { PACKAGE_VERSION } from "./constants";
+import constructUrl, {
+  compactParamKeys,
+  extractClientAndPathComponents,
+} from "./constructUrl";
 import extractQueryParams from "./extractQueryParams";
 import { ShouldComponentUpdateHOC } from "./HOCs";
-import targetWidths from "./targetWidths";
 
 const NODE_ENV = process.env.NODE_ENV;
 
@@ -69,20 +71,11 @@ const setParentRef = (parentRef, el) => {
   }
 };
 
-const buildSrcSetPairWithFixedHeight = (url, targetWidth, fixedHeight, _) =>
-  url + "&h=" + fixedHeight + "&w=" + targetWidth + " " + targetWidth + "w";
-
-const buildSrcSetPairWithTargetWidth = (url, targetWidth, _1, _2) =>
-  url + "&w=" + targetWidth + " " + targetWidth + "w";
-
-const buildDprSrcWithQuality = (url, quality, dpr) =>
-  url + "&q=" + quality + "&dpr=" + dpr + " " + dpr + "x";
-
-const buildDprSrcWithoutQuality = (url, _, dpr) =>
-  url + "&dpr=" + dpr + " " + dpr + "x";
-
-const buildDprSrcWithQualityByDpr = (url, quality, dpr) =>
-  url + "&q=" + quality + "&dpr=" + dpr + " " + dpr + "x";
+function buildSrcSet(rawSrc, params = {}, options = {}) {
+  const { client, pathComponents } = extractClientAndPathComponents(rawSrc);
+  const compactedParams = compactParamKeys(params);
+  return client.buildSrcSet(pathComponents.join("/"), compactedParams, options);
+}
 
 /**
  * Build a imgix source url with parameters from a raw url
@@ -117,43 +110,33 @@ function buildSrc({
     srcSet = src;
   } else {
     if (fixedSize) {
-      const { q, ...urlParams } = srcOptions;
-      const constructedUrl = constructUrl(rawSrc, urlParams);
-
-      let srcFn = buildDprSrcWithQualityByDpr;
+      const { width, w, height, h, q, ...urlParams } = srcOptions;
       if (q) {
-        srcFn = buildDprSrcWithQuality;
-      } else if (disableQualityByDPR) {
-        srcFn = buildDprSrcWithoutQuality;
+        urlParams["q"] = q;
       }
 
-      srcSet = "";
-      const len = DPR_QUALITY_VALUES.length;
-      for (let i = 0; i < len; i++) {
-        const quality = DPR_QUALITY_VALUES[i];
-        srcSet += srcFn(constructedUrl, q || quality, i + 1) + ", ";
+      const finalWidth = width || w;
+      const finalHeight = height || h;
+
+      if (finalWidth) {
+        urlParams["w"] = finalWidth;
       }
-      srcSet = srcSet.slice(0, -2);
+
+      if (finalHeight) {
+        urlParams["h"] = finalHeight;
+      }
+
+      srcSet = buildSrcSet(rawSrc, urlParams, {
+        disableVariableQuality: disableQualityByDPR,
+      });
     } else {
-      const { width, w, height, ...urlParams } = srcOptions;
-      const constructedUrl = constructUrl(rawSrc, urlParams);
+      const { width, w, height, h, ...urlParams } = srcOptions;
 
       const aspectRatio = imgixParams.ar;
       let showARWarning =
         aspectRatio != null && aspectRatioIsValid(aspectRatio) === false;
 
-      let srcFn = buildSrcSetPairWithTargetWidth;
-      if (height) {
-        srcFn = buildSrcSetPairWithFixedHeight;
-      }
-
-      srcSet = "";
-      const len = targetWidths.length;
-      for (let i = 0; i < len; i++) {
-        const targetWidth = targetWidths[i];
-        srcSet += srcFn(constructedUrl, targetWidth, height) + ", ";
-      }
-      srcSet = srcSet.slice(0, -2);
+      srcSet = buildSrcSet(rawSrc, urlParams);
 
       if (
         NODE_ENV !== "production" &&

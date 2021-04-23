@@ -5,9 +5,9 @@ Licensed under the Apache License 2.0, seen https://github.com/coursera/react-im
 Minor syntax modifications have been made
 */
 
-var Base64 = require("js-base64").Base64;
 const PACKAGE_VERSION = require("../package.json").version;
 import extractQueryParams from "./extractQueryParams";
+import ImgixClient from "@imgix/js-core";
 
 // @see https://www.imgix.com/docs/reference
 var PARAM_EXPANSION = Object.freeze({
@@ -116,28 +116,39 @@ function constructUrl(src, longOptions) {
   if (!src) {
     return "";
   }
+  const params = compactParamKeys(longOptions);
+  const { client, pathComponents } = extractClientAndPathComponents(src);
+  return client.buildURL(pathComponents.join("/"), params);
+}
 
+function compactParamKeys(longOptions) {
   const keys = Object.keys(longOptions);
   const keysLength = keys.length;
-  let url = src + "?";
+  const params = {};
   for (let i = 0; i < keysLength; i++) {
     let key = keys[i];
-    let val = longOptions[key];
-
     if (PARAM_EXPANSION[key]) {
-      key = PARAM_EXPANSION[key];
+      params[PARAM_EXPANSION[key]] = longOptions[key];
     } else {
-      key = encodeURIComponent(key);
+      params[key] = longOptions[key];
     }
-
-    if (key.substr(-2) === "64") {
-      val = Base64.encodeURI(val);
-    }
-
-    url += key + "=" + encodeURIComponent(val) + "&";
   }
 
-  return url.slice(0, -1);
+  return params;
+}
+
+function extractClientAndPathComponents(src) {
+  const [scheme, rest] = src.split("://");
+  const [domain, ...pathComponents] = rest.split("/");
+  let useHTTPS = scheme == "https";
+
+  const client = new ImgixClient({
+    domain: domain,
+    useHTTPS: useHTTPS,
+    includeLibraryParam: false,
+  });
+
+  return { client, pathComponents };
 }
 
 function buildURLPublic(src, imgixParams = {}, options = {}) {
@@ -158,4 +169,4 @@ function buildURLPublic(src, imgixParams = {}, options = {}) {
 
 export default constructUrl;
 
-export { buildURLPublic };
+export { buildURLPublic, compactParamKeys, extractClientAndPathComponents };
