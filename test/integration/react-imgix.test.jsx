@@ -566,7 +566,7 @@ describe("Background Mode", () => {
     expect(bgImageSrcURL.getQueryParamValue("dpr")).toBe("3.44");
   });
 
-  it("window resize", async () => {
+  it("window resize smaller", async () => {
     const sut = await renderBGAndWaitUntilLoaded(
       <div style={{ width: 1000 }} className="fake-window">
         <style>{`.bg-img { width: 50%; height: 10px}`}</style>
@@ -595,7 +595,61 @@ describe("Background Mode", () => {
     const bgImageSrcURL = findURIfromSUT(sut);
 
     const expectedWidth = BROWSER_WIDTH / 2;
-    expect(bgImageSrcURL.getQueryParamValue("w")).toBe("" + expectedWidth);
+    // We're only resizing if a wider image is required.
+    // If the browser width shrinks, then the "w" we're
+    // getting should be greater than or equal to the
+    // expectedWidth (in this case "w" doesn't change at
+    // all).
+    expect(
+      parseInt(bgImageSrcURL.getQueryParamValue("w"))
+    ).toBeGreaterThanOrEqual(expectedWidth);
+  });
+
+  it("window resize larger", async () => {
+    const sut = await renderBGAndWaitUntilLoaded(
+      <div style={{ width: 1000 }} className="fake-window">
+        <style>{`.bg-img { width: 50%; height: 10px}`}</style>
+        <Background
+          src={`${src}`}
+          imgixParams={{
+            h: 10,
+          }}
+          className="bg-img"
+        >
+          <div>Content</div>
+        </Background>
+      </div>
+    );
+
+    // Before resize:
+    const startWidth = 500;
+    const bgImageSrcURLBefore = findURIfromSUT(sut);
+    expect(parseInt(bgImageSrcURLBefore.getQueryParamValue("w"))).toEqual(
+      startWidth
+    );
+
+    const fakeWindowEl = document.querySelector(".fake-window");
+
+    // Simulate browser resize
+    const BROWSER_WIDTH = 1080;
+    fakeWindowEl.style.width = BROWSER_WIDTH + "px";
+
+    await new Promise((resolve) => {
+      setTimeout(resolve, 1000);
+    });
+
+    const bgImageSrcURL = findURIfromSUT(sut);
+
+    // After resize:
+    const expectedWidth = BROWSER_WIDTH / 2;
+
+    // We've resized, the "w" should be strictly greater than the startWidth.
+    expect(parseInt(bgImageSrcURL.getQueryParamValue("w"))).toBeGreaterThan(
+      startWidth
+    );
+    expect(parseInt(bgImageSrcURL.getQueryParamValue("w"))).toEqual(
+      expectedWidth
+    );
   });
 
   it("can pass ref to component", async () => {
