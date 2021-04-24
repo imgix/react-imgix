@@ -1,3 +1,9 @@
+### [9.1.1](https://github.com/imgix/react-imgix/compare/v9.1.0...v9.1.1) (2021-04-24)
+
+
+### Bug Fixes
+
+* re-render Background only if a larger image is needed ([#782](https://github.com/imgix/react-imgix/issues/782)) ([53bb104](https://github.com/imgix/react-imgix/commit/53bb10437274068d9aaea8e2ead0851525fc4076)), closes [#763](https://github.com/imgix/react-imgix/issues/763)
 
 ## [9.1.0](https://github.com/imgix/react-imgix/compare/v9.0.4...v9.1.0) (2021-04-23)
 
