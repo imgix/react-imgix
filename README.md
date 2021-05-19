@@ -182,7 +182,7 @@ import "./styles.css";
 </div>;
 ```
 
-[![Edit xp0348lv0z](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/charming-keller-kjnsq)
+[![Edit cold-wave-4qfhe](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/cold-wave-4qfhe?fontsize=14&hidenavigation=1)
 
 **Aspect Ratio:** A developer can pass a desired aspect ratio, which will be used when
 generating srcsets to resize and crop your image as specified. For the `ar` parameter to take effect, ensure that the `fit` parameter is set to `crop`.
