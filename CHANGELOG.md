@@ -1,3 +1,5 @@
+### [9.1.2](https://github.com/imgix/react-imgix/compare/v9.1.1...v9.1.2) (2021-05-20)
+
 ### [9.1.1](https://github.com/imgix/react-imgix/compare/v9.1.0...v9.1.1) (2021-04-24)
 
 
