@@ -1,0 +1,79 @@
+import * as React from 'react'
+
+/**
+ * 
+ * @param {String} src - A URL string, the `src` attribute of an image.
+ * @returns Boolean, `true` if the image has a domain, `false` if not.
+ */
+function hasDomain(src) {
+  return src.indexOf("://") !== -1;
+}
+/**
+ * Creates a 1-step, or complete, URL from `domain` and `src` Strings.
+ *
+ * - First, the function checks if src has a defined `domain` using the helper
+ * function, `hasDomain()`. If it does, the unmodified `src` is returned.
+ *
+ * - Otherwise, formatSrc formats `domain` and `src` Strings.
+ *
+ *   - First it strips the two strings of the  leading and `/` or trailing `/` 
+ * slash characters. 
+ *
+ *   - Then, it joins the two strings on a `/` character. IE, 
+ * `strippedDomain + "/" + strippedSrc`.
+ *
+ *   - If `domain` String argument `null` or `undefined`, the function returns
+ * the original `src` String.
+ *
+ * @param {String} src - URL that is either 1-step or 2-step
+ * @param {String} domain - Domain string, optional
+ * @returns 1-step, or complete, URL String. Ex, _assets.ix.net/foo/bar.jpg_
+ */
+function formatSrc(src, domain) {
+  if (hasDomain(src)) {
+    return src
+  } else {
+    let strippedDomain = domain ? domain.replace(/^\/|\/$/g, '') : ""
+    let strippedSrc = src.replace(/^\/|\/$/g, '')
+    return domain ? "https://" +  strippedDomain + "/" + strippedSrc : src
+  }
+}
+
+/**
+ * A function that formats the following values in the props Object:
+ *
+ * - `width`: if negative gets set to `null`.
+ * - `height`: if negative gets set to `null`.
+ * - `src`: concatenated to `domain` if `src` defined and has no domain.
+ *
+ * @param {Object} props 
+ * @returns A formatted `props` Object.
+ */
+export const formatProps = (props) => {
+  const width = !props.width || props.width <= 1 ? null : props.width
+  const height = !props.height || props.height <= 1 ? null : props.height
+  const src = props.src ? formatSrc(props.src, props.domain) : null
+
+  return Object.assign( {}, props, { width, height, src,} )
+}
+
+// TODO(luis): write me
+export const collapseImgixParams = (params) => {
+  return params
+}
+
+/**
+ * `processPropsHOF` takes a Component's props and formats them to adhere to the 
+ * ImgixClient's specifications.
+ * 
+ * @param {React.Element<typeof Component>} Component - A react component with
+ * defined `props`.
+ * @returns A React Component who's `props` have been formatted and 
+ * `imgixParams` have been collapsed.
+ */
+export const processPropsHOF = (Component) => (props) => {
+  const formattedProps = formatProps(props)
+  const formattedImgixParas = collapseImgixParams(formattedProps.imgixParams)
+
+  return <Component {...formattedProps} imgixParams={formattedImgixParas} />
+}
