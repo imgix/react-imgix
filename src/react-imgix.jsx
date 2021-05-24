@@ -9,6 +9,7 @@ import constructUrl, {
 } from "./constructUrl";
 import extractQueryParams from "./extractQueryParams";
 import { ShouldComponentUpdateHOC } from "./HOCs";
+import { mergeComponentPropsHOF, processPropsHOF } from "./HOFs";
 
 const NODE_ENV = process.env.NODE_ENV;
 
@@ -367,9 +368,13 @@ class SourceImpl extends Component {
 }
 SourceImpl.displayName = "ReactImgixSource";
 
-const ReactImgixWrapped = compose(ShouldComponentUpdateHOC)(ReactImgix);
-const Picture = compose(ShouldComponentUpdateHOC)(PictureImpl);
-const Source = compose(ShouldComponentUpdateHOC)(SourceImpl);
+let ReactImgixWrapped = compose()(ShouldComponentUpdateHOC)(ReactImgix);
+let Picture = compose()(ShouldComponentUpdateHOC)(PictureImpl);
+let Source = compose()(ShouldComponentUpdateHOC)(SourceImpl);
+
+ReactImgixWrapped = mergeComponentPropsHOF(processPropsHOF(ReactImgix))
+Picture = mergeComponentPropsHOF(processPropsHOF(PictureImpl))
+Source = mergeComponentPropsHOF(processPropsHOF(SourceImpl))
 
 export default ReactImgixWrapped;
 export {
