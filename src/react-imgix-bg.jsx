@@ -7,12 +7,71 @@ import findClosest from "./findClosest";
 import targetWidths from "./targetWidths";
 import { shallowEqual } from "./common";
 
-const noop = () => {};
-
 const findNearestWidth = (actualWidth) =>
   findClosest(actualWidth, targetWidths);
 
 const toFixed = (dp, value) => +value.toFixed(dp);
+
+export const __shouldComponentUpdate = (props, nextProps) => {
+  const contentRect = props.contentRect;
+  const bounds = contentRect.bounds;
+  const { width: prevWidth, height: prevHeight } = bounds;
+
+  const nextContentRect = nextProps.contentRect;
+  const nextBounds = nextContentRect.bounds;
+  const { width: nextWidth, height: nextHeight } = nextBounds;
+
+  // If neither of the previous nor next dimensions are present,
+  // re-render.
+  if (!nextWidth || !nextHeight || !prevWidth || !prevHeight) {
+    return true;
+  }
+
+  // The component has been rendered at least twice by this point
+  // and both the previous and next dimensions should be defined.
+  // Only update if the nextWidth is greater than the prevWidth.
+  if (prevWidth && nextWidth && nextWidth > prevWidth) {
+    return true;
+  }
+
+  // Similarly, only update if the next height is greater than
+  // the previous height.
+  if (prevHeight && nextHeight && nextHeight > prevHeight) {
+    return true;
+  }
+
+  const customizer = (oldProp, newProp, key) => {
+    // these keys are ignored from prop checking process
+    if (key === "contextRect" || key === "measure" || key === "measureRef") {
+      return true;
+    }
+
+    if (key === "children") {
+      return oldProp == newProp;
+    }
+
+    if (key === "imgixParams") {
+      return shallowEqual(oldProp, newProp, (a, b) => {
+        if (Array.isArray(a)) {
+          return shallowEqual(a, b);
+        }
+        return undefined;
+      });
+    }
+
+    if (key === "htmlAttributes") {
+      return shallowEqual(oldProp, newProp);
+    }
+
+    return undefined; // handled by shallowEqual
+  };
+
+  // If we made it here, we need to check if the "top-level"
+  // props have changed (e.g. disableLibraryParam).
+  const propsEqual = shallowEqual(props, nextProps, customizer);
+
+  return !(propsEqual);
+}
 
 class BackgroundImpl extends React.Component {
   constructor(props) {
@@ -20,44 +79,7 @@ class BackgroundImpl extends React.Component {
   }
 
   shouldComponentUpdate(nextProps) {
-    const contentRect = this.props.contentRect;
-    const bounds = contentRect.bounds;
-    const { width: prevWidth, height: prevHeight } = bounds;
-
-    const nextContentRect = nextProps.contentRect;
-    const nextBounds = nextContentRect.bounds;
-    const { width: nextWidth, height: nextHeight } = nextBounds;
-
-    // If neither of the previous nor next dimensions are present,
-    // re-render.
-    if (!nextWidth || !nextHeight || !prevWidth || !prevHeight) {
-      return true;
-    }
-
-    // The component has been rendered at least twice by this point
-    // and both the previous and next dimensions should be defined.
-    // Only update if the nextWidth is greater than the prevWidth.
-    if (prevWidth && nextWidth && nextWidth > prevWidth) {
-      return true;
-    }
-
-    // Similarly, only update if the next height is greater than
-    // the previous height.
-    if (prevHeight && nextHeight && nextHeight > prevHeight) {
-      return true;
-    }
-
-    // If we made it here, we need to check if the "top-level"
-    // props have changed (e.g. disableLibraryParam).
-    const shallowPropsEqual = shallowEqual(this.props, nextProps);
-
-    // We also need to check the imgixParams.
-    const shallowParamsEqual = shallowEqual(
-      this.props.imgixParams,
-      nextProps.imgixParams
-    );
-
-    return shallowPropsEqual && shallowParamsEqual;
+    return __shouldComponentUpdate(this.props, nextProps);
   }
 
   render() {
