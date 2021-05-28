@@ -175,12 +175,3 @@ To run the integration tests across all browsers, a BrowserStack account must be
 ```sh
 BUILD_TAG=test-xxx && BROWSERSTACK_USERNAME=xxx && BROWSERSTACK_ACCESS_KEY=xxx && npm run test:browser:all
 ```
-
-### Cutting a release
-
-Ensure all commits are correctly described using the [Conventional Commits Specification](https://conventionalcommits.org/)
-
-```sh
-npm run release
-git push --follow-tags origin main; npm publish
-```
