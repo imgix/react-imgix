@@ -1,3 +1,10 @@
+### [9.1.4](https://github.com/imgix/react-imgix/compare/v9.1.3...v9.1.4) (2021-05-28)
+
+
+### Bug Fixes
+
+* constants out of sync with versions ([a977614](https://github.com/imgix/react-imgix/commit/a977614648923e97c968d79b4b40fc00f77307c1))
+
 # Changelog
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
