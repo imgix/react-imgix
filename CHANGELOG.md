@@ -1,3 +1,14 @@
+# Changelog
+
+All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
+
+### [9.1.3](https://github.com/imgix/react-imgix/compare/v9.1.2...v9.1.3) (2021-05-28)
+
+
+### Bug Fixes
+
+* **789:** ensure children passed to background component update ([643b809](https://github.com/imgix/react-imgix/commit/643b809664096930a07eb83094a5f8e295f2e68d))
+
 ### [9.1.2](https://github.com/imgix/react-imgix/compare/v9.1.1...v9.1.2) (2021-05-20)
 
 ### [9.1.1](https://github.com/imgix/react-imgix/compare/v9.1.0...v9.1.1) (2021-04-24)
