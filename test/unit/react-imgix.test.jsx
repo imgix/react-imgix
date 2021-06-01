@@ -41,26 +41,10 @@ const makeBackgroundWithBounds = (bounds) => (props) => (
 
 const src = "http://domain.imgix.net/image.jpg";
 let sut;
-let oldConsole, log;
-
-beforeEach(() => {
-  oldConsole = global.console;
-  delete console.log;
-  console.error = console.log;
-  log = console.log.bind(console);
-});
-afterEach(() => {
-  global.console = oldConsole;
-});
-
-function sleep(ms) {
-  return new Promise((resolve) => {
-    setTimeout(resolve, ms);
-  });
-}
+jest.spyOn(global.console, 'error').mockImplementation((error) => {console.log(error)})
 
 describe("When in default mode", () => {
-  it("the rendered element's type should be img", () => {
+  it.only("the rendered element's type should be img", () => {
     const sut = shallow(<Imgix src={src} sizes="100vw" />);
     expect(sut.type()).toBe("img");
   });
@@ -426,16 +410,11 @@ describe("When in picture mode", () => {
   };
 
   it("should throw an error when no children passed", () => {
-    const oldConsole = global.console;
-    global.console = { warn: jest.fn() };
-
     shallowPicture(<Picture src={src} width={100} height={100} />);
 
     expect(console.warn).toHaveBeenCalledWith(
       expect.stringContaining("No fallback <img /> or <Imgix /> found")
     );
-
-    global.console = oldConsole;
   });
 
   describe("with a <Imgix> passed as a child", () => {
@@ -741,8 +720,6 @@ describe("When using the component", () => {
     describe("invalid AR", () => {
       const testInvalidAR = (ar) => {
         it(`an invalid ar prop (${ar}) will still generate an ar query parameter`, () => {
-          const oldConsole = global.console;
-          global.console = { warn: jest.fn() };
 
           const parseParam = (url, param) => {
             const matched = url.match("[?&]" + param + "=([^&]+)");
@@ -769,8 +746,6 @@ describe("When using the component", () => {
             expect(w).toBeTruthy();
             expect(ar).toBeTruthy();
           });
-
-          global.console = oldConsole;
         });
       };
 
