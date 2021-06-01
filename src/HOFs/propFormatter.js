@@ -23,9 +23,13 @@ export function formatSrc(src, domain, useHTTPS = true) {
   if (src.indexOf("://") !== -1){
     return src
   } else {
+    // prepend domain if defined
+    if (domain == null) {
+      return src
+    }
     let strippedDomain = domain ? domain.replace(/^\/|\/$/g, '') : ""
     let strippedSrc = src.replace(/^\/|\/$/g, '')
-    return domain ? "https://" +  strippedDomain + "/" + strippedSrc : src
+    return "https://" + strippedDomain + "/" + strippedSrc;
   }
 }
 
