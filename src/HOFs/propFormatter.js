@@ -2,36 +2,25 @@ import * as React from 'react'
 import { PARAMS_EXP_MAP } from "./constants"
 
 /**
- * 
- * @param {String} src - A URL string, the `src` attribute of an image.
- * @returns Boolean, `true` if the image has a domain, `false` if not.
- */
-function hasDomain(src) {
-  return src.indexOf("://") !== -1;
-}
-/**
  * Creates a 1-step, or complete, URL from `domain` and `src` Strings.
  *
- * - First, the function checks if src has a defined `domain` using the helper
- * function, `hasDomain()`. If it does, the unmodified `src` is returned.
- *
+ * - First, the function checks if src has a defined `domain`. If it does, it 
+ * checks to see if `src` has a scheme, and prepends "http" or "https" as needed
  * - Otherwise, formatSrc formats `domain` and `src` Strings.
- *
  *   - First it strips the two strings of the  leading and `/` or trailing `/` 
- * slash characters. 
- *
+ *     slash characters.
  *   - Then, it joins the two strings on a `/` character. IE, 
- * `strippedDomain + "/" + strippedSrc`.
- *
+ *    `strippedDomain + "/" + strippedSrc`.
  *   - If `domain` String argument `null` or `undefined`, the function returns
- * the original `src` String.
+ *    the original `src` String.
  *
  * @param {String} src - URL that is either 1-step or 2-step
  * @param {String} domain - Domain string, optional
  * @returns 1-step, or complete, URL String. Ex, _assets.ix.net/foo/bar.jpg_
  */
-function formatSrc(src, domain) {
-  if (hasDomain(src)) {
+export function formatSrc(src, domain, useHTTPS = true) {
+  // ignore if already has protocol
+  if (src.indexOf("://") !== -1){
     return src
   } else {
     let strippedDomain = domain ? domain.replace(/^\/|\/$/g, '') : ""
