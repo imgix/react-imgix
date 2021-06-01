@@ -9,11 +9,7 @@ const ImgixContext = createContext()
  * @returns Hook that gets context value from the nearest`ImgixProvider`.
  */
 function useImgixContext() {
-  const context = useContext(ImgixContext)
-  if (context === undefined) {
-    console.error("useImgixContext must be used within a ImgixProvider")
-  }
-  return context
+  return useContext(ImgixContext)
 }
 
 /**
@@ -27,6 +23,9 @@ function useImgixContext() {
 function ImgixProvider({children, ...reactImgixProps}) {
   const value = reactImgixProps
 
+  if ( children == null || children.length < 1) {
+    console.error("ImgixProvider must have at least one Imgix child component")
+  }
   return <ImgixContext.Provider value={value}>{children}</ImgixContext.Provider>
 }
 
