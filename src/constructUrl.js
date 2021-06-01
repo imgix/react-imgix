@@ -21,6 +21,7 @@ var PARAM_EXPANSION = Object.freeze({
   invert: "invert",
   saturation: "sat",
   shaddows: "shad",
+  shadows: "shad",
   sharpness: "sharp",
   "unsharp-mask": "usm",
   "unsharp-radius": "usmrad",
