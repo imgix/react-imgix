@@ -36,8 +36,8 @@ export function formatSrc(src, domain, useHTTPS = true) {
 /**
  * A function that formats the following values in the props Object:
  *
- * - `width`: if negative gets set to `null`.
- * - `height`: if negative gets set to `null`.
+ * - `width`: if undefined or negative gets set to `null`.
+ * - `height`: if undefined or negative gets set to `null`.
  * - `src`: concatenated to `domain` if `src` defined and has no domain.
  *
  * @param {Object} props 
