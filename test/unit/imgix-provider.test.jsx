@@ -37,7 +37,7 @@ describe('ImgixProvider', () => {
       </ImgixProvider>
     )
 
-    // ensure Provider value correct set
+    // ensure Provider value correctly set
     const expectedProps = {
       children: < ReactImgix src="https://assets.imgix.net/examples/pione.jpg" sizes="50vw" />,
       value: { domain: "sdk-test.imgix.net", sizes: "100vw", }
