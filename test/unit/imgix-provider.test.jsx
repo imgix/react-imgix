@@ -1,7 +1,7 @@
 import { mount, shallow } from 'enzyme';
 import React from 'react';
 import ReactImgix from "../../src/index"
-import { ImgixProvider } from "../../es/HOCs/index"
+import { ImgixProvider } from "../../es/HOCs/imgixProvider"
 
 const providerProps = {
   domain: "sdk-test.imgix.net",
