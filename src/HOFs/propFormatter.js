@@ -1,4 +1,5 @@
 import * as React from 'react'
+import { PARAMS_EXP_MAP } from "./constants"
 
 /**
  * 
@@ -57,9 +58,25 @@ export const formatProps = (props) => {
   return Object.assign( {}, props, { width, height, src,} )
 }
 
-// TODO(luis): write me
+/**
+ * Function that shortens params keys according to the imgix spec.
+ * @param {Object} params - imgixParams object
+ * @returns imgixParams object with shortened keys
+ * @see https://www.imgix.com/docs/reference
+ */
 export const collapseImgixParams = (params) => {
-  return params
+  if (params == null) {
+    return params;
+  }
+  const compactedParams = {}
+  for (const [k, v] of Object.entries(params)) {
+    if (PARAMS_EXP_MAP[k]) {
+      compactedParams[PARAMS_EXP_MAP[k]] = v
+    } else {
+      compactedParams[k] = v
+    }
+  }
+  return compactedParams
 }
 
 /**
