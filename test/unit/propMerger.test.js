@@ -12,24 +12,20 @@ describe('mergeProps()', () => {
   })
 
   it('should not overwrite destination values with source values', () => {
-    const src = { width: 100, height: 200, imgixParams: {ar: "1:2", dpr: 2} }
+    const src = { width: 100 }
     const destination = { width: 101 }
     const result = mergeProps(src, destination);
 
-    expect(result).toEqual(
-      { width: 101, height: 200, imgixParams: { ar: "1:2", dpr: 2 } }
-    )
+    expect(result).toEqual({ width: 101 })
   })
 
   it('should overwrite destination that resolves to `null` if source exists',
     () => {
-      const src = { width: 100, height: 200, imgixParams: { ar: "1:1" } }
-      const destination = { width: 101, height: null, imgixParams: { rot: 90 } }
+      const src = { height: 100 }
+      const destination = { height: null }
       const result = mergeProps(src, destination);
 
-      expect(result).toEqual(
-        { width: 101, height: 200, imgixParams: { ar: "1:1", rot: 90 } }
-      );
+      expect(result).toEqual({ height: 100 });
     }
   )
 
