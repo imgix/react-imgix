@@ -83,7 +83,7 @@ export const collapseImgixParams = (params) => {
  */
 export const processPropsHOF = (Component) => (props) => {
   const formattedProps = formatProps(props)
-  const formattedImgixParas = collapseImgixParams(formattedProps.imgixParams)
+  const formattedImgixParams = collapseImgixParams(formattedProps.imgixParams)
 
-  return <Component {...formattedProps} imgixParams={formattedImgixParas} />
+  return <Component {...formattedProps} imgixParams={formattedImgixParams} />
 }
