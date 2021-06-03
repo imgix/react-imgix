@@ -1,52 +1,61 @@
-import { mount, shallow } from 'enzyme';
-import React from 'react';
-import ReactImgix from "../../src/index"
-import { ImgixProvider } from "../../es/HOCs/imgixProvider"
+import { mount, shallow } from "enzyme";
+import React from "react";
+import ReactImgix from "../../src/index";
+import { ImgixProvider } from "../../es/HOCs/imgixProvider";
 
 const providerProps = {
   domain: "sdk-test.imgix.net",
   sizes: "100vw",
-}
+};
 
 const imageProps = {
   src: "https://assets.imgix.net/examples/pione.jpg",
   sizes: "50vw",
-}
+};
 
-describe('ImgixProvider', () => {
-
-  test('should not have context value defined if Provider has no props', () => {
+describe("ImgixProvider", () => {
+  test("should not have context value defined if Provider has no props", () => {
     const wrappedComponent = (
       <ImgixProvider>
-        <ReactImgix {...imageProps}/>
+        <ReactImgix {...imageProps} />
       </ImgixProvider>
-    )
+    );
 
     const expectedProps = {
-      children: < ReactImgix src="https://assets.imgix.net/examples/pione.jpg" sizes="50vw" />,
-      value: {}
-    }
+      children: (
+        <ReactImgix
+          src="https://assets.imgix.net/examples/pione.jpg"
+          sizes="50vw"
+        />
+      ),
+      value: {},
+    };
 
-    const renderedComponent = shallow(wrappedComponent)
-    expect(renderedComponent.props()).toEqual(expectedProps)
-  })
+    const renderedComponent = shallow(wrappedComponent);
+    expect(renderedComponent.props()).toEqual(expectedProps);
+  });
 
-  test('should set the context value to the Provider props', () => {
+  test("should set the context value to the Provider props", () => {
     const wrappedComponent = (
       <ImgixProvider {...providerProps}>
-        <ReactImgix {...imageProps}/>
+        <ReactImgix {...imageProps} />
       </ImgixProvider>
-    )
+    );
 
     // ensure Provider value correctly set
     const expectedProps = {
-      children: < ReactImgix src="https://assets.imgix.net/examples/pione.jpg" sizes="50vw" />,
-      value: { domain: "sdk-test.imgix.net", sizes: "100vw", }
-    }
+      children: (
+        <ReactImgix
+          src="https://assets.imgix.net/examples/pione.jpg"
+          sizes="50vw"
+        />
+      ),
+      value: { domain: "sdk-test.imgix.net", sizes: "100vw" },
+    };
 
-    const renderedComponent = shallow(wrappedComponent)
-    expect(renderedComponent.props()).toEqual(expectedProps)
-  })
+    const renderedComponent = shallow(wrappedComponent);
+    expect(renderedComponent.props()).toEqual(expectedProps);
+  });
 
   // TODO(luis): enable these tests once propMerger and propProcessor merged in
   // test('should merge the Provider and Child props', () => {
@@ -105,5 +114,4 @@ describe('ImgixProvider', () => {
   //     expect.stringContaining("ImgixProvider must have at least one Imgix child component")
   //   );
   // })
-})
-
+});
