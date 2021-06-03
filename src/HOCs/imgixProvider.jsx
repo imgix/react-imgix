@@ -28,11 +28,4 @@ function ImgixProvider({children, ...reactImgixProps}) {
   return <ImgixContext.Provider value={value}>{children}</ImgixContext.Provider>
 }
 
-
-//TODO(luis): do we still need this?
-// const propsProcessorHOF = (Component) => (props) => {
-//   const collapsedImgixParams = collapseImgixParam(props.imgixParams);
-//   return <Component {...props} imgixParams={collapsedImgixParams} />
-// }
-
 export {ImgixProvider, useImgixContext}
