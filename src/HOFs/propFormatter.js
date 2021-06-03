@@ -44,9 +44,9 @@ export function formatSrc(src, domain, useHTTPS = true) {
  * @returns A formatted `props` Object.
  */
 export const formatProps = (props) => {
-  const width = !props.width || props.width <= 1 ? null : props.width
-  const height = !props.height || props.height <= 1 ? null : props.height
-  const src = props.src ? formatSrc(props.src, props.domain) : null
+  const width = !props.width || props.width <= 1 ? undefined : props.width
+  const height = !props.height || props.height <= 1 ? undefined : props.height
+  const src = props.src ? formatSrc(props.src, props.domain) : undefined
 
   return Object.assign( {}, props, { width, height, src,} )
 }
