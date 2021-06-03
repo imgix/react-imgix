@@ -57,61 +57,20 @@ describe("ImgixProvider", () => {
     expect(renderedComponent.props()).toEqual(expectedProps);
   });
 
-  // TODO(luis): enable these tests once propMerger and propProcessor merged in
-  // test('should merge the Provider and Child props', () => {
+  test('should log error when has no consumers', () => {
+    jest.spyOn(global.console, 'error').mockImplementation(() => {})
 
-  //   const modifiedProps = { ...imageProps };
-  //   modifiedProps.src = "examples/pione.jpg"
-  //   modifiedProps.sizes = null
+    const wrappedComponent = (
+      <ImgixProvider {...providerProps}>
+      </ImgixProvider>
+    )
 
-  //   const wrappedComponent = (
-  //     <ImgixProvider {...providerProps}>
-  //       <ReactImgix {...modifiedProps}/>
-  //     </ImgixProvider>
-  //   )
+    shallow(wrappedComponent)
 
-  //   // ensure Provider and Child props are merged as intended
-  //   const expectedProps = {
-  //     disableSrcSet: false,
-  //     domain: "sdk-test.imgix.net",
-  //     height: null,
-  //     imgixParams: undefined,
-  //     onMounted: undefined,
-  //     sizes: "100vw",
-  //     src: "https://sdk-test.imgix.net/examples/pione.jpg",
-  //     width: null,
-  //   }
+    expect(console.error).toHaveBeenCalledWith(
+      expect.stringContaining("ImgixProvider must have at least one Imgix child component")
+    );
 
-  //   const renderedComponent = mount(wrappedComponent)
-  //   const renderedProps = renderedComponent
-  //     .childAt(0) // mergePropsHOF
-  //     .childAt(0) // processPropsHOF
-  //     .childAt(0) // ChildComponent
-  //     .props()
-  //   // remove noop function that breaks tests
-  //   renderedProps.onMounted = undefined
-
-  //   expect(renderedProps).toEqual(expectedProps)
-  // })
-
-  // test('should log error when has no consumers', () => {
-  //   jest.spyOn(global.console, 'error').mockImplementation(() => {})
-
-  //   const wrappedComponent = (
-  //     <ImgixProvider {...providerProps}>
-  //     </ImgixProvider>
-  //   )
-
-  //   const expectedProps = {
-  //     children: undefined,
-  //     value: providerProps
-  //   }
-
-  //   const renderedComponent = shallow(wrappedComponent)
-
-  //   expect(renderedComponent.props()).toEqual(expectedProps)
-  //   expect(console.error).toHaveBeenCalledWith(
-  //     expect.stringContaining("ImgixProvider must have at least one Imgix child component")
-  //   );
-  // })
+    jest.clearAllMocks();
+  })
 });
