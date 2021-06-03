@@ -42,7 +42,7 @@ export const mergeProps = (src, destination) => {
     return src;
   }
   if (src == null && destination == null) {
-    return undefined
+    return {}
   }
 
   const newProps = { ...destination }
@@ -73,7 +73,7 @@ export const mergeProps = (src, destination) => {
  */
 export const mergeComponentPropsHOF = (Component) => (props) => {
   const contextProps = useImgixContext();
-  if (contextProps === undefined) {
+  if (contextProps == null) {
     return <Component {...props} />
   }
 
