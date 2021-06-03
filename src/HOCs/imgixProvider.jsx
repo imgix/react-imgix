@@ -17,7 +17,7 @@ function useImgixContext() {
  * `React.useContext()` API.
  * @param {React.Element <typeof Component>} children 
  * @param {Object} reactImgixProps 
- * @returns Component
+ * @returns React.Element
  */
 function ImgixProvider({children, ...reactImgixProps}) {
   const value = reactImgixProps
