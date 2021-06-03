@@ -36,25 +36,19 @@ describe('mergeProps()', () => {
   it('should recursively merge imgixParams and htmlAttributes',
     () => {
       const src = {
-        width: 100,
-        height: 200,
         imgixParams: { ar: "1:2", dpr: 2},
-        htmlAttributes: { styles: "width: 50" }
+        htmlAttributes: { styles: "width: 50", alt: "src" }
       }
       const destination = {
-        width: 101,
-        height: 201,
-        imgixParams: { dpr: 1 },
-        htmlAttributes: { styles: "width: 100" }
+        imgixParams: { dpr: 1, fit: "fill" },
+        htmlAttributes: { styles: "width: 100", className: "destination" }
       }
       const result = mergeProps(src, destination);
 
       expect(result).toEqual(
         {
-          width: 101,
-          height: 201,
-          imgixParams: { ar: "1:2", dpr: 1 },
-          htmlAttributes: { styles: "width: 100" }
+          imgixParams: { ar: "1:2", dpr: 1, fit: "fill" },
+          htmlAttributes: { styles: "width: 100", className: "destination", alt: "src" }
         }
       );
     }
