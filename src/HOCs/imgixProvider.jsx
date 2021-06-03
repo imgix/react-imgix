@@ -3,10 +3,9 @@ import React, { useContext, createContext } from 'react'
 const ImgixContext = createContext()
 
 /**
- * `useImgixContext()` tries to invoke `React.useContext()`. If context is 
- * `undefined`, we know that the context is being accessed outside of a 
- * provider, and therefore throw an `Error`.
- * @returns Hook that gets context value from the nearest`ImgixProvider`.
+ * `useImgixContext()` tries to invoke `React.useContext()`. If no context
+ * is available, this function returns `undefined`. 
+ * @returns The context defined by the closest parent `ImgixProvider`.
  */
 function useImgixContext() {
   return useContext(ImgixContext)
@@ -37,4 +36,3 @@ function ImgixProvider({children, ...reactImgixProps}) {
 // }
 
 export {ImgixProvider, useImgixContext}
-
