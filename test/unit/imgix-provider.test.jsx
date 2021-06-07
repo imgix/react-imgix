@@ -65,7 +65,6 @@ describe("ImgixProvider", () => {
 
     // ensure Provider and Child props are merged as intended
     const expectedProps = {
-      disableSrcSet: false,
       domain: "sdk-test.imgix.net",
       height: null,
       imgixParams: undefined,
