@@ -19,13 +19,13 @@ describe('mergeProps()', () => {
     expect(result).toEqual({ width: 101 })
   })
 
-  it('should overwrite destination that resolves to `null` if source exists',
+  it('should not overwrite destination resolving to `null` if source exists',
     () => {
-      const src = { height: 100 }
+      const src = {domain: "foo.bar", height: 100 }
       const destination = { height: null }
       const result = mergeProps(src, destination);
 
-      expect(result).toEqual({ height: 100 });
+      expect(result).toEqual({domain: "foo.bar", height: null});
     }
   )
 
