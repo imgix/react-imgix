@@ -3,9 +3,10 @@ import { useImgixContext } from "../HOCs"
 
 /**
  * Merges the `src` object into the `destination` object. Destination values are
- * not overwritten by source values. Destination properties that resolve to 
- * `undefined` or `null` are overwritten if a destination value exists. It 
- * recursively merges the `imgixParams` and `htmlAttributes` values.
+ * not overwritten by source values. Destination properties that resolve to
+ * `undefined` or `null` are not overwritten if a destination value exists
+ * unless destination key does not exist . It recursively merges the
+ * `imgixParams` and `htmlAttributes` values.
  *
  * @param {Object} src - The Provider component's props object
  * @param {Object} destination - The child component's props object
@@ -32,7 +33,7 @@ import { useImgixContext } from "../HOCs"
  *    imgixParams: { ar: "1:2", dpr: 1 },
  *    htmlAttributes: { styles: "width: 100" }
  *  }
- * 
+ *
  */
 export const mergeProps = (src, destination) => {
   if (src == null && destination !== null) {
