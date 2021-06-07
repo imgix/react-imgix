@@ -1,7 +1,7 @@
 import PropTypes from "prop-types";
 import React, { Component } from "react";
 import "./array-findindex";
-import { compose, config } from "./common";
+import { config } from "./common";
 import { PACKAGE_VERSION } from "./constants";
 import constructUrl, {
   compactParamKeys,
@@ -368,13 +368,15 @@ class SourceImpl extends Component {
 }
 SourceImpl.displayName = "ReactImgixSource";
 
-let ReactImgixWrapped = compose()(ShouldComponentUpdateHOC)(ReactImgix);
-let Picture = compose()(ShouldComponentUpdateHOC)(PictureImpl);
-let Source = compose()(ShouldComponentUpdateHOC)(SourceImpl);
-
-ReactImgixWrapped = mergeComponentPropsHOF(processPropsHOF(ReactImgix))
-Picture = mergeComponentPropsHOF(processPropsHOF(PictureImpl))
-Source = mergeComponentPropsHOF(processPropsHOF(SourceImpl))
+const ReactImgixWrapped = (
+  mergeComponentPropsHOF(processPropsHOF(ShouldComponentUpdateHOC(ReactImgix)))
+);
+const Picture = (
+  mergeComponentPropsHOF(processPropsHOF(ShouldComponentUpdateHOC(PictureImpl)))
+);
+const Source = (
+  mergeComponentPropsHOF(processPropsHOF(ShouldComponentUpdateHOC(SourceImpl)))
+);
 
 export default ReactImgixWrapped;
 export {
