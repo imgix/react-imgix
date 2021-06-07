@@ -41,10 +41,13 @@ const makeBackgroundWithBounds = (bounds) => (props) => (
 
 const src = "http://domain.imgix.net/image.jpg";
 let sut;
-jest.spyOn(global.console, 'error').mockImplementation((error) => {console.log(error)})
+// TODO(luis): do we need to mock error? There's a react error logging that
+// might make the test-suite fail on CI.
+// jest.spyOn(global.console, 'error').mockImplementation((error) => { console.log(error) })
+jest.spyOn(global.console, 'warn').mockImplementation((msg) => {console.log(msg)})
 
 describe("When in default mode", () => {
-  it.only("the rendered element's type should be img", () => {
+  it("the rendered element's type should be img", () => {
     const sut = shallow(<Imgix src={src} sizes="100vw" />);
     expect(sut.type()).toBe("img");
   });
