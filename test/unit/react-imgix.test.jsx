@@ -400,7 +400,13 @@ describe("When in picture mode", () => {
 
     it("an <img> or a <Imgix> should be the last child", () => {
       // If the number of HOCs for ReactImgix is changed, there may need to be a change in the number of .first().shallow() calls
-      const lastChildElement = lastChild.first().shallow().first().shallow(); // hack from https://github.com/airbnb/enzyme/issues/539#issuecomment-239497107 until a better solution is implemented
+      // hack from https://github.com/airbnb/enzyme/issues/539#issuecomment-239497107 until a better solution is implemented
+      const lastChildElement = lastChild.first()
+        .shallow()
+        .first()
+        .shallow()
+        .first()
+        .shallow();
       if (lastChildElement.type().hasOwnProperty("name")) {
         expect(lastChildElement.name()).toBe(__ReactImgixImpl.displayName);
         expect(
