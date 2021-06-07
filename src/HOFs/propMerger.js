@@ -46,10 +46,11 @@ export const mergeProps = (src, destination) => {
   }
 
   const newProps = { ...destination }
+  const newPropKeys = Object.keys(newProps);
 
   for (const [k, v] of Object.entries(src)) {
-    if (newProps[k] == null && v !== null) {
-      newProps[k] = v
+    if (newPropKeys.indexOf(k) == -1 && v !== null) {
+      newProps[k] = v;
     }
     // recursively merge imgixParams and htmlAttributes
     if (k === "imgixParams" || k === "htmlAttributes") {
