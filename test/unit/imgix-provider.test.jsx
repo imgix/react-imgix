@@ -53,9 +53,11 @@ describe("ImgixProvider", () => {
 
   test('should merge the Provider and Child props', () => {
 
-    const modifiedProps = { ...imageProps };
-    modifiedProps.src = "examples/pione.jpg"
-    modifiedProps.sizes = null
+    const modifiedProps = {
+      ...imageProps,
+      src: "examples/pione.jpg",
+      sizes: null
+    };
 
     const wrappedComponent = (
       <ImgixProvider {...providerProps}>
@@ -65,21 +67,24 @@ describe("ImgixProvider", () => {
 
     // ensure Provider and Child props are merged as intended
     const expectedProps = {
+      disableSrcSet: false,
       domain: "sdk-test.imgix.net",
-      height: null,
+      height: undefined,
       imgixParams: undefined,
       onMounted: undefined,
-      sizes: "100vw",
+      sizes: null,
       src: "https://sdk-test.imgix.net/examples/pione.jpg",
-      width: null,
+      width: undefined,
     }
 
+    // The order of the childAt() needs to update if number of HOCs change.
     const renderedComponent = mount(wrappedComponent)
     const renderedProps = renderedComponent
-      .childAt(0) // mergePropsHOF
-      .childAt(0) // processPropsHOF
-      .childAt(0) // ChildComponent
-      .props()
+    .childAt(0) // mergePropsHOF
+    .childAt(0) // processPropsHOF
+    .childAt(0) // shouldComponentUpdateHOC
+    .childAt(0) // ChildComponent
+    .props()
     // remove noop function that breaks tests
     renderedProps.onMounted = undefined
 
