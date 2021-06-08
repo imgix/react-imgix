@@ -29,6 +29,14 @@ describe('mergeProps()', () => {
     }
   )
 
+  it("should not overwrite destination resolving to `undefined` if source exists", () => {
+    const src = { domain: "foo.bar", height: 100 };
+    const destination = { height: undefined };
+    const result = mergeProps(src, destination);
+
+    expect(result).toEqual({ domain: "foo.bar", height: undefined });
+  });
+
   it('should recursively merge imgixParams and htmlAttributes',
     () => {
       const src = {
