@@ -27,17 +27,18 @@ export function formatSrc(src, domain, useHTTPS = true) {
     if (domain == null) {
       return src
     }
-    let strippedDomain = domain ? domain.replace(/^\/|\/$/g, '') : ""
-    let strippedSrc = src.replace(/^\/|\/$/g, '')
-    return "https://" + strippedDomain + "/" + strippedSrc;
+    const strippedDomain = domain ? domain.replace(/^\/|\/$/g, '') : ""
+    const strippedSrc = src.replace(/^\/|\/$/g, '')
+    const prefix = useHTTPS ? "https://" : "http://"
+    return prefix + strippedDomain + "/" + strippedSrc;
   }
 }
 
 /**
  * A function that formats the following values in the props Object:
  *
- * - `width`: if undefined or negative gets set to `null`.
- * - `height`: if undefined or negative gets set to `null`.
+ * - `width`: if undefined or negative gets set to `undefined`.
+ * - `height`: if undefined or negative gets set to `undefined`.
  * - `src`: concatenated to `domain` if `src` defined and has no domain.
  *
  * @param {Object} props 
@@ -46,7 +47,7 @@ export function formatSrc(src, domain, useHTTPS = true) {
 export const formatProps = (props) => {
   const width = !props.width || props.width <= 1 ? undefined : props.width
   const height = !props.height || props.height <= 1 ? undefined : props.height
-  const src = props.src ? formatSrc(props.src, props.domain) : undefined
+  const src = props.src ? formatSrc(props.src, props.domain, props.useHttps) : undefined
 
   return Object.assign( {}, props, { width, height, src,} )
 }
