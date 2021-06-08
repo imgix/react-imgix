@@ -41,9 +41,6 @@ const makeBackgroundWithBounds = (bounds) => (props) => (
 
 const src = "http://domain.imgix.net/image.jpg";
 let sut;
-// TODO(luis): do we need to mock error? There's a react error logging that
-// might make the test-suite fail on CI.
-// jest.spyOn(global.console, 'error').mockImplementation((error) => { console.log(error) })
 jest.spyOn(global.console, 'warn').mockImplementation((msg) => {console.log(msg)})
 
 describe("When in default mode", () => {
