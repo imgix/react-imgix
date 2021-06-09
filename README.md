@@ -335,42 +335,41 @@ The [`<ImgixProvider>`]() Higher Order Component (HOC), makes [Shared Props](#sh
 For example, by rendering `<ImgixProvider>` at the top level of your application with `imgixParams` defined, all your `<Imgix>` components will have access to the same `imgixParams`.
 
 ```jsx
-import React from 'react'
-import Imgix, { ImgixProvider } from "react-imgix"
-import HomePage from "./components/HomePage"
+import React from "react";
+import Imgix, { ImgixProvider } from "react-imgix";
+import HomePage from "./components/HomePage";
 
 function App() {
-
   return (
     <div className="App">
       <header className="App-header">
         <ImgixProvider imgixParams={{ ar: "16:9" }}>
-          <div className="intro-blurb">
-          {/* ... */}
-          </div>
+          <div className="intro-blurb">{/* ... */}</div>
           <div className="gallery">
-              <Imgix 
-                src="https://assets.imgix.net/examples/pione.jpg"
-              />
-              <Imgix 
-                src="https://sdk-test.imgix.net/ساندویچ.jpg"
-              />
+            <Imgix src="https://assets.imgix.net/examples/pione.jpg" />
+            <Imgix src="https://sdk-test.imgix.net/ساندویچ.jpg" />
           </div>
         </ImgixProvider>
       </header>
     </div>
-  )
+  );
 }
 
-export default App
+export default App;
 ```
 
 So that the generated HTML looks something like
 
 ```html
 <div class="gallery">
-  <img src="https://assets.imgix.net/examples/pione.jpg?auto=format&ar=16%3A9&" .../>
-  <img src="https://sdk-test.imgix.net/%D8%B3%D8%A7%D9%86%D8%AF%D9%88%DB%8C%DA%86.jpg?auto=format&ar=16%3A9&" .../>
+  <img
+    src="https://assets.imgix.net/examples/pione.jpg?auto=format&ar=16%3A9&"
+    ...
+  />
+  <img
+    src="https://sdk-test.imgix.net/%D8%B3%D8%A7%D9%86%D8%AF%D9%88%DB%8C%DA%86.jpg?auto=format&ar=16%3A9&"
+    ...
+  />
 </div>
 ```
 
@@ -378,25 +377,30 @@ You can take advantage of this behavior to use 2-step, or partial, URLs with the
 
 ```jsx
 // inside App.jsx
-{/*... */}
+{
+  /*... */
+}
 <ImgixProvider domain="assets.imgix.net">
-  <div className="intro-blurb">
-  {/* ... */}s
-  </div>
+  <div className="intro-blurb">{/* ... */}s</div>
   <div className="gallery">
-      <Imgix src="/examples/pione.jpg" />
-      <Imgix src="/ساندویچ.jpg" />
+    <Imgix src="/examples/pione.jpg" />
+    <Imgix src="/ساندویچ.jpg" />
   </div>
-</ImgixProvider>
-{/*... */}
+</ImgixProvider>;
+{
+  /*... */
+}
 ```
 
 Both the `<Imgix>` components above will access to the `domain` prop from the provider and have their relative `src` paths resolve to the same domain. So that the generated HTML looks something like
 
 ```html
 <div class="gallery">
-  <img src="https://assets.imgix.net/examples/pione.jpg" .../>
-  <img src="https://assets.imgix.net/%D8%B3%D8%A7%D9%86%D8%AF%D9%88%DB%8C%DA%86.jpg" .../>
+  <img src="https://assets.imgix.net/examples/pione.jpg" ... />
+  <img
+    src="https://assets.imgix.net/%D8%B3%D8%A7%D9%86%D8%AF%D9%88%DB%8C%DA%86.jpg"
+    ...
+  />
 </div>
 ```
 
@@ -404,28 +408,33 @@ The props that `<ImgixProvider>` makes accessible can also be overridden by `<Im
 
 ```jsx
 // inside App.jsx
-{/*... */}
+{
+  /*... */
+}
 <ImgixProvider imgixParams={{ ar: "16:9" }}>
-  <div className="intro-blurb">
-  {/* ... */}s
-  </div>
+  <div className="intro-blurb">{/* ... */}s</div>
   <div className="gallery">
-      <Imgix
-        imgixParams={ {ar: "4:2"} }
-        src="https://assets.imgix.net/examples/pione.jpg"
-      />
-      <Imgix src="https://sdk-test.imgix.net/ساندویچ.jpg" />
+    <Imgix
+      imgixParams={{ ar: "4:2" }}
+      src="https://assets.imgix.net/examples/pione.jpg"
+    />
+    <Imgix src="https://sdk-test.imgix.net/ساندویچ.jpg" />
   </div>
-</ImgixProvider>
-{/*... */}
+</ImgixProvider>;
+{
+  /*... */
+}
 ```
 
 So that the generated HTML looks something like this
 
 ```html
 <div class="gallery">
-  <img src="https://assets.imgix.net/examples/pione.jpg?ar=4%3A2" .../>
-  <img src="https://sdk-test.imgix.net/%D8%B3%D8%A7%D9%86%D8%AF%D9%88%DB%8C%DA%86.jpg?ar=16%3A9" .../>
+  <img src="https://assets.imgix.net/examples/pione.jpg?ar=4%3A2" ... />
+  <img
+    src="https://sdk-test.imgix.net/%D8%B3%D8%A7%D9%86%D8%AF%D9%88%DB%8C%DA%86.jpg?ar=16%3A9"
+    ...
+  />
 </div>
 ```
 
@@ -433,30 +442,30 @@ To remove a shared prop from an `<Imgix>` component, the same prop can be set to
 
 ```jsx
 // inside App.jsx
-{/*... */}
+{
+  /*... */
+}
 <ImgixProvider height={500}>
-  <div className="intro-blurb">
-  {/* ... */}s
-  </div>
+  <div className="intro-blurb">{/* ... */}s</div>
   <div className="gallery">
-      <Imgix
-        src="https://assets.imgix.net/examples/pione.jpg"
-      />
-      <Imgix
-        height={undefined}
-        src="https://sdk-test.imgix.net/ساندویچ.jpg"
-      />
+    <Imgix src="https://assets.imgix.net/examples/pione.jpg" />
+    <Imgix height={undefined} src="https://sdk-test.imgix.net/ساندویچ.jpg" />
   </div>
-</ImgixProvider>
-{/*... */}
+</ImgixProvider>;
+{
+  /*... */
+}
 ```
 
 So that the generated HTML looks something like this
 
 ```html
 <div class="gallery">
-  <img src="https://assets.imgix.net/examples/pione.jpg?h=500" .../>
-  <img src="https://sdk-test.imgix.net/%D8%B3%D8%A7%D9%86%D8%AF%D9%88%DB%8C%DA%86.jpg" .../>
+  <img src="https://assets.imgix.net/examples/pione.jpg?h=500" ... />
+  <img
+    src="https://sdk-test.imgix.net/%D8%B3%D8%A7%D9%86%D8%AF%D9%88%DB%8C%DA%86.jpg"
+    ...
+  />
 </div>
 ```
 
