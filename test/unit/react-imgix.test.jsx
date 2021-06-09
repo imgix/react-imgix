@@ -443,21 +443,6 @@ describe("When in picture mode", () => {
     it("only one child should exist", () => {
       expect(children).toHaveLength(1);
     });
-    it.skip("props should not be passed down to children", () => {
-      expect(
-        lastChild
-          .first()
-          .shallow() // hack from https://github.com/airbnb/enzyme/issues/539#issuecomment-239497107 until a better solution is implemented
-          .props()
-      ).toMatchObject({
-        imgixParams: {
-          crop: "faces",
-        },
-        htmlAttributes: {
-          alt: childAlt,
-        },
-      });
-    });
   });
 
   describe("with an <img> passed as a child", () => {
