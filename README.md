@@ -330,7 +330,7 @@ A warning is displayed when no fallback image is passed. This warning can be dis
 
 > New 🪄 ✨
 
-The [`<ImgixProvider>`]() Higher Order Component (HOC), makes [Shared Props](#shared-props-imgix-source) available to any nested `<Imgix>` component in your React application.
+The [`<ImgixProvider>`]() Higher Order Component (HOC), makes its [props](#props) available to any nested `<Imgix>` component in your React application.
 
 For example, by rendering `<ImgixProvider>` at the top level of your application with `imgixParams` defined, all your `<Imgix>` components will have access to the same `imgixParams`.
 
@@ -467,6 +467,48 @@ So that the generated HTML looks something like this
     ...
   />
 </div>
+```
+
+You cans nest `ImgixProvider` components to ensure that different consumers have different props.
+
+For example to give `Imgix` components different props from `Picture` components, you can next an `ImgixProvider` inside of another one.
+
+The nested Provider will change the Context for the `Picture` component, essentially removing their access to the shared props provided by the root `ImgixProvider`.
+
+```jsx
+import React from 'react'
+import Imgix, { ImgixProvider, Picture, Source } from "react-imgix";
+export default function simpleImage() {
+  return (
+    <div className="imgix-simple-api-example">
+      {/* there props will be accessible to all the imgix components */}
+      <ImgixProvider
+        domain="assets.imgix.net"
+        src="/examples/pione.jpg"
+        imgixParams={{ fit: "crop" }}
+      >
+        <Imgix width={200} height={500} src="/examples/pione.jpg" />
+        <Imgix domain="sdk-test.imgix.net" src="/ساندویچ.jpg" />
+        <ImgixProvider
+          {/* since we define a new provider here, the context is redefined for any child components */}
+        >
+          <Picture>
+            {/* imgixParams prop is no longer defined here */}
+            <Source
+              width={100}
+              htmlAttributes={{ media: "(min-width: 768px)" }}
+            />
+            <Source
+              width={200}
+              htmlAttributes={{ media: "(min-width: 800px)" }}
+            />
+            <Imgix src="/examples/pione.jpg" />
+          </Picture>
+        </ImgixProvider>
+      </ImgixProvider>
+    </div>
+  )
+}
 ```
 
 ### Advanced Examples
