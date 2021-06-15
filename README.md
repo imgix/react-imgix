@@ -33,7 +33,7 @@
         + [Fixed Image Rendering (i.e. non-flexible)](#fixed-image-rendering-ie-non-flexible)
         + [Background Mode](#background-mode)
         + [Picture Support](#picture-support)
-        + [ImgixProvider Component ✨](#imgixprovider-component)
+        + [ImgixProvider Component](#imgixprovider-component)
     * [Advanced Examples](#advanced-examples)
         + [General Advanced Usage](#general-advanced-usage)
         + [Passing Custom HTML Attributes](#passing-custom-html-attributes)
@@ -328,9 +328,7 @@ A warning is displayed when no fallback image is passed. This warning can be dis
 
 #### ImgixProvider Component
 
-> New 🪄 ✨
-
-The [`<ImgixProvider>`]() Higher Order Component (HOC), makes its [props](#props) available to any nested `<Imgix>` component in your React application.
+The `<ImgixProvider>` Higher Order Component (HOC), makes its [props](#props) available to any nested `<Imgix>` component in your React application.
 
 For example, by rendering `<ImgixProvider>` at the top level of your application with `imgixParams` defined, all your `<Imgix>` components will have access to the same `imgixParams`.
 
@@ -363,17 +361,17 @@ So that the generated HTML looks something like
 ```html
 <div class="gallery">
   <img
-    src="https://assets.imgix.net/examples/pione.jpg?auto=format&ar=16%3A9&"
+    src="https://assets.imgix.net/examples/pione.jpg?auto=format&ar=16%3"
     ...
   />
   <img
-    src="https://sdk-test.imgix.net/%D8%B3%D8%A7%D9%86%D8%AF%D9%88%DB%8C%DA%86.jpg?auto=format&ar=16%3A9&"
+    src="https://sdk-test.imgix.net/%D8%B3%D8%A7%D9%86%D8%AF%D9%88%DB%8C%DA%86.jpg?auto=format&ar=16%3"
     ...
   />
 </div>
 ```
 
-You can take advantage of this behavior to use 2-step, or partial, URLs with the `<Imgix>` component. By defining the [`domain`](#domain--string-optional) prop on the Provider, it can be made accessible to all nested `<Imgix>` components.
+You can take advantage of this behavior to use partial URLs with the `<Imgix>` component. By defining the [`domain`](#domain--string-optional) prop on the Provider, it can be made accessible to all nested `<Imgix>` components.
 
 ```jsx
 // inside App.jsx
@@ -384,7 +382,7 @@ You can take advantage of this behavior to use 2-step, or partial, URLs with the
   <div className="intro-blurb">{/* ... */}s</div>
   <div className="gallery">
     <Imgix src="/examples/pione.jpg" />
-    <Imgix src="/ساندویچ.jpg" />
+    <Imgix src="Office Background 1.png" />
   </div>
 </ImgixProvider>;
 {
@@ -398,7 +396,7 @@ Both the `<Imgix>` components above will access to the `domain` prop from the pr
 <div class="gallery">
   <img src="https://assets.imgix.net/examples/pione.jpg" ... />
   <img
-    src="https://assets.imgix.net/%D8%B3%D8%A7%D9%86%D8%AF%D9%88%DB%8C%DA%86.jpg"
+    src="https://assets.imgix.net/Office%20Background%201.png?auto=format"
     ...
   />
 </div>
@@ -614,7 +612,7 @@ Usually in the form: `https://[your_domain].imgix.net/[image]`. Don't include an
 
 ##### domain :: string, optional
 
-Required only when using 2-step, partial, paths as `src` prop for a component. IE, if `src` is `"/images/myImage.jpg"`, then the `domain` prop needs to be defined.
+Required only when using partial paths as `src` prop for a component. IE, if `src` is `"/images/myImage.jpg"`, then the `domain` prop needs to be defined.
 
 _For example_:
 
