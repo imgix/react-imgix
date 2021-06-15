@@ -390,7 +390,7 @@ You can take advantage of this behavior to use partial URLs with the `<Imgix>` c
 }
 ```
 
-Both the `<Imgix>` components above will access to the `domain` prop from the provider and have their relative `src` paths resolve to the same domain. So that the generated HTML looks something like
+Both the `<Imgix>` components above will access to the `domain` prop from the provider and have their relative `src` paths resolve to the same domain. So that the generated HTML looks something like:
 
 ```html
 <div class="gallery">
@@ -455,7 +455,7 @@ To remove a shared prop from an `<Imgix>` component, the same prop can be set to
 }
 ```
 
-So that the generated HTML looks something like this
+So that the generated HTML looks something like this:
 
 ```html
 <div class="gallery">
@@ -467,9 +467,9 @@ So that the generated HTML looks something like this
 </div>
 ```
 
-You cans nest `ImgixProvider` components to ensure that different consumers have different props.
+You can nest `ImgixProvider` components to ensure that different consumers have different props.
 
-For example to give `Imgix` components different props from `Picture` components, you can next an `ImgixProvider` inside of another one.
+For example to give `Imgix` components different props from `Picture` components, you can nest an `ImgixProvider` inside of another one.
 
 The nested Provider will change the Context for the `Picture` component, essentially removing their access to the shared props provided by the root `ImgixProvider`.
 
