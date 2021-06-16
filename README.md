@@ -341,7 +341,7 @@ function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <ImgixProvider imgixParams={{ ar: "16:9" }}>
+        <ImgixProvider imgixParams={{ ar: "16:9", fit: "crop" }}>
           <div className="intro-blurb">{/* ... */}</div>
           <div className="gallery">
             <Imgix src="https://assets.imgix.net/examples/pione.jpg" />
@@ -361,11 +361,11 @@ So that the generated HTML looks something like
 ```html
 <div class="gallery">
   <img
-    src="https://assets.imgix.net/examples/pione.jpg?auto=format&ar=16%3"
+    src="https://assets.imgix.net/examples/pione.jpg?auto=format&ar=16%3A9&fit=crop"
     ...
   />
   <img
-    src="https://sdk-test.imgix.net/%D8%B3%D8%A7%D9%86%D8%AF%D9%88%DB%8C%DA%86.jpg?auto=format&ar=16%3"
+    src="https://sdk-test.imgix.net/%D8%B3%D8%A7%D9%86%D8%AF%D9%88%DB%8C%DA%86.jpg?auto=format&ar=16%3A9&fit=crop"
     ...
   />
 </div>
@@ -409,7 +409,7 @@ The props that `<ImgixProvider>` makes accessible can also be overridden by `<Im
 {
   /*... */
 }
-<ImgixProvider imgixParams={{ ar: "16:9" }}>
+<ImgixProvider imgixParams={{ ar: "16:9", fit:"crop" }}>
   <div className="intro-blurb">{/* ... */}s</div>
   <div className="gallery">
     <Imgix
@@ -428,9 +428,12 @@ So that the generated HTML looks something like this
 
 ```html
 <div class="gallery">
-  <img src="https://assets.imgix.net/examples/pione.jpg?ar=4%3A2" ... />
   <img
-    src="https://sdk-test.imgix.net/%D8%B3%D8%A7%D9%86%D8%AF%D9%88%DB%8C%DA%86.jpg?ar=16%3A9"
+    src="https://assets.imgix.net/examples/pione.jpg?auto=format&ar=4%3A2&fit=crop"
+    ...
+  />
+  <img
+    src="https://sdk-test.imgix.net/%D8%B3%D8%A7%D9%86%D8%AF%D9%88%DB%8C%DA%86.jpg?ar=16%3A9&fit=crop"
     ...
   />
 </div>
