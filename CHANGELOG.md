@@ -1,3 +1,21 @@
+## [9.2.0](https://github.com/imgix/react-imgix/compare/v9.1.5...v9.2.0) (2021-06-17)
+
+
+### Features
+
+* add collapseImgixParams function to shorten imgix params ([97e7155](https://github.com/imgix/react-imgix/commit/97e7155839e0c0a90a96fca07321cd2c7d9ab55b))
+* create imgixProvider component ([cb7608b](https://github.com/imgix/react-imgix/commit/cb7608bfe2e38cbcf1cd24b2f6a479994e34d0ab))
+* create mergeComponentProps & processProps ([19684ed](https://github.com/imgix/react-imgix/commit/19684ed3f388ef3c7fc796ac90ddc2221b717bcc))
+* recursive merge imgixParams & htmlAttributes ([34231c3](https://github.com/imgix/react-imgix/commit/34231c3096a446bc7dee69fcfe5ee4c0d63e2356))
+* wrap ReactImgix with props HOFs ([07c1d0a](https://github.com/imgix/react-imgix/commit/07c1d0ab6e6215a42498a712e6a1bee3ef1e050c))
+
+
+### Bug Fixes
+
+* move consumer validation to avoid unnecessary warnings ([b034d8a](https://github.com/imgix/react-imgix/commit/b034d8abd48b23979f715338420d01a32764bbb6))
+* remove compose ([7860d12](https://github.com/imgix/react-imgix/commit/7860d12cff90e6cc56bdc02cd4c34665240cf835))
+* shadows prop spelling ([41971fb](https://github.com/imgix/react-imgix/commit/41971fbdb00e088e90189d6d390df998b1e17aec))
+
 ### [9.1.5](https://github.com/imgix/react-imgix/compare/v9.1.4...v9.1.5) (2021-06-02)
 
 ### [9.1.4](https://github.com/imgix/react-imgix/compare/v9.1.3...v9.1.4) (2021-05-28)
