@@ -93,7 +93,7 @@
     "babel-loader": "8.2.1",
     "babel-plugin-inline-package-json": "2.0.0",
     "babel-plugin-transform-es2017-object-entries": "0.0.5",
-    "browserslist": "4.7.0",
+    "browserslist": "4.16.6",
     "common-tags": "1.8.0",
     "conventional-changelog-conventionalcommits": "4.6.0",
     "cross-env": "7.0.3",
