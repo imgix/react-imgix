@@ -45,6 +45,10 @@ const SHARED_IMGIX_AND_SOURCE_PROP_TYPES = Object.assign(
     width: PropTypes.number,
     height: PropTypes.number,
     src: PropTypes.string.isRequired,
+    srcSetWidths: PropTypes.arrayOf(PropTypes.number),
+    srcSetWidthTolerance: PropTypes.number,
+    srcSetMinWidth: PropTypes.number,
+    srcSetMaxWidth: PropTypes.number,
   }
 );
 
@@ -89,6 +93,10 @@ function buildSrc({
   disableSrcSet,
   imgixParams,
   disableQualityByDPR,
+  srcSetWidths,
+  srcSetWidthTolerance,
+  srcSetMinWidth,
+  srcSetMaxWidth,
 }) {
   const fixedSize = width != null || height != null;
 
@@ -129,6 +137,10 @@ function buildSrc({
 
       srcSet = buildSrcSet(rawSrc, urlParams, {
         disableVariableQuality: disableQualityByDPR,
+        widths: srcSetWidths,
+        widthTolerance: srcSetWidthTolerance,
+        minWidth: srcSetMinWidth,
+        maxWidth: srcSetMaxWidth,
       });
     } else {
       const { width, w, height, h, ...urlParams } = srcOptions;
@@ -137,7 +149,12 @@ function buildSrc({
       let showARWarning =
         aspectRatio != null && aspectRatioIsValid(aspectRatio) === false;
 
-      srcSet = buildSrcSet(rawSrc, urlParams);
+      srcSet = buildSrcSet(rawSrc, urlParams, {
+        widths: srcSetWidths,
+        widthTolerance: srcSetWidthTolerance,
+        minWidth: srcSetMinWidth,
+        maxWidth: srcSetMaxWidth,
+      });
 
       if (
         NODE_ENV !== "production" &&
@@ -368,14 +385,14 @@ class SourceImpl extends Component {
 }
 SourceImpl.displayName = "ReactImgixSource";
 
-const ReactImgixWrapped = (
-  mergeComponentPropsHOF(processPropsHOF(ShouldComponentUpdateHOC(ReactImgix)))
+const ReactImgixWrapped = mergeComponentPropsHOF(
+  processPropsHOF(ShouldComponentUpdateHOC(ReactImgix))
 );
-const Picture = (
-  mergeComponentPropsHOF(processPropsHOF(ShouldComponentUpdateHOC(PictureImpl)))
+const Picture = mergeComponentPropsHOF(
+  processPropsHOF(ShouldComponentUpdateHOC(PictureImpl))
 );
-const Source = (
-  mergeComponentPropsHOF(processPropsHOF(ShouldComponentUpdateHOC(SourceImpl)))
+const Source = mergeComponentPropsHOF(
+  processPropsHOF(ShouldComponentUpdateHOC(SourceImpl))
 );
 
 export default ReactImgixWrapped;
