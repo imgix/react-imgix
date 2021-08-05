@@ -5,7 +5,7 @@ import { config } from "./common";
 import { PACKAGE_VERSION } from "./constants";
 import constructUrl, {
   compactParamKeys,
-  extractClientAndPathComponents,
+  extractClientAndPathComponents
 } from "./constructUrl";
 import extractQueryParams from "./extractQueryParams";
 import { ShouldComponentUpdateHOC } from "./HOCs";
@@ -45,7 +45,7 @@ const SHARED_IMGIX_AND_SOURCE_PROP_TYPES = Object.assign(
     width: PropTypes.number,
     height: PropTypes.number,
     src: PropTypes.string.isRequired,
-    srcSetOptions: PropTypes.objectOf({
+    srcSetOptions: PropTypes.shape({
       widths: PropTypes.arrayOf(PropTypes.number),
       widthTolerance: PropTypes.number,
       minWidth: PropTypes.number,
@@ -388,9 +388,10 @@ const Source = mergeComponentPropsHOF(
 
 export default ReactImgixWrapped;
 export {
-  ReactImgix as __ReactImgixImpl, // for testing
+  ReactImgix as __ReactImgixImpl,
   Picture,
   Source,
-  SourceImpl as __SourceImpl, // for testing
+  SourceImpl as __SourceImpl,
   PictureImpl as __PictureImpl, // for testing
 };
+
