@@ -218,7 +218,11 @@ Fixed image rendering will automatically append a variable `q` parameter mapped 
 This behavior will respect any overriding `q` value passed in via `imgixParams` and can be disabled altogether with the boolean property `disableQualityByDPR`.
 
 ```js
-<Imgix src="https://domain.imgix.net/image.jpg" width={100} disableQualityByDPR />
+<Imgix
+  src="https://domain.imgix.net/image.jpg"
+  width={100}
+  disableQualityByDPR
+/>
 ```
 
 will generate the following srcset:
@@ -299,15 +303,15 @@ import Imgix, { Picture, Source } from "react-imgix";
 In order to reduce the duplication in props, JSX supports object spread for props:
 
 ```js
-import Imgix, { Picture, Source } from 'react-imgix'
+import Imgix, { Picture, Source } from "react-imgix";
 
 const commonProps = {
-  src: 'https://...',
+  src: "https://...",
   imgixParams: {
-    fit: 'crop',
-    crop: 'faces'
-  }
-}
+    fit: "crop",
+    crop: "faces",
+  },
+};
 
 <Picture>
   <Source
@@ -321,7 +325,7 @@ const commonProps = {
     htmlAttributes={{ media: "(min-width: 320px)" }}
   />
   <Imgix src={src} width={100} />
-</Picture>
+</Picture>;
 ```
 
 A warning is displayed when no fallback image is passed. This warning can be disabled in special circumstances. To disable this warning, look in the [warnings section](#warnings).
@@ -409,7 +413,7 @@ The props that `<ImgixProvider>` makes accessible can also be overridden by `<Im
 {
   /*... */
 }
-<ImgixProvider imgixParams={{ ar: "16:9", fit:"crop" }}>
+<ImgixProvider imgixParams={{ ar: "16:9", fit: "crop" }}>
   <div className="intro-blurb">{/* ... */}s</div>
   <div className="gallery">
     <Imgix
@@ -683,6 +687,10 @@ This re-maps src to `data-src`, srcSet to `data-srcset`, etc.
 
 Disable generation of variable `q` parameters when rendering a fixed-size image.
 
+##### srcSetOptions :: object
+
+Allows customizing the behavior of the srcset generation. Valid options are `widths`, `widthTolerance`, `minWidth`, and `maxWidth`. See [@imgix/js-core](https://github.com/imgix/js-core#imgixclientbuildsrcsetpath-params-options) for documentation of these options.
+
 #### Picture Props
 
 ##### className :: string
@@ -793,21 +801,22 @@ To upgrade to version 8, the following changes should be made.
 - Change all usages of `type='picture'` to `<Picture>` and `type='source'` to `<Source>`
 
     <!-- prettier-ignore-start -->
-    ```jsx
-    // this...
-    <Imgix type='picture'>
-      <Imgix type='source' src={src}>
-      <Imgix type='source' src={src}>
-    </Imgix>
 
-    // becomes...
-    <Picture>
-      <Source src={src}>
-      <Source src={src}>
-    </Picture>
-    ```
+  ```jsx
+  // this...
+  <Imgix type='picture'>
+    <Imgix type='source' src={src}>
+    <Imgix type='source' src={src}>
+  </Imgix>
 
-    See [Picture support](#picture-support) for more information.
+  // becomes...
+  <Picture>
+    <Source src={src}>
+    <Source src={src}>
+  </Picture>
+  ```
+
+  See [Picture support](#picture-support) for more information.
     <!-- prettier-ignore-end -->
 
 - Remove all usage of `type='bg'` as it is no longer supported. It was decided that it was too hard to implement this feature consistently. If you would still like to use this feature, please give this issue a thumbs up: [https://github.com/imgix/react-imgix/issues/160](https://github.com/imgix/react-imgix/issues/160) If we get enough requests for this, we will re-implement it.
