@@ -31,17 +31,20 @@ function shallow(element, target = __ReactImgixImpl, shallowOptions) {
 const shallowSource = (element) => shallow(element, __SourceImpl);
 const shallowPicture = (element) => shallow(element, __PictureImpl);
 
-const makeBackgroundWithBounds = (bounds) => (props) => (
-  <__BackgroundImpl
-    measureRef={() => null}
-    contentRect={{ bounds }}
-    {...props}
-  />
-);
+const makeBackgroundWithBounds = (bounds) => (props) =>
+  (
+    <__BackgroundImpl
+      measureRef={() => null}
+      contentRect={{ bounds }}
+      {...props}
+    />
+  );
 
 const src = "http://domain.imgix.net/image.jpg";
 let sut;
-jest.spyOn(global.console, 'warn').mockImplementation((msg) => {console.log(msg)})
+jest.spyOn(global.console, "warn").mockImplementation((msg) => {
+  console.log(msg);
+});
 
 describe("When in default mode", () => {
   it("the rendered element's type should be img", () => {
@@ -152,6 +155,77 @@ describe("When in default mode", () => {
         expect(srcset[4].split(" ")[0]).toContain("q=" + q_override);
       });
     });
+
+    describe("supports custom srcSet options", () => {
+      it('allows the default "widths" option to be overriden', () => {
+        const sut = shallow(
+          <Imgix
+            src={src}
+            srcSetOptions={{
+              widths: [100, 200, 300],
+            }}
+          />
+        );
+        const srcset = sut.props().srcSet;
+
+        const srcsetWidths = srcset
+          .replace(/[\n\s]+/g, " ")
+          .split(", ")
+          .map((srcset) => srcset.split(" ")[1])
+          .map((width) => width.slice(0, -1))
+          .map(Number.parseFloat);
+
+        expect(srcsetWidths).toEqual([100, 200, 300]);
+      });
+
+      it('allows the default "widthTolerance" option to be overriden', () => {
+        const sut = shallow(
+          <Imgix
+            src={src}
+            srcSetOptions={{
+              widthTolerance: 0.2,
+            }}
+          />
+        );
+        const srcset = sut.props().srcSet;
+
+        const srcsetWidths = srcset
+          .replace(/[\n\s]+/g, " ")
+          .split(", ")
+          .map((srcset) => srcset.split(" ")[1])
+          .map((width) => width.slice(0, -1))
+          .map(Number.parseFloat);
+
+        expect(srcsetWidths).toEqual([
+          100, 140, 196, 274, 384, 538, 753, 1054, 1476, 2066, 2893, 4050, 5669,
+          7937, 8192,
+        ]);
+      });
+
+      it('allows the default "minWidth" and "maxWidth" options to be overriden', () => {
+        const sut = shallow(
+          <Imgix
+            src={src}
+            srcSetOptions={{
+              minWidth: 200,
+              maxWidth: 1000,
+            }}
+          />
+        );
+        const srcset = sut.props().srcSet;
+
+        const srcsetWidths = srcset
+          .replace(/[\n\s]+/g, " ")
+          .split(", ")
+          .map((srcset) => srcset.split(" ")[1])
+          .map((width) => width.slice(0, -1))
+          .map(Number.parseFloat);
+
+        expect(srcsetWidths).toEqual([
+          200, 232, 269, 312, 362, 420, 487, 565, 656, 761, 882, 1000,
+        ]);
+      });
+    });
   });
 });
 
@@ -238,6 +312,7 @@ describe("When in <source> mode", () => {
       const srcset = renderImage().props().srcSet;
 
       const srcsetWidths = srcset
+        .replace(/[\n\s]+/g, " ")
         .split(", ")
         .map((srcset) => srcset.split(" ")[1])
         .map((width) => width.slice(0, -1))
@@ -398,7 +473,8 @@ describe("When in picture mode", () => {
     it("an <img> or a <Imgix> should be the last child", () => {
       // If the number of HOCs for ReactImgix is changed, there may need to be a change in the number of .first().shallow() calls
       // hack from https://github.com/airbnb/enzyme/issues/539#issuecomment-239497107 until a better solution is implemented
-      const lastChildElement = lastChild.first()
+      const lastChildElement = lastChild
+        .first()
         .shallow()
         .first()
         .shallow()
@@ -711,7 +787,6 @@ describe("When using the component", () => {
     describe("invalid AR", () => {
       const testInvalidAR = (ar) => {
         it(`an invalid ar prop (${ar}) will still generate an ar query parameter`, () => {
-
           const parseParam = (url, param) => {
             const matched = url.match("[?&]" + param + "=([^&]+)");
             if (!matched) return undefined;
