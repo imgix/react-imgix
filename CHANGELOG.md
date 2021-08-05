@@ -1,3 +1,16 @@
+## [9.3.0](https://github.com/imgix/react-imgix/compare/v9.2.0...v9.3.0) (2021-08-05)
+
+
+### Features
+
+* add support for customizing srcset generation ([a00cf3a](https://github.com/imgix/react-imgix/commit/a00cf3ab4e501c4345732e8b26ba10fdef7b039b))
+
+
+### Bug Fixes
+
+* replace individual props with single srcSetOptions prop ([9fc01fe](https://github.com/imgix/react-imgix/commit/9fc01fe971931b84e723534bf225a8a927ce9fcd))
+* revert changes to package-lock.json ([d85b371](https://github.com/imgix/react-imgix/commit/d85b371f27d30bc2a5c263760bb6a50aeab6ec2d))
+
 ## [9.2.0](https://github.com/imgix/react-imgix/compare/v9.1.5...v9.2.0) (2021-06-17)
 
 
