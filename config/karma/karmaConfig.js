@@ -13,7 +13,7 @@ const baseConfig = {
     "karma-chrome-launcher",
   ],
   preprocessors: {
-    "../../test/tests.webpack.js": "webpack"
+    "../../test/tests.webpack.js": "webpack",
   },
   reporters: ["mocha"],
   captureTimeout: 100000,
@@ -21,26 +21,26 @@ const baseConfig = {
   browserNoActivityTimeout: 60000,
   webpack: webpackConfig,
   webpackMiddleware: {},
-  concurrency: 5
+  concurrency: 5,
 };
 
 /**
  * Local testing - headless browsers
  */
 
-const headlessConfig = karmaConfig => {
+const headlessConfig = (karmaConfig) => {
   process.env.CHROME_BIN = require("puppeteer").executablePath();
   const headlessConfig = {
     ...baseConfig,
     browsers: ["ChromeHeadless"],
     webpack: {
       ...baseConfig.webpack,
-      stats: "errors-only"
+      stats: "errors-only",
     },
     webpackMiddleware: {
       ...baseConfig.webpackMiddleware,
-      stats: "errors-only"
-    }
+      stats: "errors-only",
+    },
   };
   karmaConfig.set(headlessConfig);
 };
@@ -49,11 +49,11 @@ const headlessConfig = karmaConfig => {
  * Local testing - full browsers
  */
 
-const localConfig = karmaConfig => {
+const localConfig = (karmaConfig) => {
   const browsers = [
     "ChromeHeadless",
     "FirefoxHeadless",
-    ...(process.platform === "darwin" ? ["Safari"] : [])
+    ...(process.platform === "darwin" ? ["Safari"] : []),
   ];
   karmaConfig.set({
     ...baseConfig,
@@ -61,18 +61,18 @@ const localConfig = karmaConfig => {
     customLaunchers: {
       FirefoxHeadless: {
         base: "Firefox",
-        flags: ["-headless"]
-      }
+        flags: ["-headless"],
+      },
     },
 
     webpack: {
       ...baseConfig.webpack,
-      stats: "errors-only"
+      stats: "errors-only",
     },
     webpackMiddleware: {
       ...baseConfig.webpackMiddleware,
-      stats: "errors-only"
-    }
+      stats: "errors-only",
+    },
   });
 };
 
@@ -80,7 +80,7 @@ const localConfig = karmaConfig => {
  * CI testing - Chrome, Firefox, and (if available) BrowserStack
  */
 
-const headlessConfigCI = karmaConfig => {
+const headlessConfigCI = (karmaConfig) => {
   const config = {
     ...baseConfig,
     reporters: [...baseConfig.reporters],
@@ -88,19 +88,19 @@ const headlessConfigCI = karmaConfig => {
     customLaunchers: {
       ChromeTravis: {
         base: "ChromeHeadless",
-        flags: ["--no-sandbox"]
+        flags: ["--no-sandbox"],
       },
       FirefoxHeadless: {
         base: "Firefox",
-        flags: ["-headless"]
-      }
+        flags: ["-headless"],
+      },
     },
     plugins: [...baseConfig.plugins],
     client: {
       mocha: {
-        timeout: 20000 // 20 seconds
-      }
-    }
+        timeout: 20000, // 20 seconds
+      },
+    },
   };
 
   karmaConfig.set(config);
@@ -164,7 +164,7 @@ const fullConfig = async (karmaConfig) => {
   console.log(`Using BrowserStack custom browsers: ${customBSLaunchers}`);
 
   const bsBrowsersWithoutChromeAndFirefox = bsBrowsers.filter(
-    browser => !(browser.includes("chrome") || browser.includes("firefox"))
+    (browser) => !(browser.includes("chrome") || browser.includes("firefox"))
   );
 
   const config = {
@@ -184,14 +184,14 @@ const fullConfig = async (karmaConfig) => {
     plugins: [...baseConfig.plugins, "karma-browserstack-launcher"],
     client: {
       mocha: {
-        timeout: 20000 // 20 seconds
-      }
-    }
+        timeout: 20000, // 20 seconds
+      },
+    },
   };
 
   console.log(
     "Testing on browsers:\n",
-    config.browsers.map(browser => ` - ${browser}`).join("\n")
+    config.browsers.map((browser) => ` - ${browser}`).join("\n")
   );
 
   karmaConfig.set(config);
