@@ -1,3 +1,4 @@
+const browserList_browserStack = require("browserslist-browserstack");
 const webpack = require("karma-webpack");
 const webpackConfig = require("../webpackConfig");
 const baseConfig = {
@@ -9,7 +10,7 @@ const baseConfig = {
     require("karma-safari-launcher"),
     "karma-mocha",
     "karma-mocha-reporter",
-    "karma-chrome-launcher"
+    "karma-chrome-launcher",
   ],
   preprocessors: {
     "../../test/tests.webpack.js": "webpack"
@@ -105,155 +106,63 @@ const headlessConfigCI = karmaConfig => {
   karmaConfig.set(config);
 };
 
-const availableOnWindows = browser =>
-  ["ie", "edge", "chrome", "firefox"].includes(browser);
-const availableOnOSX = browser =>
-  ["safari", "chrome", "firefox"].includes(browser);
-
-const oldestVersionFromRange = versionRange => {
-  if (versionRange.includes("-")) {
-    return versionRange.split("-")[0];
-  }
-  return versionRange;
-};
-
-const isDesktop = browserOrPlatform =>
-  ["chrome", "firefox", "safari", "edge", "ie"].includes(browserOrPlatform);
-
-// Update these values from https://www.browserstack.com/automate/capabilities#test-configuration-capabilities if the build fails
-const getOSVersionAndDeviceForMobileChromeVersion = version => {
-  if (Number.parseFloat(version) >= 5) {
-    // Have to approximate os version as chrome versions are not tied to android versions after 4.4
-    return {
-      os_version: "8.0",
-      device: "Google Pixel 2"
-    };
-  }
-  return {
-    os_version: "4.4",
-    device: "Samsung Galaxy Tab 4"
-  };
-};
-const getOSVersionAndDeviceForMobileSafariVersion = version => {
-  const versionNumber = Number.parseFloat(version);
-  if (10 <= versionNumber && versionNumber < 11) {
-    return {
-      os_version: "10.3",
-      device: "iPhone 7"
-    };
-  }
-  if (11 <= versionNumber && versionNumber < 12) {
-    return {
-      os_version: "11.0",
-      device: "iPhone 8"
-    };
-  }
-  if (12 <= versionNumber && versionNumber < 13) {
-    return {
-      os_version: "12.1",
-      device: "iPhone XS"
-    };
-  }
-  // Try run test if version number is outside expected range
-  return {
-    os_version: `${versionNumber}.0`,
-    device: "iPhone XS"
-  };
-};
-
-const ensureBrowserVersionExistsOnBrowserStack = (browser, version) => {
-  const versionNumber = Number.parseFloat(version);
-  if (browser.toLowerCase() === "safari") {
-    if (11 <= versionNumber && versionNumber < 12) {
-      return "11.1";
-    }
-    if (10 <= versionNumber && versionNumber < 11) {
-      return "10.1";
-    }
-  }
-  return version;
-};
-const ensureOSXVersionIsCorrect = (browser, version) => {
-  const versionNumber = Number.parseFloat(version);
-  if (browser.toLowerCase() === "safari") {
-    if (12 <= versionNumber && versionNumber < 13) {
-      return "Mojave";
-    }
-    if (11 <= versionNumber && versionNumber < 12) {
-      return "High Sierra";
-    }
-    if (10 <= versionNumber && versionNumber < 11) {
-      return "Sierra";
-    }
-  }
-  return "High Sierra";
-};
-
-const mapBrowsersListToBrowserStackLaunchers = browserslistList => {
-  let browserStackConfigurationObjects = {};
-  browserslistList.forEach(browsersListItem => {
-    const [browserOrPlatform, versionRange] = browsersListItem.split(" ");
-    const version = oldestVersionFromRange(versionRange);
-    if (isDesktop(browserOrPlatform)) {
-      const versionSafe = ensureBrowserVersionExistsOnBrowserStack(
-        browserOrPlatform,
-        version
-      );
-      if (availableOnWindows(browserOrPlatform)) {
-        browserStackConfigurationObjects[
-          `bs_${browserOrPlatform}_${versionSafe}_windows`
-        ] = {
-          base: "BrowserStack",
-          browser: browserOrPlatform,
-          browser_version: versionSafe,
-          os: "WINDOWS",
-          os_version: "10"
-        };
-      }
-      if (availableOnOSX(browserOrPlatform)) {
-        browserStackConfigurationObjects[
-          `bs_${browserOrPlatform}_${versionSafe}_os_x`
-        ] = {
-          base: "BrowserStack",
-          browser: browserOrPlatform,
-          browser_version: versionSafe,
-          os: "OS X",
-          os_version: ensureOSXVersionIsCorrect(browserOrPlatform, versionSafe)
-        };
-      }
-    } else {
-      const isIOS = browserOrPlatform === "ios_saf";
-      const { os_version, device } = isIOS
-        ? getOSVersionAndDeviceForMobileSafariVersion(version)
-        : getOSVersionAndDeviceForMobileChromeVersion(version);
-      browserStackConfigurationObjects[
-        `bs_${browserOrPlatform}_${device}_${os_version}`
-      ] = {
-        base: "BrowserStack",
-        device,
-        real_mobile: true,
-        os: isIOS ? "ios" : "android",
-        os_version
-      };
-    }
+const formatForKarma = (capabilities, browserBase) => {
+  const res = {};
+  // store each capability in a separate key with a browser name as the key
+  capabilities.forEach((capability) => {
+    // extend the object
+    capability.base = browserBase;
+    // define a unique browser name
+    const { browser, browser_version, os, os_version } = capability;
+    const karmaBrowserName = `bs_${browser}_${browser_version}_${os}_${os_version}`;
+    // set the browser name as the key for the capabilities object
+    res[karmaBrowserName] = capability;
   });
+
   return {
-    browsers: Object.keys(browserStackConfigurationObjects),
-    customLaunchers: browserStackConfigurationObjects
+    browsers: Object.keys(res),
+    customLaunchers: res,
   };
 };
 
-const fullConfig = karmaConfig => {
+const mapBrowsersListToBrowserStackLaunchers = async () => {
+  return await browserList_browserStack // nosonar
+    .default({
+      username: process.env.BROWSERSTACK_USERNAME,
+      accessKey: process.env.BROWSERSTACK_ACCESS_KEY,
+      browserslist: {
+        queries: [
+          "ie >= 11",
+          "last 1 Android versions",
+          "last 1 Chrome versions",
+          "last 1 Firefox versions",
+          "last 1 Safari versions",
+          "last 1 iOS versions",
+          "last 1 Edge versions",
+          "last 1 Opera versions",
+        ], // TODO: pull in the package.json version
+      },
+      formatForSelenium: false,
+    })
+    .then((res) => {
+      return formatForKarma(res, "BrowserStack");
+    });
+};
+
+const fullConfig = async (karmaConfig) => {
   if (!isBrowserStackAvailable()) {
     console.log("BrowserStack not available");
     process.exit(0);
   }
-
-  const browserslist = require("browserslist");
+  const allBrowsers = await mapBrowsersListToBrowserStackLaunchers();
   const {
     browsers: bsBrowsers,
-    customLaunchers: customBSLaunchers
-  } = mapBrowsersListToBrowserStackLaunchers(browserslist());
+    customLaunchers: customBSLaunchers,
+  } = allBrowsers;
+
+  console.log(`Using BrowserStack browsers: ${bsBrowsers}`);
+  console.log(`Using BrowserStack custom browsers: ${customBSLaunchers}`);
+
   const bsBrowsersWithoutChromeAndFirefox = bsBrowsers.filter(
     browser => !(browser.includes("chrome") || browser.includes("firefox"))
   );
@@ -265,7 +174,8 @@ const fullConfig = karmaConfig => {
     port: 9876,
     browserStack: {
       username: process.env.BROWSERSTACK_USERNAME,
-      accessKey: process.env.BROWSERSTACK_ACCESS_KEY
+      accessKey: process.env.BROWSERSTACK_ACCESS_KEY,
+      build: `react-imgix-bs-${new Date().toLocaleDateString()}`,
     },
 
     browsers: bsBrowsersWithoutChromeAndFirefox,
