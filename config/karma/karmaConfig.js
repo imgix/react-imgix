@@ -126,7 +126,7 @@ const formatForKarma = (capabilities, browserBase) => {
 };
 
 const mapBrowsersListToBrowserStackLaunchers = async () => {
-  return await browserList_browserStack // nosonar
+  return await browserList_browserStack
     .default({
       username: process.env.BROWSERSTACK_USERNAME,
       accessKey: process.env.BROWSERSTACK_ACCESS_KEY,
