@@ -4,9 +4,11 @@ addons:
   chrome: beta
   firefox: latest
 
-node_js:
-  - lts/*
-  - stable
+jobs:
+  include:
+  - node: lts/*
+  - node: stable
+    env: NODE_OPTIONS=--openssl-legacy-provider
 
 script:
   - travis_retry npm test
