@@ -14,8 +14,6 @@ jobs:
     docker:
       - image: cimg/node:<<parameters.version>>-browsers
     resource_class: large
-    environment: 
-      NODE_OPTIONS: --openssl-legacy-provider
     steps:
       - checkout
       - browser-tools/install-browser-tools:
@@ -25,6 +23,11 @@ jobs:
             google-chrome --version
             firefox --version
           name: Check install
+      - when:
+          condition:
+            equal: [ "stable", <<parameters.version>>]
+          steps:
+            - run: export NODE_OPTIONS=--openssl-legacy-provider
       - node/install-packages
       - run: npm run test
   deploy:
