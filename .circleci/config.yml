@@ -27,7 +27,7 @@ jobs:
           condition:
             equal: [ "current", <<parameters.version>>]
           steps:
-            - run: export NODE_OPTIONS=--openssl-legacy-provider
+            - run: echo 'export NODE_OPTIONS=--openssl-legacy-provider' >> $BASH_ENV
       - node/install-packages
       - run: npm run test
   deploy:
