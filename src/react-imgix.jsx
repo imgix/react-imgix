@@ -50,6 +50,7 @@ const SHARED_IMGIX_AND_SOURCE_PROP_TYPES = Object.assign(
       widthTolerance: PropTypes.number,
       minWidth: PropTypes.number,
       maxWidth: PropTypes.number,
+      devicePixelRatios: PropTypes.arrayOf(PropTypes.number),
     }),
   }
 );

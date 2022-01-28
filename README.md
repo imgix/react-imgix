@@ -689,7 +689,7 @@ Disable generation of variable `q` parameters when rendering a fixed-size image.
 
 ##### srcSetOptions :: object
 
-Allows customizing the behavior of the srcset generation. Valid options are `widths`, `widthTolerance`, `minWidth`, and `maxWidth`. See [@imgix/js-core](https://github.com/imgix/js-core#imgixclientbuildsrcsetpath-params-options) for documentation of these options.
+Allows customizing the behavior of the srcset generation. Valid options are `widths`, `widthTolerance`, `minWidth`, `maxWidth`, and `devicePixelRatios`. See [@imgix/js-core](https://github.com/imgix/js-core#imgixclientbuildsrcsetpath-params-options) for documentation of these options.
 
 #### Picture Props
 
