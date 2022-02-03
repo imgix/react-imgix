@@ -31,6 +31,7 @@ const COMMON_PROP_TYPES = {
   className: PropTypes.string,
   onMounted: PropTypes.func,
   htmlAttributes: PropTypes.object,
+  alt: PropTypes.string,
 };
 
 const SHARED_IMGIX_AND_SOURCE_PROP_TYPES = Object.assign(
@@ -54,6 +55,14 @@ const SHARED_IMGIX_AND_SOURCE_PROP_TYPES = Object.assign(
     }),
   }
 );
+
+const REACT_IMGIX_PROP_TYPES = Object.assign(
+  {},
+  SHARED_IMGIX_AND_SOURCE_PROP_TYPES,
+  {
+    alt: PropTypes.string,
+  });
+
 
 /**
  * Validates that an aspect ratio is in the format w:h. If false is returned, the aspect ratio is in the wrong format.
@@ -178,7 +187,7 @@ function imgixParams(props) {
  * React component used to render <img> elements with Imgix
  */
 class ReactImgix extends Component {
-  static propTypes = Object.assign({}, SHARED_IMGIX_AND_SOURCE_PROP_TYPES);
+  static propTypes = Object.assign({}, REACT_IMGIX_PROP_TYPES);
   static defaultProps = {
     disableSrcSet: false,
     onMounted: noop,
@@ -240,6 +249,9 @@ class ReactImgix extends Component {
     });
     if (!disableSrcSet) {
       childProps[attributeConfig.srcSet] = srcSet;
+    }
+    if (this.props.alt) { 
+      childProps.alt = this.props.alt;
     }
 
     return <img {...childProps} />;
