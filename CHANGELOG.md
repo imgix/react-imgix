@@ -1,3 +1,10 @@
+## [9.4.0](https://github.com/imgix/react-imgix/compare/v9.3.1...v9.4.0) (2022-02-08)
+
+
+### Features
+
+* add alt top level prop ([d39a959](https://github.com/imgix/react-imgix/commit/d39a959dbe7f298e6ce90cec40c0f8093faa2487))
+
 ### [9.3.1](https://github.com/imgix/react-imgix/compare/v9.3.0...v9.3.1) (2022-01-28)
 
 ## [9.3.0](https://github.com/imgix/react-imgix/compare/v9.2.0...v9.3.0) (2021-08-05)
