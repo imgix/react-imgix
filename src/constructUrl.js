@@ -6,8 +6,8 @@ Minor syntax modifications have been made
 */
 
 const PACKAGE_VERSION = require("../package.json").version;
-import extractQueryParams from "./extractQueryParams";
 import ImgixClient from "@imgix/js-core";
+import extractQueryParams from "./extractQueryParams";
 
 // @see https://www.imgix.com/docs/reference
 var PARAM_EXPANSION = Object.freeze({
@@ -110,28 +110,28 @@ var DEFAULT_OPTIONS = Object.freeze({
  * Construct a URL for an image with an Imgix proxy, expanding image options
  * per the [API reference docs](https://www.imgix.com/docs/reference).
  * @param  {String} src         src of raw image
- * @param  {Object} longOptions map of image API options, in long or short form per expansion rules
+ * @param  {Object} longImgixParams map of image API options, in long or short form per expansion rules
  * @return {String}             URL of image src transformed by Imgix
  */
-function constructUrl(src, longOptions) {
+function constructUrl(src, longImgixParams, srcOptions) {
   if (!src) {
     return "";
   }
-  const params = compactParamKeys(longOptions);
+  const params = compactParamKeys(longImgixParams);
   const { client, pathComponents } = extractClientAndPathComponents(src);
-  return client.buildURL(pathComponents.join("/"), params);
+  return client.buildURL(pathComponents.join("/"), params, srcOptions);
 }
 
-function compactParamKeys(longOptions) {
-  const keys = Object.keys(longOptions);
+function compactParamKeys(longImgixParams) {
+  const keys = Object.keys(longImgixParams);
   const keysLength = keys.length;
   const params = {};
   for (let i = 0; i < keysLength; i++) {
     let key = keys[i];
     if (PARAM_EXPANSION[key]) {
-      params[PARAM_EXPANSION[key]] = longOptions[key];
+      params[PARAM_EXPANSION[key]] = longImgixParams[key];
     } else {
-      params[key] = longOptions[key];
+      params[key] = longImgixParams[key];
     }
   }
 
