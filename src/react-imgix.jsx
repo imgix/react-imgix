@@ -41,6 +41,7 @@ const SHARED_IMGIX_AND_SOURCE_PROP_TYPES = Object.assign(
     disableQualityByDPR: PropTypes.bool,
     disableSrcSet: PropTypes.bool,
     disableLibraryParam: PropTypes.bool,
+    disablePathEncoding: PropTypes.bool,
     imgixParams: PropTypes.object,
     sizes: PropTypes.string,
     width: PropTypes.number,
@@ -103,6 +104,7 @@ function buildSrc({
   height,
   disableLibraryParam,
   disableSrcSet,
+  disablePathEncoding,
   imgixParams,
   disableQualityByDPR,
   srcSetOptions,
@@ -111,7 +113,7 @@ function buildSrc({
 
   const [rawSrc, params] = extractQueryParams(inputSrc);
 
-  const srcOptions = Object.assign(
+  const srcImgixParams = Object.assign(
     {},
     params,
     imgixParams,
@@ -120,15 +122,20 @@ function buildSrc({
     fixedSize && width ? { width } : {}
   );
 
-  const src = constructUrl(rawSrc, srcOptions);
+  const srcOptions = {
+    disablePathEncoding,
+  };
+
+  const src = constructUrl(rawSrc, srcImgixParams, srcOptions);
 
   let srcSet;
 
   if (disableSrcSet) {
     srcSet = src;
   } else {
+    const sharedSrcSetOptions = Object.assign({}, srcSetOptions, {disablePathEncoding});
     if (fixedSize) {
-      const { width, w, height, h, q, ...urlParams } = srcOptions;
+      const { width, w, height, h, q, ...urlParams } = srcImgixParams;
       if (q) {
         urlParams["q"] = q;
       }
@@ -144,18 +151,15 @@ function buildSrc({
         urlParams["h"] = finalHeight;
       }
 
-      srcSet = buildSrcSet(rawSrc, urlParams, {
-        disableVariableQuality: disableQualityByDPR,
-        ...srcSetOptions,
-      });
+      srcSet = buildSrcSet(rawSrc, urlParams, Object.assign({disableVariableQuality: disableQualityByDPR}, sharedSrcSetOptions ));
     } else {
-      const { width, w, height, h, ...urlParams } = srcOptions;
+      const { width, w, height, h, ...urlParams } = srcImgixParams;
 
       const aspectRatio = imgixParams.ar;
       let showARWarning =
         aspectRatio != null && aspectRatioIsValid(aspectRatio) === false;
 
-      srcSet = buildSrcSet(rawSrc, urlParams, srcSetOptions);
+      srcSet = buildSrcSet(rawSrc, urlParams, sharedSrcSetOptions);
 
       if (
         NODE_ENV !== "production" &&
