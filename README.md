@@ -661,6 +661,10 @@ Disable generation of variable width src sets to enable responsiveness.
 
 By default this component adds a parameter to the generated url to help imgix with analytics and support for this library. This can be disabled by setting this prop to `true`.
 
+##### disablePathEncoding :: bool
+
+By default this component encodes the url path in the src and srcSet. This can be disabled by setting this prop to `true`. For more information about how imgix path encoding works, please refer to the [imgix/js-core](https://github.com/imgix/js-core#disable-path-encoding) docs.
+
 ##### htmlAttributes :: object
 
 Any other attributes to add to the html node (example: `alt`, `data-*`, `className`).
