@@ -759,6 +759,7 @@ The warnings available are:
 | -------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | fallbackImage  | Triggered when there is no `<img>` or `<Imgix>` at the end of the children when using `<Picture>`. A fallback image is crucial to ensure the image renders correctly when the browser cannot match against the sources provided |
 | sizesAttribute | This library requires a `sizes` prop to be passed so that the images can render responsively. This should only turned off in very special circumstances.                                                                        |
+| invalidARFormat | Warnings thrown when the `ar` imgix parameter is not passed in the correct format (`w:h`)                                                                        |
 
 ## Upgrade Guides
 
