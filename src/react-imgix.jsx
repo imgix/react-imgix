@@ -203,7 +203,7 @@ class ReactImgix extends Component {
   }
 
   render() {
-    const { disableSrcSet, type, width, height } = this.props;
+    const { disableSrcSet, width, height } = this.props;
 
     // Pre-render checks
     if (NODE_ENV !== "production" && config.warnings.sizesAttribute) {
