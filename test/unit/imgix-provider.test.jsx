@@ -1,6 +1,6 @@
 import { mount, shallow } from 'enzyme';
 import React from 'react';
-import ReactImgix, { ImgixProvider } from "../../src/index"
+import ReactImgix, { ImgixProvider } from "../../src/index";
 
 const providerProps = {
   domain: "sdk-test.imgix.net",
@@ -52,7 +52,6 @@ describe("ImgixProvider", () => {
   })
 
   test('should merge the Provider and Child props', () => {
-
     const modifiedProps = {
       ...imageProps,
       src: "examples/pione.jpg",
