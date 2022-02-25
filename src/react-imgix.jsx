@@ -289,10 +289,18 @@ class PictureImpl extends Component {
     // make sure all of our children have key set, otherwise we get react warnings
     let _children =
       React.Children.map(children, (child, idx) =>
-        React.cloneElement(child, {
+        {
+        const childIsReactImgix = child.type?.name === 'mergeComponentPropsHOFInner';
+        return React.cloneElement(child, Object.assign({
           key: buildKey(idx),
-          _inPicture: true,
-        })
+        },
+          // This prevents props._inPicture being set on other children if
+          // they're passed, such as an <img> component, which will cause a
+          // React error
+          childIsReactImgix && {
+            _inPicture: true,
+          }));
+        }
       ) || [];
 
     /*

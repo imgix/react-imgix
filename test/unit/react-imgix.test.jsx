@@ -560,6 +560,16 @@ describe("When in picture mode", () => {
     const onMountArg = onMountedSpy.lastCall.args[0];
     expect(onMountArg).toBeInstanceOf(HTMLPictureElement);
   });
+
+  it('should not pass _inPicture to a <img> element', () => {
+    const sut = mount(
+      <Picture >
+        <img />
+      </Picture>
+    );
+
+    expect(sut.find('img').props()._inPicture).toBe(undefined)
+  })
 });
 
 describe("When in background mode", () => {
