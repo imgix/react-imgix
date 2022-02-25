@@ -73,10 +73,10 @@ export const mergeProps = (src, destination) => {
  * @param {React.Element <typeof Component} Component -  with defined `props`.
  * @returns Component with merged `props`.
  */
-export const mergeComponentPropsHOF = (Component) => (props) => {
+export const mergeComponentPropsHOF = (Component) => function mergeComponentPropsHOFInner(props) {
   const contextProps = useImgixContext();
   if (contextProps == null) {
-    return <Component {...props} />
+    return <Component {...props} />;
   }
 
   const childProps = mergeProps(contextProps, props);
