@@ -1,17 +1,14 @@
-import sinon from "sinon";
+import { mount } from "enzyme";
+import { PublicConfigAPI } from "index";
 import React from "react";
-import { shallow as enzymeShallow, mount } from "enzyme";
-import { shallowUntilTarget } from "../helpers";
-import targetWidths from "targetWidths";
-
 import Imgix, {
-  __ReactImgixImpl,
-  Picture,
-  Source,
-  __SourceImpl,
-  __PictureImpl,
+  Picture, Source, __PictureImpl, __ReactImgixImpl, __SourceImpl
 } from "react-imgix";
 import { __BackgroundImpl } from "react-imgix-bg";
+import sinon from "sinon";
+import targetWidths from "targetWidths";
+import { shallowUntilTarget } from "../helpers";
+
 
 const DPR_QUALITY = {
   q_dpr1: 75,
@@ -42,11 +39,17 @@ const makeBackgroundWithBounds = (bounds) => (props) =>
 
 const src = "http://domain.imgix.net/image.jpg";
 let sut;
+
+describe("When in default mode", () => {
+  beforeEach(() => {
 jest.spyOn(global.console, "warn").mockImplementation((msg) => {
   console.log(msg);
 });
 
-describe("When in default mode", () => {
+  })
+  afterAll(() => {
+    jest.clearAllMocks()
+  })
   it("the rendered element's type should be img", () => {
     const sut = shallow(<Imgix src={src} sizes="100vw" />);
     expect(sut.type()).toBe("img");
@@ -492,11 +495,17 @@ describe("When in picture mode", () => {
   };
 
   it("should throw an error when no children passed", () => {
+    PublicConfigAPI.enableWarning('fallbackImage')
+    jest.spyOn(global.console, "warn").mockImplementation((msg) => {
+      // Enable when debugging
+    });
+    
     shallowPicture(<Picture src={src} width={100} height={100} />);
 
     expect(console.warn).toHaveBeenCalledWith(
       expect.stringContaining("No fallback <img /> or <Imgix /> found")
     );
+    PublicConfigAPI.disableWarning('fallbackImage')
   });
 
   describe("with a <Imgix> passed as a child", () => {
@@ -785,6 +794,13 @@ describe("When using the component", () => {
     });
 
     describe("invalid AR", () => {
+      beforeAll(() => {
+PublicConfigAPI.disableWarning("invalidARFormat");
+      })
+      afterAll(() => {
+
+PublicConfigAPI.enableWarning("invalidARFormat");
+      })
       const testInvalidAR = (ar) => {
         it(`an invalid ar prop (${ar}) will still generate an ar query parameter`, () => {
           const parseParam = (url, param) => {
