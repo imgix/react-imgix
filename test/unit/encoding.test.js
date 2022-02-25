@@ -1,6 +1,6 @@
 import { mount } from "enzyme";
 import React from "react";
-import ReactImgix, { Source } from "../../src/index";
+import ReactImgix, { ImgixProvider, Source } from "../../src/index";
 
 const imageProps = {
   src: "https://assets.imgix.net/examples/space bridge.jpg",
@@ -45,6 +45,23 @@ describe("ReactImgix", () => {
     const renderedComponent = mount(component);
     const renderedImageTagProps = renderedComponent.find("img").props();
 
+    expect(renderedImageTagProps.srcSet).toMatch(expectedSrc);
+  });
+  it("should not encode the src or srcset path if disablePathEncoding is set on <ImgixProvider>", () => {
+    const providerProps = {
+      disablePathEncoding: true,
+    };
+    const wrappedComponent = (
+      <ImgixProvider {...providerProps}>
+        <ReactImgix {...imageProps} />
+      </ImgixProvider>
+    );
+
+    const expectedSrc = "https://assets.imgix.net/examples/space bridge.jpg";
+
+    const renderedComponent = mount(wrappedComponent);
+    const renderedImageTagProps = renderedComponent.find("img").props();
+    expect(renderedImageTagProps.src).toMatch(expectedSrc);
     expect(renderedImageTagProps.srcSet).toMatch(expectedSrc);
   });
 });
