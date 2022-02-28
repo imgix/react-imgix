@@ -1,3 +1,15 @@
+## [9.5.0](https://github.com/imgix/react-imgix/compare/v9.4.0...v9.5.0) (2022-02-28)
+
+
+### Features
+
+* allow path encoding to be disabled for Imgix component ([045bb42](https://github.com/imgix/react-imgix/commit/045bb4203b2664ce81e8fba23a721cf956bc80ea))
+
+
+### Bug Fixes
+
+* bug where _inPicture would be set on <img>'s that were children of <Picture> ([4d57c1f](https://github.com/imgix/react-imgix/commit/4d57c1f3e208b31a42b43aeff294fc3f3ebccd76))
+
 ## [9.4.0](https://github.com/imgix/react-imgix/compare/v9.3.1...v9.4.0) (2022-02-08)
 
 
