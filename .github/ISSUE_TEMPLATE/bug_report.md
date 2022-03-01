@@ -5,7 +5,7 @@ about: Create a report to help us improve
 
 **Before you submit:**
 
-- [ ] Please search through the existing issues (both open AND closed) to see if your issue has been discussed before. Github issue search can be used for this: https://github.com/imgix/react-imgix/issues?utf8=%E2%9C%93&q=is%3Aissue
+- [ ] Please search through the existing issues (both open AND closed) to see if your issue has been discussed before. GitHub issue search can be used for this: https://github.com/imgix/react-imgix/issues?utf8=%E2%9C%93&q=is%3Aissue
 - [ ] Please ensure the problem has been isolated and reduced. This link explains more: http://css-tricks.com/6263-reduced-test-cases/
 
 **Describe the bug**
