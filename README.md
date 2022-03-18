@@ -5,10 +5,9 @@
 `react-imgix` provides custom components for integrating [imgix](https://www.imgix.com/) into React sites and generating images server-side.
 
 [![npm version](https://img.shields.io/npm/v/react-imgix.svg)](https://www.npmjs.com/package/react-imgix)
-[![Build Status](https://travis-ci.com/imgix/react-imgix.svg?branch=main)](https://travis-ci.com/imgix/react-imgix)
+[![Build Status](https://circleci.com/gh/imgix/react-imgix.svg?style=shield)](https://circleci.com/gh/imgix/react-imgix)
 [![Downloads](https://img.shields.io/npm/dm/react-imgix.svg)](https://www.npmjs.com/package/react-imgix)
 [![License](https://img.shields.io/npm/l/react-imgix)](https://github.com/imgix/react-imgix/blob/main/LICENSE)
-[![Dependencies Status](https://david-dm.org/imgix/react-imgix.svg)](https://david-dm.org/imgix/react-imgix)
 [![styled with prettier](https://img.shields.io/badge/styled_with-prettier-ff69b4.svg)](https://github.com/prettier/prettier)
 [![All Contributors](https://img.shields.io/badge/all_contributors-22-orange.svg?style=flat-square)](#contributors-)
 [![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fimgix%2Freact-imgix.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2Fimgix%2Freact-imgix?ref=badge_shield)
