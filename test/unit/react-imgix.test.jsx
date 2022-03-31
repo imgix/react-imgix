@@ -337,6 +337,7 @@ describe("When in <source> mode", () => {
         <Source
           src={src}
           width={100}
+          height={100}
           htmlAttributes={htmlAttributes}
           sizes={sizes}
         />
@@ -356,6 +357,12 @@ describe("When in <source> mode", () => {
       expect(srcSets[2].split(" ")[1]).toBe("3x");
       expect(srcSets[3].split(" ")[1]).toBe("4x");
       expect(srcSets[4].split(" ")[1]).toBe("5x");
+    });
+
+    it("width and height should be nullable to pass HTML validation", () => {
+      const {width, height} = renderImage().props();
+      expect(width).toBe(null);
+      expect(height).toBe(null);
     });
   });
 
