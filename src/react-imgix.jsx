@@ -370,8 +370,8 @@ class SourceImpl extends Component {
     const childProps = Object.assign({}, this.props.htmlAttributes, {
       [attributeConfig.sizes]: this.props.sizes,
       className: this.props.className,
-      width: width <= 1 ? null : width,
-      height: height <= 1 ? null : height,
+      width: null,
+      height: null,
       ref: (el) => {
         this.sourceRef = el;
         if (
