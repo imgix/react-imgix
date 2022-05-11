@@ -1,3 +1,10 @@
+### [9.5.1](https://github.com/imgix/react-imgix/compare/v9.5.0...v9.5.1) (2022-05-11)
+
+
+### Bug Fixes
+
+* add support for react 18 ([0e01aa4](https://github.com/imgix/react-imgix/commit/0e01aa4d737c490c8c3c86778e5a99fec021bd5b))
+
 ### [9.5.1-beta.1](https://github.com/imgix/react-imgix/compare/v9.5.0...v9.5.1-beta.1) (2022-05-10)
 
 
