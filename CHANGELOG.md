@@ -1,3 +1,10 @@
+### [9.5.2](https://github.com/imgix/react-imgix/compare/v9.5.1...v9.5.2) (2022-07-26)
+
+
+### Bug Fixes
+
+* **ci:** build project between deploy steps and publishing ([2cd0cdf](https://github.com/imgix/react-imgix/commit/2cd0cdf03e567134f855b13d6926d8e93f9c0d49))
+
 ### [9.5.1](https://github.com/imgix/react-imgix/compare/v9.5.0...v9.5.1) (2022-05-11)
 
 
