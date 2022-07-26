@@ -2,13 +2,16 @@ import { mount } from "enzyme";
 import { PublicConfigAPI } from "index";
 import React from "react";
 import Imgix, {
-  Picture, Source, __PictureImpl, __ReactImgixImpl, __SourceImpl
+  Picture,
+  Source,
+  __PictureImpl,
+  __ReactImgixImpl,
+  __SourceImpl,
 } from "react-imgix";
 import { __BackgroundImpl } from "react-imgix-bg";
 import sinon from "sinon";
 import targetWidths from "targetWidths";
 import { shallowUntilTarget } from "../helpers";
-
 
 const DPR_QUALITY = {
   q_dpr1: 75,
@@ -42,14 +45,13 @@ let sut;
 
 describe("When in default mode", () => {
   beforeEach(() => {
-jest.spyOn(global.console, "warn").mockImplementation((msg) => {
-  console.log(msg);
-});
-
-  })
+    jest.spyOn(global.console, "warn").mockImplementation((msg) => {
+      console.log(msg);
+    });
+  });
   afterAll(() => {
-    jest.clearAllMocks()
-  })
+    jest.clearAllMocks();
+  });
   it("the rendered element's type should be img", () => {
     const sut = shallow(<Imgix src={src} sizes="100vw" />);
     expect(sut.type()).toBe("img");
@@ -495,17 +497,17 @@ describe("When in picture mode", () => {
   };
 
   it("should throw an error when no children passed", () => {
-    PublicConfigAPI.enableWarning('fallbackImage')
+    PublicConfigAPI.enableWarning("fallbackImage");
     jest.spyOn(global.console, "warn").mockImplementation((msg) => {
       // Enable when debugging
     });
-    
+
     shallowPicture(<Picture src={src} width={100} height={100} />);
 
     expect(console.warn).toHaveBeenCalledWith(
       expect.stringContaining("No fallback <img /> or <Imgix /> found")
     );
-    PublicConfigAPI.disableWarning('fallbackImage')
+    PublicConfigAPI.disableWarning("fallbackImage");
   });
 
   describe("with a <Imgix> passed as a child", () => {
@@ -570,15 +572,15 @@ describe("When in picture mode", () => {
     expect(onMountArg).toBeInstanceOf(HTMLPictureElement);
   });
 
-  it('should not pass _inPicture to a <img> element', () => {
+  it("should not pass _inPicture to a <img> element", () => {
     const sut = mount(
-      <Picture >
+      <Picture>
         <img />
       </Picture>
     );
 
-    expect(sut.find('img').props()._inPicture).toBe(undefined)
-  })
+    expect(sut.find("img").props()._inPicture).toBe(undefined);
+  });
 });
 
 describe("When in background mode", () => {
@@ -805,12 +807,11 @@ describe("When using the component", () => {
 
     describe("invalid AR", () => {
       beforeAll(() => {
-PublicConfigAPI.disableWarning("invalidARFormat");
-      })
+        PublicConfigAPI.disableWarning("invalidARFormat");
+      });
       afterAll(() => {
-
-PublicConfigAPI.enableWarning("invalidARFormat");
-      })
+        PublicConfigAPI.enableWarning("invalidARFormat");
+      });
       const testInvalidAR = (ar) => {
         it(`an invalid ar prop (${ar}) will still generate an ar query parameter`, () => {
           const parseParam = (url, param) => {

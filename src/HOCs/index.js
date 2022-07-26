@@ -1,2 +1,2 @@
 export * from "./shouldComponentUpdateHOC";
-export * from "./imgixProvider"
+export * from "./imgixProvider";

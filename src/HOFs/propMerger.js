@@ -1,5 +1,5 @@
-import React from 'react'
-import { useImgixContext } from "../HOCs"
+import React from "react";
+import { useImgixContext } from "../HOCs";
 
 /**
  * Merges the `src` object into the `destination` object. Destination values are
@@ -37,16 +37,16 @@ import { useImgixContext } from "../HOCs"
  */
 export const mergeProps = (src, destination) => {
   if (src == null && destination !== null) {
-    return destination
+    return destination;
   }
   if (src !== null && destination == null) {
     return src;
   }
   if (src == null && destination == null) {
-    return {}
+    return {};
   }
 
-  const newProps = { ...destination }
+  const newProps = { ...destination };
   const newPropKeys = Object.keys(newProps);
 
   for (const [k, v] of Object.entries(src)) {
@@ -56,29 +56,30 @@ export const mergeProps = (src, destination) => {
     // recursively merge imgixParams and htmlAttributes
     if (k === "imgixParams" || k === "htmlAttributes") {
       if (v !== null) {
-        newProps[k] = mergeProps(src[k], newProps[k])
+        newProps[k] = mergeProps(src[k], newProps[k]);
       }
     }
   }
   return newProps;
-}
+};
 
 /**
- * `mergeComponentPropsHOF` tries to invoke `React.useContext()`. If context is 
- * `undefined`, context is being accessed outside of an `ImgixContext` provider 
+ * `mergeComponentPropsHOF` tries to invoke `React.useContext()`. If context is
+ * `undefined`, context is being accessed outside of an `ImgixContext` provider
  * and the Component is returned as is.
  *
- * Otherwise, it merges a Component's props with the `ImgixContext` props and 
+ * Otherwise, it merges a Component's props with the `ImgixContext` props and
  * return a Component with the merged `props`.
  * @param {React.Element <typeof Component} Component -  with defined `props`.
  * @returns Component with merged `props`.
  */
-export const mergeComponentPropsHOF = (Component) => function mergeComponentPropsHOFInner(props) {
-  const contextProps = useImgixContext();
-  if (contextProps == null) {
-    return <Component {...props} />;
-  }
+export const mergeComponentPropsHOF = (Component) =>
+  function mergeComponentPropsHOFInner(props) {
+    const contextProps = useImgixContext();
+    if (contextProps == null) {
+      return <Component {...props} />;
+    }
 
-  const childProps = mergeProps(contextProps, props);
-  return <Component {...childProps} />;
-}
+    const childProps = mergeProps(contextProps, props);
+    return <Component {...childProps} />;
+  };
