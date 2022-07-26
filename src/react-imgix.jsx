@@ -5,7 +5,7 @@ import { config } from "./common";
 import { PACKAGE_VERSION } from "./constants";
 import constructUrl, {
   compactParamKeys,
-  extractClientAndPathComponents
+  extractClientAndPathComponents,
 } from "./constructUrl";
 import extractQueryParams from "./extractQueryParams";
 import { ShouldComponentUpdateHOC } from "./HOCs";
@@ -62,8 +62,8 @@ const REACT_IMGIX_PROP_TYPES = Object.assign(
   SHARED_IMGIX_AND_SOURCE_PROP_TYPES,
   {
     alt: PropTypes.string,
-  });
-
+  }
+);
 
 /**
  * Validates that an aspect ratio is in the format w:h. If false is returned, the aspect ratio is in the wrong format.
@@ -133,7 +133,9 @@ function buildSrc({
   if (disableSrcSet) {
     srcSet = src;
   } else {
-    const sharedSrcSetOptions = Object.assign({}, srcSetOptions, {disablePathEncoding});
+    const sharedSrcSetOptions = Object.assign({}, srcSetOptions, {
+      disablePathEncoding,
+    });
     if (fixedSize) {
       const { width, w, height, h, q, ...urlParams } = srcImgixParams;
       if (q) {
@@ -151,7 +153,14 @@ function buildSrc({
         urlParams["h"] = finalHeight;
       }
 
-      srcSet = buildSrcSet(rawSrc, urlParams, Object.assign({disableVariableQuality: disableQualityByDPR}, sharedSrcSetOptions ));
+      srcSet = buildSrcSet(
+        rawSrc,
+        urlParams,
+        Object.assign(
+          { disableVariableQuality: disableQualityByDPR },
+          sharedSrcSetOptions
+        )
+      );
     } else {
       const { width, w, height, h, ...urlParams } = srcImgixParams;
 
@@ -254,7 +263,7 @@ class ReactImgix extends Component {
     if (!disableSrcSet) {
       childProps[attributeConfig.srcSet] = srcSet;
     }
-    if (this.props.alt) { 
+    if (this.props.alt) {
       childProps.alt = this.props.alt;
     }
 
@@ -288,20 +297,24 @@ class PictureImpl extends Component {
 
     // make sure all of our children have key set, otherwise we get react warnings
     let _children =
-      React.Children.map(children, (child, idx) =>
-        {
-        const childIsReactImgix = child.type?.name === 'mergeComponentPropsHOFInner';
-        return React.cloneElement(child, Object.assign({
-          key: buildKey(idx),
-        },
-          // This prevents props._inPicture being set on other children if
-          // they're passed, such as an <img> component, which will cause a
-          // React error
-          childIsReactImgix && {
-            _inPicture: true,
-          }));
-        }
-      ) || [];
+      React.Children.map(children, (child, idx) => {
+        const childIsReactImgix =
+          child.type?.name === "mergeComponentPropsHOFInner";
+        return React.cloneElement(
+          child,
+          Object.assign(
+            {
+              key: buildKey(idx),
+            },
+            // This prevents props._inPicture being set on other children if
+            // they're passed, such as an <img> component, which will cause a
+            // React error
+            childIsReactImgix && {
+              _inPicture: true,
+            }
+          )
+        );
+      }) || [];
 
     /*
     We need to make sure an <img /> or <Imgix /> is the last child so we look for one in children
@@ -419,4 +432,3 @@ export {
   SourceImpl as __SourceImpl,
   PictureImpl as __PictureImpl, // for testing
 };
-

@@ -1,15 +1,15 @@
-import * as React from 'react'
-import { PARAMS_EXP_MAP } from "./constants"
+import * as React from "react";
+import { PARAMS_EXP_MAP } from "./constants";
 
 /**
  * Creates a 1-step, or complete, URL from `domain` and `src` Strings.
  *
- * - First, the function checks if src has a defined `domain`. If it does, it 
+ * - First, the function checks if src has a defined `domain`. If it does, it
  * checks to see if `src` has a scheme, and prepends "http" or "https" as needed
  * - Otherwise, formatSrc formats `domain` and `src` Strings.
- *   - First it strips the two strings of the  leading and `/` or trailing `/` 
+ *   - First it strips the two strings of the  leading and `/` or trailing `/`
  *     slash characters.
- *   - Then, it joins the two strings on a `/` character. IE, 
+ *   - Then, it joins the two strings on a `/` character. IE,
  *    `strippedDomain + "/" + strippedSrc`.
  *   - If `domain` String argument `null` or `undefined`, the function returns
  *    the original `src` String.
@@ -20,16 +20,16 @@ import { PARAMS_EXP_MAP } from "./constants"
  */
 export function formatSrc(src, domain, useHTTPS = true) {
   // ignore if already has protocol
-  if (src.indexOf("://") !== -1){
-    return src
+  if (src.indexOf("://") !== -1) {
+    return src;
   } else {
     // prepend domain if defined
     if (domain == null) {
-      return src
+      return src;
     }
-    const strippedDomain = domain ? domain.replace(/^\/|\/$/g, '') : ""
-    const strippedSrc = src.replace(/^\/|\/$/g, '')
-    const prefix = useHTTPS ? "https://" : "http://"
+    const strippedDomain = domain ? domain.replace(/^\/|\/$/g, "") : "";
+    const strippedSrc = src.replace(/^\/|\/$/g, "");
+    const prefix = useHTTPS ? "https://" : "http://";
     return prefix + strippedDomain + "/" + strippedSrc;
   }
 }
@@ -41,16 +41,18 @@ export function formatSrc(src, domain, useHTTPS = true) {
  * - `height`: if undefined or negative gets set to `undefined`.
  * - `src`: concatenated to `domain` if `src` defined and has no domain.
  *
- * @param {Object} props 
+ * @param {Object} props
  * @returns A formatted `props` Object.
  */
 export const formatProps = (props) => {
-  const width = !props.width || props.width <= 1 ? undefined : props.width
-  const height = !props.height || props.height <= 1 ? undefined : props.height
-  const src = props.src ? formatSrc(props.src, props.domain, props.useHttps) : undefined
+  const width = !props.width || props.width <= 1 ? undefined : props.width;
+  const height = !props.height || props.height <= 1 ? undefined : props.height;
+  const src = props.src
+    ? formatSrc(props.src, props.domain, props.useHttps)
+    : undefined;
 
-  return Object.assign( {}, props, { width, height, src,} )
-}
+  return Object.assign({}, props, { width, height, src });
+};
 
 /**
  * Function that shortens params keys according to the imgix spec.
@@ -62,29 +64,29 @@ export const collapseImgixParams = (params) => {
   if (params == null) {
     return params;
   }
-  const compactedParams = {}
+  const compactedParams = {};
   for (const [k, v] of Object.entries(params)) {
     if (PARAMS_EXP_MAP[k]) {
-      compactedParams[PARAMS_EXP_MAP[k]] = v
+      compactedParams[PARAMS_EXP_MAP[k]] = v;
     } else {
-      compactedParams[k] = v
+      compactedParams[k] = v;
     }
   }
-  return compactedParams
-}
+  return compactedParams;
+};
 
 /**
- * `processPropsHOF` takes a Component's props and formats them to adhere to the 
+ * `processPropsHOF` takes a Component's props and formats them to adhere to the
  * ImgixClient's specifications.
- * 
+ *
  * @param {React.Element<typeof Component>} Component - A react component with
  * defined `props`.
- * @returns A React Component who's `props` have been formatted and 
+ * @returns A React Component who's `props` have been formatted and
  * `imgixParams` have been collapsed.
  */
 export const processPropsHOF = (Component) => (props) => {
-  const formattedProps = formatProps(props)
-  const formattedImgixParams = collapseImgixParams(formattedProps.imgixParams)
+  const formattedProps = formatProps(props);
+  const formattedImgixParams = collapseImgixParams(formattedProps.imgixParams);
 
-  return <Component {...formattedProps} imgixParams={formattedImgixParams} />
-}
+  return <Component {...formattedProps} imgixParams={formattedImgixParams} />;
+};
