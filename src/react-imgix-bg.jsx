@@ -1,11 +1,11 @@
 import React from "react";
 import { withContentRect } from "react-measure";
+import { shallowEqual } from "./common";
 import { PACKAGE_VERSION } from "./constants";
 import constructUrl from "./constructUrl";
 import extractQueryParams from "./extractQueryParams";
 import findClosest from "./findClosest";
 import targetWidths from "./targetWidths";
-import { shallowEqual } from "./common";
 
 const findNearestWidth = (actualWidth) =>
   findClosest(actualWidth, targetWidths);
@@ -42,7 +42,7 @@ export const __shouldComponentUpdate = (props, nextProps) => {
 
   const customizer = (oldProp, newProp, key) => {
     // these keys are ignored from prop checking process
-    if (key === "contextRect" || key === "measure" || key === "measureRef") {
+    if (key === "contentRect" || key === "measure" || key === "measureRef") {
       return true;
     }
 
