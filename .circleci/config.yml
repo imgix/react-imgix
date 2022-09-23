@@ -31,6 +31,9 @@ jobs:
             - run: echo 'export NODE_OPTIONS=--openssl-legacy-provider' >> $BASH_ENV
       - node/install-packages
       - run: npm run test
+      - run:
+          name: "Test whether build is successful"
+          command: yarn build
   deploy:
     docker:
       - image: cimg/node:17.9
