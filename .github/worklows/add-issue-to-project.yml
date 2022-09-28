@@ -4,7 +4,6 @@ on:
   issues:
     types:
       - opened
-      - labeled
 
 jobs:
   add-to-project:
@@ -15,5 +14,3 @@ jobs:
         with:
           project-url: https://github.com/orgs/imgix/projects/4
           github-token: ${{ secrets.GH_TOKEN }}
-          labeled: bug, needs-triage
-          label-operator: OR
