@@ -297,7 +297,7 @@ import Imgix, { Picture, Source } from "react-imgix";
     htmlAttributes={{ media: "(min-width: 320px)" }}
   />
   <Imgix src={src} imgixParams={{ w: 100 }} />
-</Picture>;
+</Picture>
 ```
 
 In order to reduce the duplication in props, JSX supports object spread for props:

@@ -70,8 +70,8 @@ export const __shouldComponentUpdate = (props, nextProps) => {
   // props have changed (e.g. disableLibraryParam).
   const propsEqual = shallowEqual(props, nextProps, customizer);
 
-  return !(propsEqual);
-}
+  return !propsEqual;
+};
 
 class BackgroundImpl extends React.Component {
   constructor(props) {

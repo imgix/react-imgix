@@ -1,9 +1,7 @@
 import ReactImgix, { Picture, Source } from "./react-imgix";
 import { PublicConfigAPI } from "./config";
 import { buildURLPublic as buildURL } from "./constructUrl";
-import {
-  ImgixProvider,
-} from "./HOCs"
+import { ImgixProvider } from "./HOCs";
 
 export { ImgixProvider };
 export { buildURL };
