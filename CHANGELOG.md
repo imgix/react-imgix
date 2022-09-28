@@ -1,3 +1,10 @@
+### [9.5.3-beta.1](https://github.com/imgix/react-imgix/compare/v9.5.2...v9.5.3-beta.1) (2022-09-28)
+
+
+### Bug Fixes
+
+* source width/height HTML validation ([e58464c](https://github.com/imgix/react-imgix/commit/e58464c7038ef013b2d54c35aa086fbd9016d998))
+
 ### [9.5.2](https://github.com/imgix/react-imgix/compare/v9.5.1...v9.5.2) (2022-07-26)
 
 
