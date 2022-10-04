@@ -1,3 +1,11 @@
+### [9.5.4](https://github.com/imgix/react-imgix/compare/v9.5.3...v9.5.4) (2022-10-04)
+
+
+### Bug Fixes
+
+* source width/height HTML validation ([5feb09b](https://github.com/imgix/react-imgix/commit/5feb09bf599c5adfadef0a51f9d4413d0d36aebf))
+* stop background infinite rerenders ([a455b6d](https://github.com/imgix/react-imgix/commit/a455b6d0ef85dafa3a131ea8a6a2a38110f5bb46))
+
 ### [9.5.3](https://github.com/imgix/react-imgix/compare/v9.5.2...v9.5.3) (2022-10-04)
 
 ### [9.5.2](https://github.com/imgix/react-imgix/compare/v9.5.1...v9.5.2) (2022-07-26)
