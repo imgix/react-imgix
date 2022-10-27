@@ -8,7 +8,7 @@ jobs:
   test:
     parameters:
       version: 
-        default: "stable"
+        default: "current"
         description: Node.JS version to install
         type: string
     docker:
@@ -23,12 +23,8 @@ jobs:
             google-chrome --version
             firefox --version
           name: Check install
-      - when:
-          condition:
-            equal: [ "17.9", <<parameters.version>>]
-          steps:
-            # Prevents build error on stable node version
-            - run: echo 'export NODE_OPTIONS=--openssl-legacy-provider' >> $BASH_ENV
+      # Prevents build error on stable node version
+      - run: echo 'export NODE_OPTIONS=--openssl-legacy-provider' >> $BASH_ENV
       - node/install-packages
       - run: npm run test
       - run:
@@ -49,7 +45,7 @@ workflows:
           matrix:
             parameters:
               version:
-                - "17.9"
+                - "current"
                 - "lts"
       - deploy:
           requires:
