@@ -113,7 +113,7 @@ This will generate HTML similar to the following:
 
 Since imgix can generate as many derivative resolutions as needed, react-imgix calculates them programmatically, using the dimensions you specify. All of this information has been placed into the srcset and sizes attributes.
 
-**Width and height known:** If the width and height are known beforehand, it is recommended that they are set explicitly:
+**Width and height known and fixed:** If the width and height are known beforehand, and a fixed-size image is wanted, it is recommended that they are set explicitly:
 
 ```js
 import Imgix from "react-imgix";
@@ -127,17 +127,44 @@ import Imgix from "react-imgix";
 
 [![Edit xp0348lv0z](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/charming-keller-kjnsq)
 
-#### Server-Side Rendering
+When width and height are specified, Imgix will give the image a srcset with resolution descriptors.
 
-React-imgix also works well on the server. Since react-imgix uses `srcset` and `sizes`, it allows the browser to render the correctly sized image immediately after the page has loaded.
+**Width and height known but fluid:** If the image's intrinsic width and height are known but a fluid size image is wanted, [width and height should still be set to avoid layout shift](https://web.dev/optimize-cls/), but they must be set via `htmlAttributes` so as not to hint to Imgix to produce resolution descriptors in the srcset.
 
 ```js
 import Imgix from "react-imgix";
 
-<Imgix src="https://assets.imgix.net/examples/pione.jpg" sizes="100vw" />;
+<Imgix
+  src="https://assets.imgix.net/examples/pione.jpg"
+  sizes="(min-width: 1024px) 40vw, 90vw"
+  htmlAttributes={{ // These are ignored by Imgix but passed through to the <img> element
+    width: 200,
+    height: 100,
+  }}
+/>;
 ```
 
-If the width and height are known beforehand, it is recommended that they are set explicitly:
+In this example, Imgix will produce a srcset with width descriptors.
+
+#### Server-Side Rendering
+
+React-imgix also works well on the server. Since react-imgix uses `srcset` and `sizes`, it allows the browser to render the correctly sized image immediately after the page has loaded.
+If they are known, pass width and height attributes via `htmlAttributes` to help combat layout shift.
+
+```js
+import Imgix from "react-imgix";
+
+<Imgix
+  src="https://assets.imgix.net/examples/pione.jpg"
+  sizes="100vw"
+  htmlAttributes={{
+    width: 400,
+    height: 250,
+  }}
+/>;
+```
+
+If the width and height are known beforehand, and a fixed-size image is wanted, set width and height and do not set `sizes`:
 
 ```js
 import Imgix from "react-imgix";

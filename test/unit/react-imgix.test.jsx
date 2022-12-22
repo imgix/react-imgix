@@ -232,6 +232,26 @@ describe("When in default mode", () => {
       });
     });
   });
+
+  describe("using the htmlAttributes prop", () => {
+    it("passes any attributes via htmlAttributes to the rendered element", () => {
+      const htmlAttributes = {
+        "data-src": "https://mysource.imgix.net/demo.png",
+        width: "200",
+        height: "100",
+      };
+      sut = shallow(
+        <Imgix
+          src={"https://mysource.imgix.net/demo.png"}
+          sizes="100vw"
+          htmlAttributes={htmlAttributes}
+        />
+      );
+      expect(sut.props()["data-src"]).toEqual(htmlAttributes["data-src"]);
+      expect(sut.props()["width"]).toEqual(htmlAttributes["width"]);
+      expect(sut.props()["height"]).toEqual(htmlAttributes["height"]);
+    });
+  });
 });
 
 describe("When in image mode", () => {
@@ -359,10 +379,10 @@ describe("When in <source> mode", () => {
       expect(srcSets[4].split(" ")[1]).toBe("5x");
     });
 
-    it("width and height should be nullable to pass HTML validation", () => {
-      const {width, height} = renderImage().props();
-      expect(width).toBe(null);
-      expect(height).toBe(null);
+    it("width and height should be passed through to the img element", () => {
+      const { width, height } = renderImage().props();
+      expect(width).toBe(100);
+      expect(height).toBe(100);
     });
   });
 
@@ -417,6 +437,8 @@ describe("When in <source> mode", () => {
     it("passes any attributes via htmlAttributes to the rendered element", () => {
       const htmlAttributes = {
         "data-src": "https://mysource.imgix.net/demo.png",
+        width: "200",
+        height: "100",
       };
       sut = mount(
         <Source
@@ -428,6 +450,12 @@ describe("When in <source> mode", () => {
 
       expect(sut.props()["htmlAttributes"]["data-src"]).toEqual(
         htmlAttributes["data-src"]
+      );
+      expect(sut.props()["htmlAttributes"]["width"]).toEqual(
+        htmlAttributes["width"]
+      );
+      expect(sut.props()["htmlAttributes"]["height"]).toEqual(
+        htmlAttributes["height"]
       );
     });
 
