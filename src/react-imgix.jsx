@@ -247,8 +247,8 @@ class ReactImgix extends Component {
     const childProps = Object.assign({}, this.props.htmlAttributes, {
       [attributeConfig.sizes]: this.props.sizes,
       className: this.props.className,
-      width: width <= 1 ? null : width,
-      height: height <= 1 ? null : height,
+      width: width <= 1 ? null : width ?? this.props.htmlAttributes?.width,
+      height: height <= 1 ? null : height ?? this.props.htmlAttributes?.height,
       [attributeConfig.src]: src,
       ref: (el) => {
         this.imgRef = el;
@@ -383,8 +383,8 @@ class SourceImpl extends Component {
     const childProps = Object.assign({}, this.props.htmlAttributes, {
       [attributeConfig.sizes]: this.props.sizes,
       className: this.props.className,
-      width: null,
-      height: null,
+      width: width <= 1 ? null : width ?? this.props.htmlAttributes?.width,
+      height: height <= 1 ? null : height ?? this.props.htmlAttributes?.height,
       ref: (el) => {
         this.sourceRef = el;
         if (
