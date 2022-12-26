@@ -85,7 +85,7 @@
     "@babel/polyfill": "7.12.1",
     "@babel/preset-env": "7.12.1",
     "@babel/preset-react": "7.12.5",
-    "@google/semantic-release-replace-plugin": "1.1.0",
+    "@google/semantic-release-replace-plugin": "1.2.0",
     "@imgix/browserslist-config": "1.0.0",
     "@semantic-release/changelog": "6.0.2",
     "@semantic-release/git": "10.0.1",
