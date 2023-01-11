@@ -1,3 +1,10 @@
+## [9.6.0](https://github.com/imgix/react-imgix/compare/v9.5.4...v9.6.0) (2023-01-11)
+
+
+### Features
+
+* **react-imgix-bg:** optionally disable path encoding ([4a1e206](https://github.com/imgix/react-imgix/commit/4a1e206903773c5c3ed5e8685c2d84147e2ac3c3))
+
 ### [9.5.4](https://github.com/imgix/react-imgix/compare/v9.5.3...v9.5.4) (2022-10-04)
 
 
