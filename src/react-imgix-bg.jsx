@@ -89,6 +89,7 @@ class BackgroundImpl extends React.Component {
       imgixParams = {},
       onLoad,
       disableLibraryParam,
+      disablePathEncoding,
       src,
       children,
       className = "",
@@ -154,7 +155,7 @@ class BackgroundImpl extends React.Component {
 
     const renderedSrc = (() => {
       const [rawSrc, params] = extractQueryParams(src);
-      const srcOptions = {
+      const longImgixParams = {
         ...params,
         fit: "crop",
         ...imgixParams,
@@ -164,7 +165,11 @@ class BackgroundImpl extends React.Component {
         dpr,
       };
 
-      return constructUrl(rawSrc, srcOptions);
+      const srcOptions = {
+        disablePathEncoding,
+      }
+
+      return constructUrl(rawSrc, longImgixParams, srcOptions);
     })();
 
     const style = {
