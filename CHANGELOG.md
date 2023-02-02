@@ -1,3 +1,10 @@
+## [9.7.0](https://github.com/imgix/react-imgix/compare/v9.6.0...v9.7.0) (2023-02-02)
+
+
+### Features
+
+* allow width and height to be passed through htmlAttributes ([c8ef392](https://github.com/imgix/react-imgix/commit/c8ef392e2f54c36fdd69d70d33bbbdcbe2cb961c))
+
 ## [9.6.0](https://github.com/imgix/react-imgix/compare/v9.5.4...v9.6.0) (2023-01-11)
 
 
