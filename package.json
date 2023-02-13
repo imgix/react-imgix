@@ -98,7 +98,7 @@
     "browserslist": "4.21.4",
     "chokidar": "^3.5.3",
     "common-tags": "1.8.2",
-    "conventional-changelog-conventionalcommits": "4.6.3",
+    "conventional-changelog-conventionalcommits": "5.0.0",
     "cross-env": "7.0.3",
     "enzyme": "3.11.0",
     "enzyme-adapter-react-16": "1.15.7",
