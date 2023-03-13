@@ -32,7 +32,7 @@ jobs:
           command: yarn build
   deploy:
     docker:
-      - image: cimg/node:18.12
+      - image: cimg/node:19.7
     steps:
       - checkout
       - node/install-packages
