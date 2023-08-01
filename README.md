@@ -148,6 +148,9 @@ In this example, Imgix will produce a srcset with width descriptors.
 
 #### Server-Side Rendering
 
+> Note
+This library does not run in Server Components but instead adds the ["use client" directive](https://react.dev/reference/react/use-client) to components. This means they are able to be used alongside Server Components (for example, as children), but they still require client-side JavaScript. [Client Components are still SSRed](https://github.com/reactwg/server-components/discussions/4).
+
 React-imgix also works well on the server. Since react-imgix uses `srcset` and `sizes`, it allows the browser to render the correctly sized image immediately after the page has loaded.
 If they are known, pass width and height attributes via `htmlAttributes` to help combat layout shift.
 
