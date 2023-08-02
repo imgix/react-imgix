@@ -1,3 +1,10 @@
+## [9.8.0-rc.1](https://github.com/imgix/react-imgix/compare/v9.7.0...v9.8.0-rc.1) (2023-08-02)
+
+
+### Features
+
+* add use client directive to index ([d0ffc27](https://github.com/imgix/react-imgix/commit/d0ffc27fc94179ef3973c56163fb95c3cc47057c))
+
 ## [9.7.0](https://github.com/imgix/react-imgix/compare/v9.6.0...v9.7.0) (2023-02-02)
 
 
