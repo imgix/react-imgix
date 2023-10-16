@@ -67,8 +67,10 @@ Below are some other articles that help explain responsive imagery, and how it c
 
 ## Installation
 
-- **NPM**: `npm install react-imgix`
-- **Yarn**: `yarn add react-imgix`
+| Package Manager | Installation Command          |
+|-----------------|-----------------------------|
+| NPM             | `npm install react-imgix`  |
+| Yarn            | `yarn add react-imgix`     |
 
 This module exports two transpiled versions. If a ES6-module-aware bundler is being used to consume this module, it will pick up an ES6 module version and can perform tree-shaking. **If you are not using ES6 modules, you don't have to do anything**
 
