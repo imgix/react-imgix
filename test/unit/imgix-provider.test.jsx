@@ -1,6 +1,6 @@
 import { mount, shallow } from "enzyme";
 import React from "react";
-import ReactImgix, { ImgixProvider } from "../../src/index";
+import ReactImgix, { ImgixProvider, Background } from "../../src/index";
 
 const providerProps = {
   domain: "sdk-test.imgix.net",
@@ -17,15 +17,22 @@ describe("ImgixProvider", () => {
     const wrappedComponent = (
       <ImgixProvider>
         <ReactImgix {...imageProps} />
+        <Background {...imageProps} />
       </ImgixProvider>
     );
 
     const expectedProps = {
       children: (
-        <ReactImgix
-          src="https://assets.imgix.net/examples/pione.jpg"
-          sizes="50vw"
-        />
+        <>
+          <ReactImgix
+            src="https://assets.imgix.net/examples/pione.jpg"
+            sizes="50vw"
+          />
+          <Background
+            src="https://assets.imgix.net/examples/pione.jpg"
+            sizes="50vw"
+          />
+        </>
       ),
       value: {},
     };
@@ -38,16 +45,23 @@ describe("ImgixProvider", () => {
     const wrappedComponent = (
       <ImgixProvider {...providerProps}>
         <ReactImgix {...imageProps} />
+        <Background {...imageProps} />
       </ImgixProvider>
     );
 
     // ensure Provider value correctly set
     const expectedProps = {
       children: (
-        <ReactImgix
-          src="https://assets.imgix.net/examples/pione.jpg"
-          sizes="50vw"
-        />
+        <>
+          <ReactImgix
+            src="https://assets.imgix.net/examples/pione.jpg"
+            sizes="50vw"
+          />
+          <Background
+            src="https://assets.imgix.net/examples/pione.jpg"
+            sizes="50vw"
+          />
+        </>
       ),
       value: { domain: "sdk-test.imgix.net", sizes: "100vw" },
     };
@@ -66,6 +80,7 @@ describe("ImgixProvider", () => {
     const wrappedComponent = (
       <ImgixProvider {...providerProps}>
         <ReactImgix {...modifiedProps} />
+        <Background {...modifiedProps} />
       </ImgixProvider>
     );
 
