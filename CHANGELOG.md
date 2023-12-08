@@ -1,3 +1,10 @@
+## [9.8.1-rc.2](https://github.com/imgix/react-imgix/compare/v9.8.1-rc.1...v9.8.1-rc.2) (2023-12-08)
+
+
+### Bug Fixes
+
+* remove comment ([6aa0e9a](https://github.com/imgix/react-imgix/commit/6aa0e9ad9d0a93220160951dbf0e22924817470f))
+
 ## [9.8.1-rc.1](https://github.com/imgix/react-imgix/compare/v9.8.0...v9.8.1-rc.1) (2023-12-08)
 
 
