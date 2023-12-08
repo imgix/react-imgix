@@ -1,3 +1,11 @@
+## [9.8.1-rc.1](https://github.com/imgix/react-imgix/compare/v9.8.0...v9.8.1-rc.1) (2023-12-08)
+
+
+### Bug Fixes
+
+* disables test job for next release ([5bd8714](https://github.com/imgix/react-imgix/commit/5bd87149bf5c6162c2cfe9f48be9efcb6f902dc8))
+* updates background component to merge props ([db16026](https://github.com/imgix/react-imgix/commit/db16026ae4e2917485866f8c971065dbd889231d))
+
 ## [9.8.0](https://github.com/imgix/react-imgix/compare/v9.7.0...v9.8.0) (2023-08-04)
 
 
