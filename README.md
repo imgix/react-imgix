@@ -22,7 +22,6 @@
 
 <!-- toc -->
 
-<!-- TODO: update readme -->
 - [Overview / Resources](#overview--resources)
 - [Installation](#installation)
 - [Usage](#usage)
