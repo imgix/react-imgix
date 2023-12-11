@@ -1,6 +1,6 @@
 import { mount, shallow } from "enzyme";
 import React from "react";
-import ReactImgix, { ImgixProvider } from "../../src/index";
+import ReactImgix, { ImgixProvider, Background } from "../../src/index";
 
 const providerProps = {
   domain: "sdk-test.imgix.net",
@@ -17,43 +17,57 @@ describe("ImgixProvider", () => {
     const wrappedComponent = (
       <ImgixProvider>
         <ReactImgix {...imageProps} />
+        <Background {...imageProps} />
       </ImgixProvider>
     );
 
-    const expectedProps = {
-      children: (
-        <ReactImgix
-          src="https://assets.imgix.net/examples/pione.jpg"
-          sizes="50vw"
-        />
-      ),
-      value: {},
-    };
-
     const renderedComponent = shallow(wrappedComponent);
-    expect(renderedComponent.props()).toEqual(expectedProps);
+
+    // Inspect the rendered children directly
+    const renderedChildren = renderedComponent.children();
+
+    expect(renderedChildren.length).toBe(2); // Assuming you have two children
+    expect(renderedChildren.at(0).props()).toEqual({
+      src: 'https://assets.imgix.net/examples/pione.jpg',
+      sizes: imageProps.sizes,
+    });
+
+    expect(renderedChildren.at(1).props()).toEqual({
+      src: 'https://assets.imgix.net/examples/pione.jpg',
+      sizes: imageProps.sizes,
+    });
+
+    expect(renderedComponent.prop('value')).toEqual({});
   });
 
   test("should set the context value to the Provider props", () => {
     const wrappedComponent = (
       <ImgixProvider {...providerProps}>
         <ReactImgix {...imageProps} />
+        <Background {...imageProps} />
       </ImgixProvider>
     );
 
-    // ensure Provider value correctly set
+    const renderedComponent = shallow(wrappedComponent);
+
+    // Inspect the rendered children directly
+    const renderedChildren = renderedComponent.children();
+
     const expectedProps = {
-      children: (
-        <ReactImgix
-          src="https://assets.imgix.net/examples/pione.jpg"
-          sizes="50vw"
-        />
-      ),
       value: { domain: "sdk-test.imgix.net", sizes: "100vw" },
     };
 
-    const renderedComponent = shallow(wrappedComponent);
-    expect(renderedComponent.props()).toEqual(expectedProps);
+    expect(renderedChildren.length).toBe(2); // Assuming you have two children
+    expect(renderedChildren.at(0).props()).toEqual({
+      src: 'https://assets.imgix.net/examples/pione.jpg',
+      sizes: '50vw',
+    });
+    expect(renderedChildren.at(1).props()).toEqual({
+      src: 'https://assets.imgix.net/examples/pione.jpg',
+      sizes: '50vw',
+    });
+
+    expect(renderedComponent.prop('value')).toEqual(expectedProps.value);
   });
 
   test("should merge the Provider and Child props", () => {
@@ -66,12 +80,12 @@ describe("ImgixProvider", () => {
     const wrappedComponent = (
       <ImgixProvider {...providerProps}>
         <ReactImgix {...modifiedProps} />
+        <Background {...modifiedProps} />
       </ImgixProvider>
     );
 
     // ensure Provider and Child props are merged as intended
     const expectedProps = {
-      disableSrcSet: false,
       domain: "sdk-test.imgix.net",
       height: undefined,
       imgixParams: undefined,
@@ -79,20 +93,38 @@ describe("ImgixProvider", () => {
       sizes: null,
       src: "https://sdk-test.imgix.net/examples/pione.jpg",
       width: undefined,
-    };
+      };
+
+      const expectedReactImgixProps = {
+        ...expectedProps,
+        disableSrcSet: false,
+      };
+
+      const expectedBgProps = {
+        ...expectedProps,
+      };
 
     // The order of the childAt() needs to update if number of HOCs change.
-    const renderedComponent = mount(wrappedComponent);
+    const renderedComponent = mount(wrappedComponent); //ImgixProvider
+
     const renderedProps = renderedComponent
       .childAt(0) // mergePropsHOF
       .childAt(0) // processPropsHOF
       .childAt(0) // shouldComponentUpdateHOC
       .childAt(0) // ChildComponent
       .props();
+
+      const renderedBackgroundProps = renderedComponent
+      .childAt(1) // mergePropsHOF
+      .childAt(0) // processPropsHOF
+      .childAt(0) // withContentRect
+      .props();
+
     // remove noop function that breaks tests
     renderedProps.onMounted = undefined;
 
-    expect(renderedProps).toEqual(expectedProps);
+    expect(renderedProps).toEqual(expectedReactImgixProps);
+    expect(renderedBackgroundProps).toEqual(expectedBgProps);
   });
 
   test("should log error when has no consumers", () => {

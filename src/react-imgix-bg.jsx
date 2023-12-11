@@ -6,6 +6,7 @@ import constructUrl from "./constructUrl";
 import extractQueryParams from "./extractQueryParams";
 import findClosest from "./findClosest";
 import targetWidths from "./targetWidths";
+import { mergeComponentPropsHOF, processPropsHOF } from "./HOFs";
 
 const findNearestWidth = (actualWidth) =>
   findClosest(actualWidth, targetWidths);
@@ -188,6 +189,9 @@ class BackgroundImpl extends React.Component {
     );
   }
 }
-const Background = withContentRect("bounds")(BackgroundImpl);
+
+const Background = mergeComponentPropsHOF(
+  processPropsHOF(withContentRect("bounds")(BackgroundImpl))
+);
 
 export { Background, BackgroundImpl as __BackgroundImpl };
