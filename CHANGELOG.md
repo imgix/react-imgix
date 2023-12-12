@@ -1,3 +1,10 @@
+## [9.8.1](https://github.com/imgix/react-imgix/compare/v9.8.0...v9.8.1) (2023-12-12)
+
+
+### Bug Fixes
+
+* updates background component to merge props ([06a3430](https://github.com/imgix/react-imgix/commit/06a3430df7e47e03ebaf122e2dbb32a0c0762fe4))
+
 ## [9.8.0](https://github.com/imgix/react-imgix/compare/v9.7.0...v9.8.0) (2023-08-04)
 
 
