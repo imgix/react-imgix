@@ -101,11 +101,11 @@ This will generate HTML similar to the following:
 
 ```html
 <img
-  src="https://assets.imgix.net/examples/pione.jpg?auto=format&amp;crop=faces&amp;ixlib=react-7.2.0"
+  src="https://assets.imgix.net/examples/pione.jpg?auto=format&crop=faces&ixlib=react-7.2.0"
   sizes="100vw"
   srcset="
-    https://assets.imgix.net/examples/pione.jpg?auto=format&amp;crop=faces&amp;ixlib=react-7.2.0&amp;w=100 100w,
-    https://assets.imgix.net/examples/pione.jpg?auto=format&amp;crop=faces&amp;ixlib=react-7.2.0&amp;w=200 200w,
+    https://assets.imgix.net/examples/pione.jpg?auto=format&crop=faces&ixlib=react-7.2.0&w=100 100w,
+    https://assets.imgix.net/examples/pione.jpg?auto=format&crop=faces&ixlib=react-7.2.0&w=200 200w,
     ...
   "
 />
