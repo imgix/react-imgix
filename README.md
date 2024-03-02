@@ -127,9 +127,9 @@ import Imgix from "react-imgix";
 
 [![Edit xp0348lv0z](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/charming-keller-kjnsq)
 
-When width and height are specified, Imgix will give the image a srcset with resolution descriptors.
+When width and height are specified, `<Imgix>` will give the image a srcset with resolution descriptors.
 
-**Width and height known but fluid:** If the image's intrinsic width and height are known but a fluid size image is wanted, [width and height should still be set to avoid layout shift](https://web.dev/optimize-cls/), but they must be set via `htmlAttributes` so as not to hint to Imgix to produce resolution descriptors in the srcset.
+**Width and height known but fluid:** If the image's intrinsic width and height are known but a fluid size image is wanted, [width and height should still be set to avoid layout shift](https://web.dev/optimize-cls/), but they must be set via `htmlAttributes` so as not to hint to `<Imgix>` to produce resolution descriptors in the srcset.
 
 ```js
 import Imgix from "react-imgix";
@@ -144,7 +144,7 @@ import Imgix from "react-imgix";
 />;
 ```
 
-In this example, Imgix will produce a srcset with width descriptors.
+In this example, `<Imgix>` will produce a srcset with width descriptors.
 
 #### Server-Side Rendering
 
@@ -628,7 +628,7 @@ If you'd like to use LQIP images, like before, we recommend using [lazysizes](ht
 
 #### Attaching Ref to DOM Elements
 
-A `ref` passed to react-imgix using `<Imgix ref={handleRef}>` will attach the ref to the Imgix instance, rather than the DOM element. It is possible to attach a ref to the DOM element that is rendered using `htmlAttributes`:
+A `ref` passed to react-imgix using `<Imgix ref={handleRef}>` will attach the ref to the `<Imgix>` instance, rather than the DOM element. It is possible to attach a ref to the DOM element that is rendered using `htmlAttributes`:
 
 ```js
 <Imgix htmlAttributes={{ ref: handleRef }}>
@@ -658,7 +658,7 @@ _For example_:
 
 ##### imgixParams :: object
 
-Imgix params to add to the image `src`.
+[imgix params](https://docs.imgix.com/apis/rendering) to add to the image `src`.
 
 _For example_:
 
@@ -746,7 +746,7 @@ Usually in the form: `https://[your_domain].imgix.net/[image]`. Don't include an
 
 ##### imgixParams :: object
 
-Imgix params to add to the image `src`. This is also how width and height can be explicitly set. For more information about this, see the "Background" section above.
+[imgix](https://docs.imgix.com/apis/rendering) params to add to the image `src`. This is also how width and height can be explicitly set. For more information about this, see the "Background" section above.
 
 _For example_:
 
@@ -831,7 +831,7 @@ The largest change in this major version bump is the move to width-based `srcSet
 
 To upgrade to version 8, the following changes should be made.
 
-- A `sizes` prop should be added to all usages of Imgix. If `sizes` is new to you (or even if it's not), Eric's [seminal article on `srcset` and `sizes`](https://ericportis.com/posts/2014/srcset-sizes/) is highly recommended.
+- A `sizes` prop should be added to all usages of `<Imgix>`. If `sizes` is new to you (or even if it's not), Eric's [seminal article on `srcset` and `sizes`](https://ericportis.com/posts/2014/srcset-sizes/) is highly recommended.
 - Change all usages of `type='picture'` to `<Picture>` and `type='source'` to `<Source>`
 
     <!-- prettier-ignore-start -->
