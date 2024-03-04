@@ -101,7 +101,7 @@
     "conventional-changelog-conventionalcommits": "7.0.2",
     "cross-env": "7.0.3",
     "enzyme": "3.11.0",
-    "enzyme-adapter-react-16": "1.15.7",
+    "enzyme-adapter-react-16": "1.15.8",
     "expect": "25.5.0",
     "jest": "25.5.4",
     "jest-extended": "0.11.5",
