@@ -114,7 +114,7 @@
     "karma-mocha-reporter": "2.2.5",
     "karma-safari-launcher": "1.0.0",
     "karma-webpack": "4.0.2",
-    "mocha": "10.2.0",
+    "mocha": "10.4.0",
     "prettier": "3.2.5",
     "puppeteer": "21.8.0",
     "react": "16.14.0",
