@@ -164,7 +164,8 @@ function buildURLPublic(src, imgixParams = {}, options = {}) {
       params,
       imgixParams,
       disableLibraryParam ? {} : { ixlib: `react-${PACKAGE_VERSION}` }
-    )
+    ),
+    { disablePathEncoding }
   );
 }
 
