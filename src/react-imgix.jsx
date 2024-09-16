@@ -244,8 +244,18 @@ class ReactImgix extends Component {
       defaultAttributeMap,
       this.props.attributeConfig
     );
+
+    const fixedSize = !!(
+      (width || this.props.htmlAttributes?.width) &&
+      (height || this.props.htmlAttributes?.height)
+    );
+    let adjustedSizes = this.props.sizes;
+    if (this.props.sizes && this.props.htmlAttributes?.loading === "lazy" && !fixedSize) {
+      adjustedSizes = "auto, " + adjustedSizes ?? "";
+    }
+
     const childProps = Object.assign({}, this.props.htmlAttributes, {
-      [attributeConfig.sizes]: this.props.sizes,
+      [attributeConfig.sizes]: adjustedSizes,
       className: this.props.className,
       width: width <= 1 ? null : width ?? this.props.htmlAttributes?.width,
       height: height <= 1 ? null : height ?? this.props.htmlAttributes?.height,
