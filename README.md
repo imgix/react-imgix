@@ -585,7 +585,23 @@ For example, if the the developer would like to attach a custom `onLoad` callbac
 
 #### Lazy Loading
 
-If you'd like to lazy load images, we recommend using [lazysizes](https://github.com/aFarkas/lazysizes). In order to use react-imgix with lazysizes, you can simply tell it to generate lazysizes-compatible attributes instead of the standard `src`, `srcset`, and `sizes` by changing some configuration settings:
+If you'd like to lazy load images, we recommend using browser-level lazy loading, with the [`loading`](https://developer.mozilla.org/en-US/docs/Web/API/HTMLImageElement/loading) property, passed in `htmlAttributes`:
+
+```jsx
+<Imgix
+  src="..."
+  sizes="..."
+  htmlAttributes={{
+    loading: "lazy"
+  }}
+/>
+```
+
+This property has [strong browser support](https://caniuse.com/loading-lazy-attr), and functions without additional JavaScript. Additionally, using browser-level lazy loading enables optimization of the sizes attribute with `sizes="auto"`, which allows the browser to [automatically calculate the optimal size](https://ericportis.com/posts/2023/auto-sizes-pretty-much-requires-width-and-height/) for the image based on its layout. 
+
+If you need granular control over lazy-loading behavior such as loading distance, you can use the [Intersection Observer API](https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API).
+
+If you are using a library like [lazysizes](https://github.com/aFarkas/lazysizes), you can tell the Imgix component to generate compatible attributes instead of the standard `src`, `srcset`, and `sizes` by changing some configuration settings:
 
 ```jsx
 <Imgix

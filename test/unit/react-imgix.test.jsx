@@ -239,6 +239,7 @@ describe("When in default mode", () => {
         "data-src": "https://mysource.imgix.net/demo.png",
         width: "200",
         height: "100",
+        loading: "lazy"
       };
       sut = shallow(
         <Imgix
@@ -250,6 +251,89 @@ describe("When in default mode", () => {
       expect(sut.props()["data-src"]).toEqual(htmlAttributes["data-src"]);
       expect(sut.props()["width"]).toEqual(htmlAttributes["width"]);
       expect(sut.props()["height"]).toEqual(htmlAttributes["height"]);
+      expect(sut.props()["loading"]).toEqual(htmlAttributes["loading"]);
+    });
+    it("prepends 'auto, ' to the sizes prop if loading is lazy and not fixed size", () => {
+      const htmlAttributes = {
+        "data-src": "https://mysource.imgix.net/demo.png",
+        width: "200",
+        loading: "lazy",
+      };
+      sut = shallow(
+        <Imgix
+          src={"https://mysource.imgix.net/demo.png"}
+          sizes="100vw"
+          htmlAttributes={htmlAttributes}
+        />
+      );
+      expect(sut.props()["sizes"]).toEqual("auto, 100vw"); 
+    });
+  
+    it("does not prepend 'auto, ' to the sizes prop if loading is not lazy", () => {
+      const htmlAttributes = {
+        "data-src": "https://mysource.imgix.net/demo.png",
+        width: "200",
+        height: "100",
+        loading: "eager", // Not lazy loading
+      };
+      sut = shallow(
+        <Imgix
+          src={"https://mysource.imgix.net/demo.png"}
+          sizes="100vw"
+          htmlAttributes={htmlAttributes}
+        />
+      );
+      expect(sut.props()["sizes"]).toEqual("100vw"); 
+    });
+
+    it("does not prepend 'auto, ' to the sizes prop if loading is omitted", () => {
+      const htmlAttributes = {
+        "data-src": "https://mysource.imgix.net/demo.png",
+        width: "200",
+        height: "100",
+      };
+      sut = shallow(
+        <Imgix
+          src={"https://mysource.imgix.net/demo.png"}
+          sizes="100vw"
+          htmlAttributes={htmlAttributes}
+        />
+      );
+      expect(sut.props()["sizes"]).toEqual("100vw"); 
+    });
+
+    it("does not prepend 'auto, ' to the sizes prop if both width and height are present (htmlAttributes)", () => {
+      const htmlAttributes = {
+        "data-src": "https://mysource.imgix.net/demo.png",
+        width: "200",
+        height: "100",
+        loading: "lazy",
+      };
+      sut = shallow(
+        <Imgix
+          src={"https://mysource.imgix.net/demo.png"}
+          sizes="100vw"
+          htmlAttributes={htmlAttributes}
+        />
+      );
+      expect(sut.props()["sizes"]).toEqual("100vw"); 
+    });
+
+    it("does not prepend 'auto, ' to the sizes prop if both width and height are present (element attributes)", () => {
+      const htmlAttributes = {
+        "data-src": "https://mysource.imgix.net/demo.png",
+        loading: "lazy",
+      };
+      sut = shallow(
+        <Imgix
+          src={"https://mysource.imgix.net/demo.png"}
+          sizes="100vw"
+          width={100}
+          height={100}
+          htmlAttributes={htmlAttributes}
+        />
+      );
+      expect(sut.props()["sizes"]).toEqual("100vw"); 
     });
   });
 });
