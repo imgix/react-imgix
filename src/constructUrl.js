@@ -153,7 +153,7 @@ function extractClientAndPathComponents(src) {
 }
 
 function buildURLPublic(src, imgixParams = {}, options = {}) {
-  const { disableLibraryParam } = options;
+  const { disableLibraryParam, disablePathEncoding } = options;
 
   const [rawSrc, params] = extractQueryParams(src);
 
@@ -164,7 +164,8 @@ function buildURLPublic(src, imgixParams = {}, options = {}) {
       params,
       imgixParams,
       disableLibraryParam ? {} : { ixlib: `react-${PACKAGE_VERSION}` }
-    )
+    ),
+    { disablePathEncoding }
   );
 }
 
