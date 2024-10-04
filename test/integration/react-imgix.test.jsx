@@ -160,6 +160,93 @@ const renderAndWaitForImageLoad = async (element) => {
   });
 };
 
+describe("Image Warnings", () => {
+  const imageUndersizedWarning = "was rendered with dimensions significantly smaller than intrinsic size";
+  const lcpWarning = "was detected as a possible LCP element";
+  
+  let realConsoleWarn;
+  let warnings = [];
+
+  beforeEach(() => {
+    realConsoleWarn = window.console.warn;
+    window.console.warn = (str) => {
+      warnings.push(str);
+    }
+  });
+  afterEach(() => {
+    window.console.warn = realConsoleWarn;
+    warnings = [];
+  });
+
+  it("should log a warning if LCP image is lazy-loaded", async () => {
+    const renderedImage = await renderAndWaitForImageLoad(
+      <Imgix
+        src={src}
+        sizes="100vw"
+        htmlAttributes={{
+          loading: "lazy" 
+        }}
+      />
+    );
+
+    await new Promise((resolve) => {
+      setTimeout(resolve, 500);
+    });
+    expect(warnings.find(warning => warning.includes(lcpWarning))).toBeTruthy();
+  });
+
+  it("should not log a warning if non-LCP image is lazy-loaded", async () => {
+    renderIntoContainer(
+      <div>
+        <div style={{height: "5000px", width: "5000px"}}></div>
+        <Imgix
+          src={src}
+          sizes="100vw"
+          htmlAttributes={{
+            loading: "lazy" 
+          }}
+        />
+      </div>
+    );
+
+    await new Promise((resolve) => {
+      setTimeout(resolve, 1000);
+    });
+    expect(warnings.find(warning => warning.includes(lcpWarning))).not.toBeTruthy();
+  });
+
+  it("should log a warning if intrinsic dimensions are significantly larger than rendered size", async () => {
+    
+    const sut = await renderAndWaitForImageLoad(
+      <Imgix
+        src={src}
+        sizes="100w"
+        htmlAttributes={{
+          style: { width: '400px', height: '400px' }
+        }}
+      />
+    );
+
+    expect(warnings.find(warning => warning.includes(imageUndersizedWarning))).toBeTruthy();
+  });
+
+  it("should not log a warning if intrinsic dimensions are within the threshold of rendered size", async () => {
+
+    const sut = await renderAndWaitForImageLoad(
+      <Imgix
+        src={src}
+        sizes="500px"
+        htmlAttributes={{
+          style: { width: '400px', height: '400px' }
+        }}
+      />
+    );
+
+    expect(warnings.find(warning => warning.includes(imageUndersizedWarning))).not.toBeTruthy();
+  });
+
+});
+
 describe("When in default mode", () => {
   const renderImage = () =>
     renderIntoContainer(<Imgix src={src} sizes="100px" />);

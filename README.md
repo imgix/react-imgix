@@ -809,6 +809,8 @@ The warnings available are:
 | fallbackImage  | Triggered when there is no `<img>` or `<Imgix>` at the end of the children when using `<Picture>`. A fallback image is crucial to ensure the image renders correctly when the browser cannot match against the sources provided |
 | sizesAttribute | This library requires a `sizes` prop to be passed so that the images can render responsively. This should only turned off in very special circumstances.                                                                        |
 | invalidARFormat | Warnings thrown when the `ar` imgix parameter is not passed in the correct format (`w:h`)                                                                        |
+| oversizeImage | A runtime error triggered when an image loads with an intrinsic size substantially larger than the rendered size.                                |
+| lazyLCP | A runtime error triggered when an image is detected to be the [LCP element](https://web.dev/articles/lcp) but is loaded with `loading="lazy"`.            |
 
 ## Upgrade Guides
 
