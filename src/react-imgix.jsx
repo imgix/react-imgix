@@ -65,6 +65,10 @@ const REACT_IMGIX_PROP_TYPES = Object.assign(
   }
 );
 
+const OVERSIZE_IMAGE_TOLERANCE = 500;
+
+let performanceObserver;
+
 /**
  * Validates that an aspect ratio is in the format w:h. If false is returned, the aspect ratio is in the wrong format.
  */
@@ -189,6 +193,75 @@ function buildSrc({
 }
 
 /**
+ * Use the PerfomanceObser API to warn if an LCP element is loaded lazily.
+ */
+function watchForLazyLCP(imgRef) {
+  if (
+    !performanceObserver &&
+    typeof window !== 'undefined' &&
+    window.PerformanceObserver
+  ) { 
+    performanceObserver = new PerformanceObserver((entryList) => {
+      const entries = entryList.getEntries();
+
+      if (entries.length === 0) {
+        return;
+      }
+
+      // The most recent LCP entry is the only one that can be the real LCP element.
+      const lcpCandidate = entries[entries.length - 1];
+      if (lcpCandidate.element?.getAttribute("loading") === "lazy") {
+        console.warn(
+          `An image with URL ${imgRef.src} was detected as a possible LCP element (https://web.dev/lcp) ` + 
+          `and also has 'loading="lazy"'. This can have a significant negative impact on page loading performance. ` +
+          `Lazy loading is not recommended for images which may render in the initial viewport.` );
+      }
+    });
+    performanceObserver.observe({type: 'largest-contentful-paint', buffered: true});
+  }
+}
+
+/**
+ * Once the image is loaded, warn if it's intrinsic size is much larger than its rendered size.
+ */
+function checkImageSize(imgRef) {
+  const renderedWidth = imgRef.clientWidth;
+  const renderedHeight = imgRef.clientHeight;
+  const intrinsicWidth = imgRef.naturalWidth;
+  const intrinsicHeight = imgRef.naturalHeight;
+
+  if (
+    intrinsicWidth > renderedWidth + OVERSIZE_IMAGE_TOLERANCE ||
+    intrinsicHeight > renderedHeight + OVERSIZE_IMAGE_TOLERANCE
+  ) {
+    console.warn(
+      `An image with URL ${imgRef.src} was rendered with dimensions significantly smaller than intrinsic size, ` +
+      `which can slow down page loading. This may be caused by a missing or inaccurate "sizes" property. ` + 
+      `Rendered size: ${renderedWidth}x${renderedHeight}. Intrinsic size: ${intrinsicWidth}x${intrinsicHeight}.`
+    );
+  }
+}
+
+/**
+ * Initializes listeners for performance-related image warnings
+ */
+function doPerformanceChecksOnLoad(imgRef) {
+  // Check image size on load
+  if(config.warnings.oversizeImage) {
+    if (imgRef.complete) {
+      checkImageSize(imgRef);
+    } else {
+      imgRef.addEventListener('load', () => {
+        checkImageSize(imgRef);
+      });
+    }
+  }
+  if(config.warnings.lazyLCP) {
+    watchForLazyLCP(imgRef);
+  }
+}
+
+/**
  * Combines default imgix params with custom imgix params to make a imgix params config object
  */
 function imgixParams(props) {
@@ -212,6 +285,9 @@ class ReactImgix extends Component {
   }
 
   componentDidMount() {
+    if (NODE_ENV === 'development' && this.imgRef) {
+      doPerformanceChecksOnLoad(this.imgRef);
+    }
     this.props.onMounted(this.imgRef);
   }
 
