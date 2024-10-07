@@ -3,6 +3,8 @@ const config = {
     fallbackImage: true,
     sizesAttribute: true,
     invalidARFormat: true,
+    oversizeImage: true,
+    lazyLCP: true
   },
 };
 
