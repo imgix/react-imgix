@@ -17,6 +17,7 @@ jobs:
     steps:
       - checkout
       - browser-tools/install_chrome:
+          replace_existing: true
       - browser-tools/install_firefox:
       - run:
           command: |
