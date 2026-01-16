@@ -2,7 +2,7 @@ version: 2.1
 
 orbs:
   node: circleci/node@5.1.0
-  browser-tools: circleci/browser-tools@1.4.8 # see https://github.com/CircleCI-Public/browser-tools-orb/issues/33#issuecomment-1081974320 and https://github.com/cypress-io/circleci-orb/issues/437
+  browser-tools: circleci/browser-tools@2.4.0
 
 jobs:
   test:
@@ -16,8 +16,9 @@ jobs:
     resource_class: large
     steps:
       - checkout
-      - browser-tools/install-browser-tools:
-          install-geckodriver: false
+      - browser-tools/install_chrome:
+          replace_existing: true
+      - browser-tools/install_firefox
       - run:
           command: |
             google-chrome --version
