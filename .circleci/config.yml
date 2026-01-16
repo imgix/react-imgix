@@ -18,7 +18,7 @@ jobs:
       - checkout
       - browser-tools/install_chrome:
           replace_existing: true
-      - browser-tools/install_firefox:
+      - browser-tools/install_firefox
       - run:
           command: |
             google-chrome --version
