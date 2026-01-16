@@ -16,9 +16,10 @@ jobs:
     resource_class: large
     steps:
       - checkout
-      - browser-tools/install-chrome
-      - browser-tools/install-firefox:
-          replace-existing: true
+      - browser-tools/install_chrome:
+          replace_existing: true
+      - browser-tools/install_firefox:
+          replace_existing: true
       - run:
           command: |
             google-chrome --version
